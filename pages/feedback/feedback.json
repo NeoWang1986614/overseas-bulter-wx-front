@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "feedback-item": "/components/feedback-item/feedback-item"
+  },
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "我的反馈",
+  "backgroundColor": "#eeeeee",
+  "backgroundTextStyle": "light"
+}

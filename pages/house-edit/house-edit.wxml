@@ -1,0 +1,54 @@
+<!--pages/house-edit/house-edit.wxml-->
+<view class="wrap">
+  <view class="item-container">
+    <view class="item-static">
+      名字:
+    </view>
+    <view class="item-input-container">
+      <input class="item-input" placeholder="点击输入房产名字" value="{{currentName}}" bindblur="onNameInput"></input>
+    </view>
+  </view>
+  <view class="item-container">
+    <view class="item-static">
+      地址:
+    </view>
+    <view class="item-input-container">
+        <picker
+        mode="multiSelector"
+        bindchange="onAddressMultiPickerChange" 
+        value="{{addressIndexArrayCurrent}}"
+        range="{{addressTextArrayForPicker}}">
+          <view>
+            当前选择：{{addressTextShowCurrent}}
+          </view>
+        </picker>
+    </view>
+  </view>
+  <view class="address-detail-container">
+    <textarea placeholder="点击输入地址剩余详细信息" class="address-detail-input" value="{{addressDetail}}" bindblur="onAddressInput">
+    </textarea>
+  </view>
+  <view class="item-container">
+    <view class="item-static">
+      户型:
+    </view>
+    <view class="item-input-container">
+        <picker mode="selector" bindchange="onLayoutPickerChange" value="{{layoutIndexCurrent}}" range="{{layoutTextArrayForPicker}}">
+          <view class="picker">
+            当前选择：{{layoutTextShowCurrent}}
+          </view>
+        </picker>
+    </view>
+  </view>
+  <view class="is-default-container">
+    <button class="is-default-button" bindtap="onIsDefaultClick">
+      <image class="is-default-icon" src="{{isDefaultIconUrl}}"></image>
+      <view class="is-default-title">设为默认</view>
+    </button>
+  </view>
+  <view class="save-item-container">
+    <button class="save-button" hover-class="save-button-hover" bindtap="onSaveClick">
+      <text decode="true" space="emsp">保&emsp;&emsp;存</text>
+    </button>
+  </view>
+</view>

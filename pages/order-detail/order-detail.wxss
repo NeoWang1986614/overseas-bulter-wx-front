@@ -1,0 +1,105 @@
+/* pages/order-detail/order-detail.wxss */
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgb(234, 236, 236);
+  display: flex;
+  flex-direction: column;
+}
+
+scroll-view {
+  width: 100%;
+  height: 10rpx;
+  flex: 1;
+  /* background: lightblue; */
+}
+
+.scroll-content {
+  /* background: orange; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item-container {
+  width: 90%;
+  min-height: 60rpx;
+  display: flex;
+  align-items: center;
+  /* background: lightcoral; */
+  margin-top: 10px;
+}
+
+.common-text {
+  font-size: 28rpx;
+}
+
+.operate-container {
+  height: 120rpx;
+  background: green;
+  display: flex;
+  flex-direction: row;
+}
+
+.price-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10rpx;
+  flex-grow: 1;
+  background: white;
+}
+
+.pay-button {
+  width: 300rpx;
+  height: 100%;
+  background: rgb(3, 168, 3);
+  font-size: 40rpx;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.pay-button-hover {
+  background: green;
+}
+
+.pay-button:after {
+  border: none;
+}
+
+.progress-container {
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40rpx;
+  color: green;
+}
+
+.progress-container-hover {
+  width: 100%;
+  background: rgb(228, 227, 227);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40rpx;
+  color: green;
+}
+
+.complete-container {
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40rpx;
+  color: gray;
+}

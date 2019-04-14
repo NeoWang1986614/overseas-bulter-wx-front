@@ -1,0 +1,12 @@
+<!--pages/feedback/feedback.wxml-->
+<view class="wrap">
+  <scroll-view scroll-y="true">
+    <view wx:for="{{orders}}" class="feedback-item-container"
+    bindtap="onFeedbackItemClick" data-index="{{index}}">
+      <feedback-item id="feedbackItem" orderId="{{item.uid}}"
+                    bind:refreshData="itemRefreshNotify">
+      </feedback-item>
+    </view>
+  </scroll-view>
+  
+</view>

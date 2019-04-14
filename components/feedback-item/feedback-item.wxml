@@ -1,0 +1,9 @@
+<!--components/feedback-item/feedback-item.wxml-->
+<view class="wrap">
+  <view class="order-info">
+    订单编号: {{orderId}}
+  </view>
+  <view class="unread-count" wx:if="{{0 != feedbacks.length}}">
+    {{feedbacks.length}}
+  </view>
+</view>

@@ -1,0 +1,126 @@
+/* pages/house-edit/house-edit.wxss */
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+
+.item-container {
+  height: 100rpx;
+  /* background: seagreen; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10rpx;
+}
+
+.item-static {
+  width: 100rpx;
+  /* background: lawngreen; */
+  font-size: 26rpx;
+  color: gray;
+}
+
+.item-input-container {
+  height: 100%;
+  width: 640rpx;
+  /* background: skyblue; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-input {
+  width: 100%;
+  height: 30rpx;
+  /* background: whitesmoke; */
+  font-size: 26rpx;
+  text-align: right;
+}
+
+picker {
+  font-size: 26rpx;
+}
+
+.address-detail-container {
+  height: 140rpx;
+  /* background: lightgoldenrodyellow; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.address-detail-input {
+  width: 96%;
+  height: 120rpx;
+  background: whitesmoke;
+  border-radius: 10rpx;
+  padding: 10rpx;
+  font-size: 26rpx;
+}
+
+.is-default-container {
+  width: 100%;
+  height: 100rpx;
+  /* background: sandybrown; */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.is-default-button {
+  height: 80rpx;
+  width: 160rpx;
+  background:white;
+  padding: 0;
+  margin: 0;
+  margin-left: 10rpx;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.is-default-button::after {
+  border: none;
+}
+
+.is-default-icon {
+  width: 40rpx;
+  height: 40rpx;
+  /* background: lightblue; */
+}
+
+.is-default-title {
+  font-size: 26rpx;
+  color: gray;
+}
+
+.save-item-container {
+  position: absolute;
+  width: 100%;
+  height: 100rpx;
+  /* background: white; */
+  bottom: 20rpx;
+}
+
+.save-button {
+  width: 94%;
+  height: 100%;
+  background: rgb(3, 168, 3);
+  font-size: 40rpx;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.save-button-hover {
+  background: green;
+}
+
+.save-button:after {
+  border: none;
+}

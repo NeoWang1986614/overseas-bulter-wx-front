@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/house-edit/house-edit",
+    "pages/user-info/user-info",
+    "pages/houses/houses",
+    "pages/case-detail/case-detail",
+    "pages/feedback/feedback",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/feedback-detail/feedback-detail",
+    "pages/service-detail/service-detail"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "海外管家",
+    "navigationBarTextStyle": "black"
+  }
+}

@@ -1,0 +1,43 @@
+<!--pages/houses/houses.wxml-->
+<view class="wrap">
+  <scroll-view scroll-y="true">
+    <view wx:for="{{houses}}" class="house-item-container">
+      <view class="house-name house-sub-item">
+        {{item.name}}
+      </view>
+      <view class="house-address house-sub-item">
+        {{item.address}}
+      </view>
+      <view class="line"></view>
+      <view class="house-operate-container house-sub-item">
+        <view class="house-sub-left-operate">
+          <button class="operate-default" hover-class="house-operate-hover" bindtap="onDefaultClick" data-index="{{index}}">
+            <view class="house-operate-icon">
+              <image class="operate-icon" src="{{defaultHouseUid == item.uid ? checkUrl : unCheckUrl}}"  mode="scaleToFill"></image>
+            </view>
+            <view class="operate-title">{{defaultHouseUid == item.uid ? checkTitle : unCheckTitle}}</view>
+          </button>
+        </view>
+        <view class="house-sub-right-operate">
+          <button class="operate-right-button" hover-class="operate-right-button-hover" bindtap="onEditClick" data-index="{{index}}">
+            <view class="house-operate-icon">
+              <image class="operate-icon" src="../../images/edit.png"  mode="scaleToFill"></image>
+            </view>
+            <view class="operate-title">编辑</view>
+          </button>
+          <button class="operate-delete" hover-class="operate-right-button-hover" bindtap="onDeleteClick" data-index="{{index}}">
+            <view class="house-operate-icon">
+              <image class="operate-icon" src="../../images/trash.png"  mode="scaleToFill"></image>
+            </view>
+            <view class="operate-title">删除</view>
+          </button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view class="add-button-container">
+    <button class="add-button" hover-class="add-button-hover" bindtap="onAddClick">
+      <text decode="true" space="emsp">添&emsp;加&emsp;房&emsp;产</text>
+    </button>
+  </view>
+</view>

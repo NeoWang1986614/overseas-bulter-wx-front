@@ -1,0 +1,83 @@
+<!--pages/home/home.wxml-->
+<scroll-view class="wrap" scroll-y="true">
+  <view class="head-wrap">
+    <image class="head-bg-img" mode="scaleToFill" src="../../images/head-bg.jpg"></image>
+    <view class="user-container">
+    <button class="user-btn" open-type="getUserInfo" bindgetuserinfo="onUserAvatarClick">
+      <image class="user-icon" mode="scaleToFill" src="{{userAvatarUrl}}"></image>
+    </button>
+      
+    </view>
+  </view>
+  <view class="recommand-wrap">
+    <view class="title-container">
+      <view class="title-sub-container">
+        <view class="pattern-line"></view>
+        <text>案例推荐</text>
+        <view class="pattern-line"></view>
+      </view>
+    </view>
+    <scroll-view class="recommand-scroll" scroll-x="true">
+      <view class="recommand-scroll-content">
+        <view class="recommand-scroll-item-container" wx:for="{{recommendCases}}"  bindtap="onCaseClick" data-index="{{index}}">
+          <view class="recommand-item-container">
+            <view class="recommand-item-image">
+              <image class="recommand-image" src="{{item.imageUrl}}" mode="scaleToFill"></image>
+            </view>
+            <view class="recommand-item-title">
+                {{item.content}}
+            </view>
+            <view class="recommand-item-sub-title-container">
+                <text class="recommand-item-sub-title-style-text">{{item.title}}</text>
+                <text class="recommand-item-sub-title-price-text">{{item.price}}¥</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+  <view class="service-wrap">
+    <view class="title-container">
+      <view class="title-sub-container">
+        <view class="pattern-line"></view>
+          <text>我们的服务</text>
+        <view class="pattern-line"></view>
+      </view>
+    </view>
+    <view class="service-content-container">
+      <view wx:for="{{serviceItems}}" class="service-item-container">
+        <button class="service-item" hover-class="service-item-hover" bindtap="onServiceClick" data-index="{{index}}">
+          <view class="service-item-icon">
+            <image class="service-icon" mode="scaleToFill" src="{{item.icon}}"></image>
+          </view>
+          <view class="service-item-title">
+            {{textMap[item.name]}}
+          </view>
+        </button>
+        <!-- <view class="service-item">
+          
+        </view> -->
+      </view>
+    </view>
+  </view>
+  <view class="track-wrap">
+    <view class="title-container">
+      <view class="title-sub-container">
+        <view class="pattern-line"></view>
+        <text>我的跟踪</text>
+        <view class="pattern-line"></view>
+      </view>
+    </view>
+    <view class="track-item-container">
+      <view wx:for="{{trackItems}}" class="track-item" bindtap="onOrdresTrackClick" data-index="{{index}}">
+        <view class="track-item-icon">
+          <image class="track-icon" mode="scaleToFill" src="{{item.icon}}"></image>
+        </view>
+        <view class="track-title">{{item.title}}</view>
+        <view class="track-item-indicator">
+          <image class="track-indicator-icon" mode="scaleToFill" src="/images/indicator.png"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

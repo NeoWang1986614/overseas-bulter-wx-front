@@ -1,0 +1,31 @@
+/* components/feedback-item/feedback-item.wxss */
+.wrap {
+  height: 100%;
+  width: 100%;
+  background: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.order-info {
+  width: 460rpx;
+  /* background: red; */
+  margin-left: 160rpx;
+  font-size: 30rpx;
+}
+
+.unread-count {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 4rpx solid white;
+  color: white;
+  font-size: 34rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: lightcoral;
+  margin-bottom: 80rpx;
+}

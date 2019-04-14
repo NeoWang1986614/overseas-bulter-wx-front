@@ -1,0 +1,58 @@
+<!--pages/order-detail/order-detail.wxml-->
+<view class="wrap">
+  <scroll-view scroll-y="true">
+    <view class="scroll-content">
+      <view class="item-container common-text">
+        订单号: {{order.uid}}
+      </view>
+      <view class="item-container common-text">
+        订单类型: {{mapText[order.type]}}
+      </view>
+      <view class="item-container common-text">
+        房产地址: {{houseDescription}}
+      </view>
+      <view class="item-container common-text">
+        订单内容: {{order.content}}
+      </view>
+      <view class="item-container common-text">
+        当前状态: {{mapText[order.status]}}
+      </view>
+      <view class="item-container common-text">
+        下单人: {{user.name}}(电话号码:{{user.phoneNumber}} 身份证号: {{user.idCardNumber}})
+      </view>
+      <view class="item-container common-text">
+        价格: ¥{{order.price}}
+      </view>
+      <view class="item-container common-text">
+        下单时间: {{order.createTime}}
+      </view>
+    </view>
+  </scroll-view>
+  <view class="operate-container">
+    <block wx:if="{{order.status == 'non-payment'}}">
+      <view class="price-container">
+        ¥{{order.price}}
+      </view>
+      <button class="pay-button" 
+        hover-class="pay-button-hover"
+        bindtap="onPayClick">
+        订单支付
+      </button>
+    </block>
+    <block wx:if="{{order.status == 'paid'}}">
+      <view class="progress-container">
+        等待订单接受中...
+      </view>
+    </block>
+    <block wx:if="{{order.status == 'accepted'}}">
+      <view class="progress-container" hover-class="progress-container-hover" bindtap="onViewFeedbackClick">
+        查看订单反馈
+      </view>
+    </block>
+    <block wx:if="{{order.status == 'completed'}}">
+      <view class="complete-container">
+        订单已完成
+      </view>
+    </block>
+  </view>
+</view>

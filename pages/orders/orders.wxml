@@ -1,0 +1,48 @@
+<!--pages/orders/orders.wxml-->
+<view class="wrap">
+  <view class="tab-container">
+    <view wx:for="{{tabOptions}}" class="tab-item-container {{item.value == currentSelectTabOptions ? 'tab-item-active' : 'tab-item-inactive' }}" bindtap="onTabItemClick" data-index="{{index}}">
+        {{item.title}}
+    </view>
+  </view>
+  <view class="list-container">
+    <scroll-view scroll-y="true">
+      <view class="scroll-container">
+        <view wx:for="{{orders}}"
+        class="list-item-container">
+          <view class="trigger-container"
+                hover-class="trigger-container-hover"
+                bindtap="onListItemClick"
+                data-index="{{index}}">
+            <view class="type-container">
+              {{textMapping[item.type]}}--{{textMapping[item.houseCountry]+textMapping[item.houseProvince]+textMapping[item.houseCity] + item.houseAddress}}
+            </view>
+            <view class="content-container">
+              {{item.content}}
+            </view>
+            <view class="other-container">
+              <view class="price">
+                ¥{{item.price}}
+              </view>
+              <view class="time-stamp">
+                {{item.createTime}}
+              </view>
+            </view>
+          </view>
+          <view class="line"
+          wx:if="{{item.status != 'accepted' && item.status != 'paid'}}">
+          </view>
+          <view class="operate-container" 
+          wx:if="{{item.status != 'accepted' && item.status != 'paid'}}">
+            <view class="delete-container"
+            bindtap="onDeleteClick"
+            data-index="{{index}}">
+              <image class="operate-img" src="../../images/trash.png"  mode="scaleToFill"></image>
+              <view class="operate-title">删除</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

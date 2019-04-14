@@ -1,0 +1,43 @@
+<!--pages/user-info/user-info.wxml-->
+<view class="wrap">
+  <view class="item-container">
+    <view class="text-static">昵称:</view>
+    <view class="input-container">
+      <input placeholder="请输入您的姓名" value="{{nickName}}" bindinput="nickNameInput" disabled="true"></input>
+    </view>
+  </view>
+  <view class="item-container">
+    <view class="text-static">姓名:</view>
+    <view class="input-container">
+      <input type="number" placeholder="请输入您的姓名" value="{{name}}" bindinput="nameInput"></input>
+    </view>
+  </view>
+  <view class="item-container">
+    <view class="text-static">手机号码:</view>
+    <view class="input-container">
+      <input type="number" placeholder="请输入您的手机号码" value="{{phoneNumber}}" bindinput="phoneNumberInput"></input>
+    </view>
+  </view>
+  <view class="item-container">
+    <view class="text-static">验证码:</view>
+    <view class="input-container verification-input-container">
+      <input class="verification-input" placeholder="请输入验证码"></input>
+    </view>
+    <view class="verification-code-btn-container">
+      <button class="verification-code-btn" hover-class="verification-code-btn-hover">
+        获取验证码
+      </button>
+    </view>
+  </view>
+  <view class="item-container">
+    <view class="text-static">身份证号码:</view>
+    <view class="input-container">
+      <input type="idcard" placeholder="请输入身证份号码" value="{{idCardNumber}}" bindinput="idCardNumberInput"></input>
+    </view>
+  </view>
+  <view class="save-item-container">
+    <button class="save-button" hover-class="save-button-hover" bindtap="onSaveClick">
+      <text decode="true" space="emsp">保&emsp;&emsp;存</text>
+    </button>
+  </view>
+</view>

@@ -1,0 +1,152 @@
+/* pages/houses/houses.wxss */
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgb(234, 236, 236);
+}
+
+scroll-view {
+  height: calc(100% - 120rpx);
+  /* background: salmon; */
+}
+
+.house-item-container {
+  height: 180rpx;
+  background: white;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow:0 1px 2px 0px rgba(185, 181, 181, 0.616);
+}
+
+.house-name {
+  width: 700rpx;
+  height: 60rpx;
+  /* background: lightblue; */
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.house-address {
+  width: 700rpx;
+  height: 60rpx;
+  /* background: rgb(11, 206, 125); */
+  font-size: 26rpx;
+  color: gray;
+  line-height: 60rpx;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.house-operate-container {
+  width: 700rpx;
+  height: 60rpx;
+  /* background: rgb(200, 11, 206); */
+  display: flex;
+  justify-content: space-between;
+}
+
+.house-sub-item {
+  text-align: left;
+  line-height: 60rpx;
+}
+
+.house-sub-left-operate {
+  height: 100%;
+  width: 160rpx;
+  /* background: sienna; */
+}
+
+.house-sub-right-operate {
+  height: 100%;
+  width: 300rpx;
+  /* background: sienna; */
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  border-radius: 0;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0);
+  /* background: lightblue; */
+}
+
+.operate-default {
+  justify-content: flex-start;
+}
+
+.operate-right-button {
+  justify-content: flex-end;
+}
+
+button::after {
+  border: none;
+}
+
+.house-operate-icon {
+  width: 40rpx;
+  height: 40rpx;
+  /* background: rgb(8, 47, 218); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.line {
+  width: 96%;
+  height: 3rpx;
+  background: rgba(196, 194, 194, 0.815);
+}
+
+.operate-right-button-hover {
+  background: rgba(218, 214, 214, 0.479);
+}
+
+.operate-icon {
+  width: 100%;
+  height: 100%;
+  /* background: rebeccapurple; */
+}
+
+.operate-title {
+  margin-left: 10rpx;
+  color: gray;
+}
+
+.add-button-container {
+  height: 120rpx;
+  /* background: lightblue; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-button {
+  width: 94%;
+  height: 100rpx;
+  background: rgb(3, 168, 3);
+  font-size: 40rpx;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10rpx;
+}
+
+.add-button-hover {
+  background: green;
+}
+
+.add-button:after {
+  border: none;
+}
