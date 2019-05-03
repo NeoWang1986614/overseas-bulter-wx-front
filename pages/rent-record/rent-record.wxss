@@ -1,0 +1,82 @@
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: white;
+  display: flex;
+  font-size: 30rpx;
+  color: gray;
+  flex-direction: column;
+}
+
+.block-container {
+  min-height: 10rpx;
+  /* background: orange; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.house-desc {
+  margin-top: 20rpx;
+  width: 96%; 
+  /* background: lightblue;  */
+  font-size: 34rpx;
+}
+
+.time-range {
+  width: 96%;
+  color: black;
+}
+
+.accounting-date{
+   margin-bottom: 20rpx;
+   width: 96%;
+   color: black;
+}
+
+.total {
+  width: 96%; 
+  height: 120rpx;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 34rpx;
+}
+
+.line {
+  width: 94%; 
+  height: 4rpx;
+  background: lightblue; 
+}
+
+.fee-item {
+  width: 96%;
+  height: 60rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30rpx;
+}
+
+.balance {
+  width: 96%;
+  height: 100rpx;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 34rpx;
+}
+
+.comment {
+  width: 96%; 
+  margin-top: 30rpx;
+  min-height: 100rpx; 
+  font-size: 30rpx;
+}

@@ -1,7 +1,10 @@
 <!--pages/feedback/feedback.wxml-->
 <view class="wrap">
   <scroll-view scroll-y="true">
-    <view wx:for="{{orders}}" class="feedback-item-container"
+    <view class="empty-data" wx:if="{{0==orders.length}}">
+      没有数据
+    </view>
+    <view wx:for="{{orders}}" wx:if="{{0!=orders.length}}" class="feedback-item-container"
     bindtap="onFeedbackItemClick" data-index="{{index}}">
       <feedback-item id="feedbackItem" orderId="{{item.uid}}"
                     bind:refreshData="itemRefreshNotify">

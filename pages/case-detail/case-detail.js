@@ -1,6 +1,7 @@
 // pages/case-detail/case-detail.js
 //获取应用实例
 const app = getApp()
+const publicAccountEntity = require('../../entity/public-account.js')
 
 Page({
 
@@ -8,7 +9,8 @@ Page({
    * Page initial data
    */
   data: {
-    currentCase: null
+    materialDetailNewsItem: null,
+    article: ''
   },
 
   /**
@@ -17,16 +19,16 @@ Page({
   onLoad: function (options) {
     console.log(options);
 
-    if(!options.hasOwnProperty('id')){
+    if(!options.hasOwnProperty('media_id')){
       return;
     }
 
-    app.getCaseAsync(options['id'], caseData => {
-      console.log('onload in case detail', caseData);
+    app.getPublicAccountMaterialDetailAsync(options['media_id'], res => {
+      console.log('getPublicAccountMaterialDetailAsync', res);
       this.setData({
-        currentCase: caseData
+        materialDetailNewsItem: res.newsItem[0]
       });
-    });
+    })
     
   },
 
@@ -75,7 +77,7 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  }
+  // }
 })

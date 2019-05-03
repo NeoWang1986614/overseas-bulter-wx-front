@@ -9,7 +9,7 @@
   <view class="item-container">
     <view class="text-static">姓名:</view>
     <view class="input-container">
-      <input type="number" placeholder="请输入您的姓名" value="{{name}}" bindinput="nameInput"></input>
+      <input type="text" placeholder="请输入您的姓名" value="{{name}}" bindinput="nameInput"></input>
     </view>
   </view>
   <view class="item-container">

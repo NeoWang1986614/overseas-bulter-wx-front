@@ -1,0 +1,108 @@
+/* pages/inspect-record/inspect-record.wxss */
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: white;
+  display: flex;
+  font-size: 30rpx;
+  color: gray;
+  flex-direction: column;
+}
+
+.block-container {
+  min-height: 10rpx;
+  /* background: orange; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.house-desc {
+  margin-top: 20rpx;
+  width: 96%; 
+  /* background: lightblue;  */
+  font-size: 34rpx;
+}
+
+.inspect-date {
+  width: 96%;
+  color: black;
+}
+
+.inspector{
+   width: 96%;
+   color: black;
+}
+
+.comment{
+   margin-bottom: 20rpx;
+   width: 96%;
+   color: black;
+}
+
+.config {
+  width: 96%; 
+  height: 120rpx;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 34rpx;
+}
+
+.config-item {
+  width: 96%;
+  height: 60rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30rpx;
+}
+
+.line {
+  width: 94%; 
+  height: 4rpx;
+  background: lightblue; 
+}
+
+.area {
+  width: 96%; 
+  height: 120rpx;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 34rpx;
+}
+
+.area-item {
+  width: 96%;
+  min-height: 20rpx;
+  font-size: 30rpx;
+  /* background: lightblue; */
+}
+
+.area-title-desc-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10rpx;
+}
+
+.image-container {
+  width: 100%;
+  height: 600rpx;
+  margin-bottom: 10rpx;
+}
+
+.declaration {
+  width: 80%;
+  min-height: 100rpx;
+  /* background: lightcoral; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

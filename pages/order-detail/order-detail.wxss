@@ -50,6 +50,9 @@ scroll-view {
   width: 10rpx;
   flex-grow: 1;
   background: white;
+  color: black;
+  font-size: 40rpx;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .pay-button {

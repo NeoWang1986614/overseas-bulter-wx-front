@@ -1,0 +1,66 @@
+<!--pages/rent-record/rent-record.wxml-->
+<view class="wrap">
+  <scroll-view style="height: 100%;" scroll-y="true">
+    <view class="block-container">
+      <view 
+      class="house-desc">
+        {{houseAddressDesc}}
+      </view>
+      <view class="time-range" style="margin-top: 100rpx;">
+        结算时间: {{rentRecord.timeRange.fromCn}} 至 {{rentRecord.timeRange.toCn}}
+      </view>
+      <view class="accounting-date">
+        结算日期: {{rentRecord.accountingDateCn}}
+      </view>
+    </view>
+    <view class="block-container" style="margin-top: 60rpx;">
+      <view class="total">
+        <view>收入</view>
+        <view>¥{{incomeTotal}}</view>
+      </view>
+      <view class="line" style="margin-bottom: 30rpx;">
+      </view>
+      <view class="fee-item"
+       wx:for="{{rentRecord.income}}">
+        <view>
+          {{item.title}}
+        </view>
+        <view>
+          ¥{{item.amount}}
+        </view>
+      </view>
+    </view>
+    <view class="block-container" style="margin-top: 40rpx;">
+      <view class="total">
+        <view>支出</view>
+        <view>¥{{outgoingsTotal}}</view>
+      </view>
+      <view class="line" style="margin-bottom: 30rpx;">
+      </view>
+      <view class="fee-item"
+       wx:for="{{rentRecord.outgoings}}">
+        <view>
+          {{item.title}}
+        </view>
+        <view>
+          ¥{{item.amount}}
+        </view>
+      </view>
+    </view>
+    <view class="block-container" style="margin-top: 100rpx;">
+      <view class="line">
+      </view>
+      <view class="balance">
+        <view>结余费用:</view>
+        <view style="color: green;">¥{{rentRecord.balance}}</view>
+      </view>
+    </view>
+    <view class="block-container" style="margin-top: 30rpx;">
+      <view class="line" style="margin-top: 30rpx;">
+      </view>
+      <view class="comment">
+        <view>备注: {{rentRecord.comment}}</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

@@ -11,6 +11,7 @@ Page({
    */
   data: {
     houses: [],
+    map: map,
     operateItems:[
       {
         icon: '/images/check.png',
@@ -47,17 +48,15 @@ Page({
    * Lifecycle function--Called when page show
    */
   updateHouseList: function () {
-    app.getHousesAsync(0, 1000, data => {
+    app.getHousesByOwnerIdAsync(app.globalData.loginInfo.userId, 0, 1000, data => {
       console.log(data)
 
       app.globalData.houses = data;
 
-      if(0 == data.length){
-        return;
-      }
-      if(!app.getDefaultHouseUid()){
+      if (0 != data.length && !app.getDefaultHouseUid()){
         app.setDefaultHouseUid(data[0].uid);
       }
+      console.log('key set data');
       this.setData({
         houses: data,
         defaultHouseUid: app.getDefaultHouseUid()
@@ -108,9 +107,9 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  },
+  // },
   onDefaultClick: function (e) {
     console.log(e);
     var clickedIndex = e.currentTarget.dataset.index;
@@ -152,7 +151,7 @@ Page({
         'Accept': 'application/json'
       },
       success: res => {
-        console.log(res);
+        console.log('delete success',res);
         if(200 == res.statusCode) {
           if(0 == res.data.code){
             console.log('delete success');
@@ -165,7 +164,7 @@ Page({
   onEditClick: function (e) {
     console.log(e);
     wx.navigateTo({
-      url: '../../pages/house-edit/house-edit?index=' + e.currentTarget.dataset.index + '&type=edit',
+      url: '../../pages/house-edit/house-edit?uid=' + this.data.houses[e.currentTarget.dataset.index].uid + '&type=edit',
     });
   },
   onAddClick: function () {

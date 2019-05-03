@@ -8,14 +8,24 @@
   <view class="list-container">
     <scroll-view scroll-y="true">
       <view class="scroll-container">
-        <view wx:for="{{orders}}"
+        <view class="empty-data" wx:if="{{0==orders.length}}">
+          没有数据
+        </view>
+        <view wx:for="{{orders}}" wx:if="{{0!=orders.length}}"
         class="list-item-container">
           <view class="trigger-container"
                 hover-class="trigger-container-hover"
                 bindtap="onListItemClick"
                 data-index="{{index}}">
             <view class="type-container">
-              {{textMapping[item.type]}}--{{textMapping[item.houseCountry]+textMapping[item.houseProvince]+textMapping[item.houseCity] + item.houseAddress}}
+               {{textMapping[item.type]}}--{{
+               "Room " + item.houseRoomNum + ", " +
+               "Building " + item.houseBuildingNum + ", " +
+               item.houseStreetNum + " " + item.houseStreetName + " Street, " +
+               item.houseAdLevel3 + ", " +
+               item.houseAdLevel2 + ", " +
+               item.houseAdLevel1 + ", " +
+               item.houseNation}}
             </view>
             <view class="content-container">
               {{item.content}}

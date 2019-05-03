@@ -12,7 +12,7 @@
         房产地址: {{houseDescription}}
       </view>
       <view class="item-container common-text">
-        订单内容: {{order.content}}
+        <text>订单内容: {{order.content}}</text>
       </view>
       <view class="item-container common-text">
         当前状态: {{mapText[order.status]}}

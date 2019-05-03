@@ -5,6 +5,10 @@ function convertFeedbackEntity(entity) {
     authorId: entity.author_id,
     content: entity.content,
     isRead: entity.is_read,
+    income: entity.income,
+    outgoings: entity.outgoings,
+    accountingDate: entity.account_date,
+    updateTime: entity.update_time,
     createTime: entity.create_time
   }
 }

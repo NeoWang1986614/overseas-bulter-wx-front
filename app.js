@@ -8,131 +8,93 @@ const orderEntity = require('entity/order.js')
 const userEntity = require('entity/user.js')
 const feedbackEntity = require('entity/feedback.js')
 const serviceEntity = require('entity/service.js')
+const publicAccountEntity = require('entity/public-account.js')
+const rentRecordEntity = require('entity/rent-record.js')
+const inspectRecordEntity = require('entity/inspect-record.js')
+const repairRecordEntity = require('entity/repair-record.js')
 
 App({
-  onLaunch: function () {
+  onLaunch: function (options) {
+    console.log('app.onLaunch : options =',options);
+
+    if(1044 == options.scene && options.shareTicket && options.query.hasOwnProperty('uid')){
+      wx.getShareInfo({
+        shareTicket: options.shareTicket,
+        success: res => {
+          console.log('wx.getShareInfo res=', res);
+          this.sendShareDataAsync(options.query.uid, res.encryptedData, res.iv, res => {
+            console.log('send share data to server ok !');
+          });
+        }
+      });
+    }
+    
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-    // 登录
-    wx.login({
-      success: res => {
-        console.log(res);
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        wx.request({
-          url: config.generateFullUrl('/login'),
-          method:'POST',
-          data: {
-            code: res.code
-          },
-          header: {
-            'content-type': 'application/json',
-            'Accept': 'application/json'
-          },
-          success:  res => {
-            console.log(res);
-            var convertedUser = userEntity.convertUserEntity(res.data);
-            this.globalData.loginInfo.userId = res.data.uid;
-            this.globalData.loginInfo.phoneNumber = res.data.phoneNumber;
-            this.globalData.loginInfo.idCardNumber = res.data.idCardNumber;
-          }
-        })
-      }
-    })
+    
     // 获取用户信息
     wx.getSetting({
       success: res => {
         if (res.authSetting['scope.userInfo']) {
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              // 可以将 res 发送给后台解码出 unionId
-              this.globalData.userInfo = res.userInfo
-              console.log(res.userInfo);
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
+          this.loginAsync(res => {
+            wx.getUserInfo({
+              success: res => {
+                console.log('wx.getUserInfo res=', res);
+                // 可以将 res 发送给后台解码出 unionId
+                this.globalData.userInfo = res.userInfo
+                console.log(res.userInfo);
+                // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                // 所以此处加入 callback 以防止这种情况
+                if (this.userInfoReadyCallback) {
+                  this.userInfoReadyCallback(res)
+                }
               }
-            }
-          })
+            })
+          });
         }
       }
     })
   },
+  loginAsync: function(callback){
+    // 登录
+    wx.login({
+      success: res => {
+        console.log('wx.login res =', res);
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        wx.request({
+          url: config.generateFullUrl('/login'),
+          method: 'POST',
+          data: {
+            code: res.code,
+            app_id: config.appId,
+            app_secret: config.appSecret
+          },
+          header: {
+            'content-type': 'application/json',
+            'Accept': 'application/json'
+          },
+          success: res => {
+            console.log(res);
+            var convertedUser = userEntity.convertUserEntity(res.data);
+            this.globalData.loginInfo.userId = res.data.uid;
+            this.globalData.loginInfo.phoneNumber = res.data.phoneNumber;
+            this.globalData.loginInfo.idCardNumber = res.data.idCardNumber;
+            if(callback){
+              callback();
+            }
+          }
+        })
+      }
+    });
+  },
   globalData: {
+    material: {},
     loginInfo: {},
     userInfo: null,
-    recommendCases: [
-      {
-        image: '/images/case-1.jpg',
-        title: '4.58万包含所有主材+辅料+人工+设计+家具/家电+灶具+洁具,避免装修采坑,',
-        style: '家装-标准',
-        price: '2,5000'
-      },
-      {
-        image: '/images/case-2.jpg',
-        title: '原木的边缘装饰，给人一种自然简洁的感觉。沙发背后采用通透的橱窗设计，让客厅的空间感更加开阔，背后的透明橱窗，可以装下主人平时喜欢的书籍和各种艺术品，不仅方便收纳和整理，也能够起到很好的装饰作用',
-        style: '维护保养',
-        price: '2000'
-      },
-      {
-        image: '/images/case-3.jpg',
-        title: '出租房户型比较简单,一室一厅一厨一卫。家具老旧,是改造的难点。 为了住的更舒心,屋主的改造顺序是:打扫卫生、整改',
-        style: '出租',
-        price: '2000'
-      },
-
-      {
-        image: '/images/case-4.jpg',
-        title: '客厅以高级灰色调为主。采用石材与柜体做电视墙的设计，突显层次之外让客厅更简洁品质大气。客厅并无集中大灯光照射，采用分散柔光设计，点、线、面的连接让空间“星光熠熠”会发光的元素',
-        style: '家装—定制-现代风格',
-        price: '2,5000'
-      },
-      {
-        image: '/images/case-1.jpg',
-        title: '美式风格的实木餐桌，看起来不仅舒服，也给人一种极大的安宁感。有家人在侧，有美食一餐，有花香环绕，这不就是美好生活最好的诠释吗',
-        style: '维护保养',
-        price: '2500'
-      },
-      {
-        image: '/images/case-2.jpg',
-        title: '家不用很大，温馨足矣。人不用很多，有你们就够。这是90后夫妻的第一套婚房，也是为即将出生的宝宝设计的第一个家。所以设计师采用现代美式的风格，将整体的营造出满满的温馨感，也表达两个年轻人对于美好未来的无限憧憬',
-        style: '家装-定制-复古风格',
-        price: '4,5000'
-      }
-    ],
     houses: [],
-    countryValueArray: [
-      'Republika ng Pilipinas'
-    ],
-    provinceValueArray: [
-      'Metro Manila'
-    ],
-    cityValueArray: [
-      'the City of Manila',
-      'Quezon City',
-      'Caloocan',
-      'Las Pinas',
-      'Makati',
-      'Mandaluyong',
-      'Marikina',
-      'Muntinlupa',
-      'Navotas',
-      'Paranaque',
-      'Pasay',
-      'Pasig',
-      'San Juan',
-      'Taguig',
-      'Valenzuela',
-      'the municipality of Pateros',
-    ],
-    layoutValueArray: [
-      'studio',
-      'one-bedroom',
-      'two-bedroom'
-    ],
     layoutOptionsArray:[
       {
         name: 'studio',
@@ -357,13 +319,14 @@ App({
       }
     })
   },
-  getHousesAsync: function(offset, count, callback) {
+  getHousesByOwnerIdAsync: function(ownerId, offset, count, callback) {
     wx.request({
       url: config.generateFullUrl('/house/search'),
       method: 'POST',
       data: {
         offset: offset,
-        length: count
+        length: count,
+        owner_id: ownerId
       },
       header: {
         'content-type': 'application/json',
@@ -506,7 +469,8 @@ App({
       data:{
         order_id: orderId,
         offset: offset,
-        length: length
+        length: length,
+        is_from_back_end: 0
       },
       header: {
         'content-type': 'application/json',
@@ -587,6 +551,27 @@ App({
       }
     })
   },
+  getServicesByTypeLayoutAsync: function (serviceType, layout, callback) {
+    wx.request({
+      url: config.generateFullUrl('/service/search'),
+      method: 'POST',
+      data: {
+        type: serviceType,
+        layout: layout
+      },
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('getServicesByTypeLayoutAsync res = ', res);
+        var convertedServices = serviceEntity.convertServiceEntities(res.data);
+        if (callback) {
+          callback(convertedServices);
+        }
+      }
+    })
+  },
   getServiceAsync: function (id, callback) {
     wx.request({
       url: config.generateFullUrl('/service?id=' + id),
@@ -600,6 +585,125 @@ App({
         var convertedService = serviceEntity.convertServiceEntity(res.data);
         if (callback) {
           callback(convertedService);
+        }
+      }
+    })
+  },
+  sendShareDataAsync: function (uid, encryptedData, iv, callback){
+    wx.request({
+      url: config.generateFullUrl('/share'),
+      method: 'POST',
+      data: {
+        uid: uid,
+        encrypted_data: encryptedData,
+        iv: iv
+      },
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('sendShareAsync res=', res);
+        if (callback) {
+          callback();
+        }
+      }
+    })
+  },
+  queryPublicAccountMaterialAsync: function(mType, offset, count, callback){
+    wx.request({
+      url: config.generateFullUrl('/public-account/material/search'),
+      method: 'POST',
+      data: {
+        type: mType,
+        offset: offset,
+        count: count
+      },
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('queryPublicAccountMaterialAsync res=', res);
+        var convertedMaterial = null;
+        if(0 != res.data.item_count){
+          publicAccountEntity.convertWxPublicAccountMaterialEntity(res.data);
+        }
+        console.log('convertedMaterial=', convertedMaterial);
+        this.globalData.material = convertedMaterial;
+        if (callback) {
+          callback(convertedMaterial);
+        }
+      }
+    })
+  },
+  getPublicAccountMaterialDetailAsync: function (mediaId, callback) {
+    wx.request({
+      url: config.generateFullUrl('/public-account/material?media_id=' + mediaId),
+      method: 'GET',
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('getPublicAccountMaterialDetailAsync res=', res);
+        var convertedMaterialDetail = publicAccountEntity.convertWxPublicAccountMaterialDetailEntity(res.data);
+        if (callback) {
+          callback(convertedMaterialDetail);
+        }
+      }
+    })
+  },
+  getRecordsAsync: function (recordType, orderId, offset, count, callback) {
+    wx.request({
+      url: config.generateFullUrl('/' + recordType + '/search'),
+      method: 'POST',
+      data: {
+        order_id: orderId,
+        offset: offset,
+        count: count
+      },
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        // console.log('getRecordsAsync res=', res);
+        var convertedRecords = [];
+        if('rent-record' == recordType){
+          convertedRecords = rentRecordEntity.convertRentRecordEntities(res.data.entities);
+        } else if ('inspect-record' == recordType){
+          convertedRecords = inspectRecordEntity.convertInspectRecordEntities(res.data.entities);
+        } else if ('repair-record' == recordType) {
+          convertedRecords = repairRecordEntity.convertRepairRecordEntities(res.data.entities);
+        }
+        // console.log('converted records = ', convertedRecords);
+        if (callback) {
+          callback(convertedRecords);
+        }
+      }
+    })
+  },
+  getRecordAsync: function (recordType, recordId, callback) {
+    wx.request({
+      url: config.generateFullUrl('/' + recordType + '?uid=' + recordId),
+      method: 'GET',
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('get record raw data =' , res);
+        var convertedRecord = {};
+        if ('rent-record' == recordType) {
+          convertedRecord = rentRecordEntity.convertRentRecordEntity(res.data);;
+        } else if ('inspect-record' == recordType) {
+          convertedRecord = inspectRecordEntity.convertInspectRecordEntity(res.data);
+        } else if ('repair-record' == recordType) {
+          convertedRecord = repairRecordEntity.convertRepairRecordEntity(res.data);
+        }
+        if(callback){
+          callback(convertedRecord);
         }
       }
     })

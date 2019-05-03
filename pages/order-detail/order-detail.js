@@ -3,6 +3,7 @@ const app = getApp()
 const config = require('../../common/config.js')
 const map = require('../../common/map.js')
 const orderEntity = require('../../entity/order.js')
+const utils = require('../../utils/util.js')
 
 Page({
 
@@ -54,10 +55,7 @@ Page({
 
     app.getOrderAsync(this.data.order.uid, orderObj => {
       console.log('on show data', orderObj);
-      var hd = map.text[orderObj.houseCountry]
-        + map.text[orderObj.houseProvince]
-        + map.text[orderObj.houseCity]
-        + orderObj.houseAddress;
+      var hd = utils.generateHouseInOrderDescription(orderObj);
       this.setData({
         order: orderObj,
         houseDescription: hd
@@ -102,9 +100,9 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  },
+  // },
   orderPay: function() {
     this.data.order.status = 'paid';
     console.log(this.data.order);
@@ -149,7 +147,7 @@ Page({
   },
   onViewFeedbackClick: function () {
     wx.navigateTo({
-      url: '../../pages/feedback-detail/feedback-detail?orderId=' + this.data.order.uid,
+      url: '../../pages/feedbacks/feedbacks?orderId=' + this.data.order.uid,
     });
   }
 })

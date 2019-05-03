@@ -1,14 +1,16 @@
-var text = {
+module.exports.text = {
   'my-houses': '我的房产',
-  'house-rent': '房屋出租',
-  'home-decoration': '家装布置',
+  'house-rent': '出租出售',
+  'home-decoration': '家居布置',
   'house-maintain': '维护保养',
+  'customer-service': '客服咨询',
+  'other-service': '其他服务',
   'studio': '单间',
   'one-bedroom': '一室一厅',
   'two-bedroom': '二室一厅',
   'Republika ng Pilipinas': '菲律宾',
   'Metro Manila': '马尼拉大都会',
-  'the City of Manila': '马尼拉市',
+  'Manila': '马尼拉市',
   'Quezon City': '奎松市',
   'Caloocan': '加洛坎市',
   'Las Pinas': '拉斯皮纳斯市',
@@ -33,4 +35,23 @@ var text = {
   'completed': '已完成'
 }
 
-module.exports.text = text;
+module.exports.enText = {
+  '菲律宾': 'Republika ng Pilipinas',
+  '马尼拉大都会': 'Metro Manila',
+  '马尼拉市': 'Manila',
+  '奎松市': 'Quezon City',
+  '加洛坎市': 'Caloocan',
+  '拉斯皮纳斯市': 'Las Pinas',
+  '马卡迪市': 'Makati',
+  '曼达路永市': 'Mandaluyong',
+  '马利金纳市': 'Marikina',
+  '文珍俞巴市': 'Muntinlupa',
+  '纳沃达斯市': 'Navotas',
+  '帕拉纳克市': 'Paranaque',
+  '帕谢市': 'Pasay',
+  '帕西市': 'Pasig',
+  '仙范市': 'San Juan',
+  '塔吉格市': 'Taguig',
+  '瓦伦瑞拉市': 'Valenzuela',
+  '巴提洛斯自治市': 'the municipality of Pateros',
+}

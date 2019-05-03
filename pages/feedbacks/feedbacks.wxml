@@ -1,0 +1,90 @@
+<!--pages/feedbacks/feedbacks.wxml-->
+<view class="wrap">
+  <view class="tab-container">
+    <view wx:for="{{tabOptions}}" class="tab-item-container {{item.value == currentSelectTabOption ? 'tab-item-active' : 'tab-item-inactive' }}" bindtap="onTabItemClick" data-index="{{index}}">
+        {{item.title}}
+    </view>
+  </view>
+  <scroll-view class="list-container">
+    <block wx:if="{{'rent-record'==currentSelectTabOption}}">
+      <view style="height: 200rpx; line-height:200rpx; color: gray; font-size: 24rpx; display: flex; justify-content: center;"
+        wx:if="{{0 == rentRecords.length}}">
+        没有数据
+      </view>
+      <view wx:if="{{0 != rentRecords.length}}" class="record-item-container"
+          wx:for="{{rentRecords}}"
+          bindtap="onRentRecordItemClick"
+          data-index="{{index}}">
+          <view>
+            结算范围: {{item.timeRange.fromCn}}-{{item.timeRange.toCn}}
+          </view>
+          <view style="margin-top: 10rpx; display: flex; flex-direction: row;">
+            <view style="width: 500rpx;">
+              结算日期: {{item.accountingDateCn}}
+            </view>
+            <view>
+              余额: ¥{{item.balance}}
+            </view>
+          </view>
+          <view style="margin-top: 10rpx;line-height: 30rpx;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">
+            备注: {{item.comment}}
+          </view>
+      </view>
+    </block>
+    <block wx:if="{{'inspect-record'==currentSelectTabOption}}">
+      <view style="height: 200rpx; line-height:200rpx; color: gray; font-size: 24rpx; display: flex; justify-content: center;"
+        wx:if="{{0 == inspectRecords.length}}">
+        没有数据
+      </view>
+      <view class="record-item-container"
+          wx:if="{{0 != inspectRecords.length}}"
+          wx:for="{{inspectRecords}}"
+          bindtap="onInspectRecordItemClick"
+          data-index="{{index}}">
+          <view style="width: 400rpx;">
+            验房日期: {{item.inspectDateCn}}
+          </view>
+          <view style="margin-top: 10rpx;">
+            验房人员: {{item.inspector}}
+          </view>
+          <view style="margin-top: 10rpx;line-height: 30rpx;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">
+            备注: {{item.comment}}
+          </view>
+      </view>
+    </block>
+    <block wx:if="{{'repair-record'==currentSelectTabOption}}">
+      <view style="height: 200rpx; line-height:200rpx; color: gray; font-size: 24rpx; display: flex; justify-content: center;"
+          wx:if="{{0 == repairRecords.length}}">
+        没有数据
+      </view>
+      <view class="record-item-container"
+          wx:if="{{0 != repairRecords.length}}"
+          wx:for="{{repairRecords}}"
+          bindtap="onRepairRecordItemClick"
+          data-index="{{index}}">
+          <view style="display: flex; flex-direction: row;">
+            <view style="width: 300rpx;">
+              报修日期: {{item.reportTimeCn}}
+            </view>
+            <view>
+              维修日期: {{item.repairTimeCn}}
+            </view>
+          </view>
+          <view style="margin-top: 10rpx; display: flex; flex-direction: row;">
+            <view style="width: 300rpx;">
+              完成日期: {{item.completeTimeCn}}
+            </view>
+            <view>
+              费用: ¥{{item.cost}}
+            </view>
+          </view>
+          <view style="margin-top: 10rpx;">
+            状态: {{item.status}}
+          </view>
+          <view style="margin-top: 10rpx;line-height: 30rpx;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">
+            备注: {{item.comment}}
+          </view>
+      </view>
+    </block>
+  </scroll-view>
+</view>

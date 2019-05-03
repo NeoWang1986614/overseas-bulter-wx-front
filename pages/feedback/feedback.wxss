@@ -15,3 +15,13 @@ scroll-view {
   /* background: lightblue; */
   margin-top: 10rpx;
 }
+
+.empty-data {
+  margin-top: 400rpx;
+  /* background: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+  color: gray;
+}

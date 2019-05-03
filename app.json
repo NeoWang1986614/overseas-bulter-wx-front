@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/home/home",
+    "pages/service-detail-v1/service-detail-v1",
     "pages/house-edit/house-edit",
     "pages/user-info/user-info",
     "pages/houses/houses",
@@ -8,13 +9,16 @@
     "pages/feedback/feedback",
     "pages/orders/orders",
     "pages/order-detail/order-detail",
-    "pages/feedback-detail/feedback-detail",
-    "pages/service-detail/service-detail"
+    "pages/feedbacks/feedbacks",
+    "pages/rent-record/rent-record",
+    "pages/inspect-record/inspect-record",
+    "pages/repair-record/repair-record"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "海外管家",
     "navigationBarTextStyle": "black"
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

@@ -1,54 +1,191 @@
 <!--pages/house-edit/house-edit.wxml-->
 <view class="wrap">
-  <view class="item-container">
-    <view class="item-static">
-      名字:
-    </view>
-    <view class="item-input-container">
-      <input class="item-input" placeholder="点击输入房产名字" value="{{currentName}}" bindblur="onNameInput"></input>
-    </view>
-  </view>
-  <view class="item-container">
-    <view class="item-static">
-      地址:
-    </view>
-    <view class="item-input-container">
-        <picker
-        mode="multiSelector"
-        bindchange="onAddressMultiPickerChange" 
-        value="{{addressIndexArrayCurrent}}"
-        range="{{addressTextArrayForPicker}}">
-          <view>
-            当前选择：{{addressTextShowCurrent}}
+  <view class="scroll-wrap">
+    <scroll-view scroll-y="true">
+      <view class="item-container">
+        <view class="item-static">
+          楼盘名字:
+        </view>
+        <view class="item-input-container">
+          <input class="item-input" placeholder="点击输入楼盘名字" value="{{houseName}}" bindblur="onHouseNameInput"></input>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          国家:
+        </view>
+        <view class="item-input-container">
+            <picker
+            mode="selector"
+            bindchange="onNationPickerChange" 
+            value="{{nationCurrentIndex}}"
+            range="{{nationTextOptions}}">
+              <view>
+                {{invalidIndex == nationCurrentIndex? '未选择' : nationTextOptions[nationCurrentIndex]}}
+              </view>
+            </picker>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          区域:
+        </view>
+        <view class="item-input-container">
+            <picker
+            mode="selector"
+            bindchange="onAdLevel1PickerChange" 
+            value="{{adLevel1CurrentIndex}}"
+            range="{{adLevel1TextOptions}}">
+              <view>
+                {{invalidIndex == adLevel1CurrentIndex? '未选择' : adLevel1TextOptions[adLevel1CurrentIndex]}}
+              </view>
+            </picker>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          城市:
+        </view>
+        <view class="item-input-container">
+            <picker
+            mode="selector"
+            bindchange="onAdLevel2PickerChange" 
+            value="{{adLevel2CurrentIndex}}"
+            range="{{adLevel2TextOptions}}">
+              <view>
+                {{invalidIndex == adLevel2CurrentIndex? '未选择' : adLevel2TextOptions[adLevel2CurrentIndex]}}
+              </view>
+            </picker>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          镇/社/村:
+        </view>
+        <view class="item-input-container">
+          <input class="item-input" placeholder="点击输入镇/社/村名字" value="{{adLevel3}}" bindblur="onAdLevel3Input"></input>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-container" style="width: 340rpx;">
+          <view class="item-static">
+            街道名称:
           </view>
-        </picker>
-    </view>
-  </view>
-  <view class="address-detail-container">
-    <textarea placeholder="点击输入地址剩余详细信息" class="address-detail-input" value="{{addressDetail}}" bindblur="onAddressInput">
-    </textarea>
-  </view>
-  <view class="item-container">
-    <view class="item-static">
-      户型:
-    </view>
-    <view class="item-input-container">
-        <picker mode="selector" bindchange="onLayoutPickerChange" value="{{layoutIndexCurrent}}" range="{{layoutTextArrayForPicker}}">
-          <view class="picker">
-            当前选择：{{layoutTextShowCurrent}}
+          <view class="input-short-text">
+            <input type="text" placeholder="请输入街道名称" value="{{streetName}}" bindinput="onStreetNameInput" fixed="true"></input>
           </view>
-        </picker>
-    </view>
+        </view>
+        <view class="item-container" style="width: 300rpx;">
+          <view class="item-static">
+            街道号码:
+          </view>
+          <view class="input-short-text">
+            <input type="number" placeholder="请输入街道号码" value="{{streetNum}}" bindinput="onStreetNumInput"></input>
+          </view>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          单元号:
+        </view>
+        <view class="item-input-container">
+          <input class="input-short-number" type="number" placeholder="" value="{{buildingNum}}" bindinput="onBuildingNumberInput"></input>
+          栋
+          <input class="input-short-number" type="number" placeholder="" value="{{roomNum}}" bindinput="onRoomNumberInput"></input>
+          号
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
+          户型:
+        </view>
+        <view class="item-input-container">
+            <picker 
+              mode="selector" 
+              bindchange="onLayoutPickerChange" 
+              value="{{layoutCurrentIndex}}" 
+              range="{{layoutTextOptions}}">
+              <view class="picker">
+                {{invalidIndex == layoutCurrentIndex ? '未选择' : map.text[layoutOptions[layoutCurrentIndex]]}}
+              </view>
+            </picker>
+        </view>
+      </view>
+      <view class="is-default-container">
+        <button class="is-default-button" bindtap="onIsDefaultClick">
+          <image class="is-default-icon" src="{{isDefaultIconUrl}}"></image>
+          <view class="is-default-title">设为默认</view>
+        </button>
+      </view>
+      <view style="height: 2rpx; background: lightgray;"></view>
+      <view class="map-container">
+        <checkbox-group  style="font-size: 30rpx; color: gray;" bindchange="onMapCheckChange">
+            <checkbox style="transform:scale(0.8);" checked="{{isOpenMap}}">
+              使用地图来定位地址
+            </checkbox>
+        </checkbox-group>
+        <view style="font-size: 24rpx; color: gray;" wx:if="{{isOpenMap}}">
+          {{mapAdLevel3 + "," + mapAdLevel2  + "," + map.enText[mapAdLevel1] + "," + map.enText[mapNation]}}
+        </view>
+        <map
+          wx:if="{{isOpenMap}}"
+          id="map"
+          longitude="{{lng}}"
+          latitude="{{lat}}"
+          scale="14"
+          bindtap="onMapClick"
+          bindpoitap="onPoiClick"
+          controls="{{controls}}"
+          bindcontroltap="controltap"
+          markers="{{markers}}"
+          bindmarkertap="markertap"
+          polyline="{{polyline}}"
+          bindregionchange="regionchange"
+          show-location
+          style="width: 100%; height: 700rpx;">
+          <cover-view class="map-cover-view">
+            <cover-image class="map-cover-img" src="/images/location.png" />
+          </cover-view>
+        </map>
+      </view>
+    </scroll-view>
   </view>
-  <view class="is-default-container">
-    <button class="is-default-button" bindtap="onIsDefaultClick">
-      <image class="is-default-icon" src="{{isDefaultIconUrl}}"></image>
-      <view class="is-default-title">设为默认</view>
-    </button>
-  </view>
+
   <view class="save-item-container">
     <button class="save-button" hover-class="save-button-hover" bindtap="onSaveClick">
       <text decode="true" space="emsp">保&emsp;&emsp;存</text>
     </button>
   </view>
-</view>
+
+  <!--
+  <modal 
+    hidden="{{!isShowMapModal}}" 
+    title="请选择您的房产" 
+    confirm-text="地图" 
+    cancel-text="取消" 
+    bindcancel="onHouseModalCancel" 
+    bindconfirm="onHouseModalConfirmClick" 
+    no-confirm="{{isHousesEmpty}}">
+    <view>{{mapNation}}{{mapAdLevel1}}{{map.text[mapAdLevel2]}}{{mapStreet}}</view>
+    <map
+      id="map"
+      longitude="121.015916"
+      latitude="14.607107"
+      scale="14"
+      bindtap="onMapClick"
+      bindpoitap="onPoiClick"
+      controls="{{controls}}"
+      bindcontroltap="controltap"
+      markers="{{markers}}"
+      bindmarkertap="markertap"
+      polyline="{{polyline}}"
+      bindregionchange="regionchange"
+      show-location
+      style="width: 100%; height: 300rpx;">
+      <cover-view class="map-cover-view">
+        <cover-image class="map-cover-img" src="/images/location.png" />
+      </cover-view>
+    </map>
+  </modal>
+  -->
+  </view>

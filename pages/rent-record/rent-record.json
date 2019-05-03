@@ -2,7 +2,7 @@
   "usingComponents": {},
   "navigationBarBackgroundColor": "#ffffff",
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "反馈详情",
+  "navigationBarTitleText": "出租记录明细",
   "backgroundColor": "#eeeeee",
   "backgroundTextStyle": "light"
 }

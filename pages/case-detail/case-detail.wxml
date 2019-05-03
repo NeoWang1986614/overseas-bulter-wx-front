@@ -1,20 +1,4 @@
 <!--pages/case-detail/case-detail.wxml-->
 <view class="wrap">
-  <scroll-view scroll-y="true">
-    <view class="scroll-content">
-      <view class="head-image-container">
-        <image style="width: 100%; height: 100%" src="{{currentCase.imageUrl}}">
-        </image>
-      </view>
-      <view class="content-style">
-        标题: {{currentCase.title}}
-      </view>
-      <view class="content-price">
-        价格: ¥{{currentCase.price}}
-      </view>
-      <view class="content-detail">
-        <text decode="true" space="emsp">&emsp;&emsp;{{currentCase.content}}</text> 
-      </view>
-    </view>
-  </scroll-view>
+  <web-view class="material-web-view" src="{{materialDetailNewsItem.url}}"></web-view>
 </view>

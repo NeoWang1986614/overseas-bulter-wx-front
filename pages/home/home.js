@@ -12,30 +12,43 @@ Page({
   data: {
     recommendCases:[],
     textMap: {},
+    material:[],
     serviceItems:[
-      {
-        icon: '/images/my-house.png',
-        name: 'my-houses',
-        navigateUrl: '../../pages/houses/houses',
-        navigateParams: ''//没有参数
-      },
-      {
-        icon: '/images/house-rent.png',
-        name: 'house-rent',
-        navigateUrl: '../../pages/service-detail/service-detail',
-        navigateParams: '?type=house-rent'
-      },
       {
         icon: '/images/home-decoration.png',
         name: 'home-decoration',
-        navigateUrl: '../../pages/service-detail/service-detail',
+        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
         navigateParams: '?type=home-decoration'
       },
       {
         icon: '/images/house-maintain.png',
         name: 'house-maintain',
-        navigateUrl: '../../pages/service-detail/service-detail',
+        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
         navigateParams: '?type=house-maintain'
+      },
+      {
+        icon: '/images/house-rent.png',
+        name: 'house-rent',
+        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
+        navigateParams: '?type=house-rent'
+      },
+      {
+        icon: '/images/other-service.png',
+        name: 'other-service',
+        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
+        navigateParams: '?type=other-service'//没有参数
+      },
+      {
+        icon: '/images/customer-service.png',
+        name: 'customer-service',
+        navigateUrl: '',
+        navigateParams: ''
+      },
+      {
+        icon: '/images/my-house.png',
+        name: 'my-houses',
+        navigateUrl: '../../pages/houses/houses',
+        navigateParams: ''//没有参数
       },
     ],
     trackItems:[
@@ -51,7 +64,7 @@ Page({
       {
         icon: '/images/feedback.png',
         title: '我的反馈跟踪',
-        navigateUrl: '../../pages/feedback/feedback'
+        navigateUrl: '../../pages/feedbacks/feedbacks'
       },
     ],
     userInfo: {},
@@ -64,6 +77,9 @@ Page({
    * Lifecycle function--Called when page load
    */
   onLoad: function (options) {
+    wx.showShareMenu({
+      withShareTicket: true
+    })
     this.setData({
       textMap: map.text
     });
@@ -96,6 +112,7 @@ Page({
         }
       });
     }
+    // wx.hideShareMenu();
   },
 
   /**
@@ -110,13 +127,27 @@ Page({
    */
   onShow: function () {
     console.log('home on show');
-    app.getCasesAsync(0, 1000, 0, cases => {
+    console.log('userInfo: ', app.globalData.userInfo);
+    // wx.showShareMenu({
+    //   withShareTicket: true
+    // })
+    // app.getCasesAsync(0, 1000, 0, cases => {
+    //   this.setData({
+    //     recommendCases: cases
+    //   });
+    // });
+    app.queryPublicAccountMaterialAsync("news", 0, 10000, res => {
       this.setData({
-        recommendCases: cases
+        material: res
       });
     });
   },
-
+  onRecommandItemClick: function(e){
+    console.log('onRecommandItemClick e=',e);
+    var clickedIndex = e.currentTarget.dataset.index;
+    var materialItem = app.globalData.material.item[clickedIndex];
+    this.navigateWrapper('../../pages/case-detail/case-detail?media_id=' + materialItem.mediaId);
+  },
   /**
    * Lifecycle function--Called when page hide
    */
@@ -128,7 +159,7 @@ Page({
    * Lifecycle function--Called when page unload
    */
   onUnload: function () {
-
+    
   },
 
   /**
@@ -148,11 +179,24 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
-
+  onShareAppMessage: function (options) {
+    console.log(options);
+    console.log('userId = ', 'pages/home/home?uid=' + app.globalData.loginInfo.userId);
+    return {
+      title: '海外管家',
+      path: 'pages/home/home?uid=' + app.globalData.loginInfo.userId,
+      success(res){
+        console.log('转发成功');
+      },
+      fail: function(res){
+        console.log('转发失败');
+      },
+      complete: function(res){
+        consonle.log('转发完成:', res);
+      }
+    };
   },
   onUserAvatarClick: function (e) {
-    console.log(e)
     if (!e.detail.hasOwnProperty("userInfo")) {
       return;
     }
@@ -163,12 +207,13 @@ Page({
       });
       return;
     }
-
     this.getUserInfo(e);
+    app.loginAsync(res=>{
+      
+    });
 
   },
   getUserInfo: function (e) {
-    
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
@@ -178,23 +223,38 @@ Page({
     console.log("set data success!")
   },
   onServiceClick: function(e) {
+    console.log('on service click');
     var clickedIndex = e.currentTarget.dataset.index;
     var item = this.data.serviceItems[clickedIndex];
-    wx.navigateTo({
-      url: item.navigateUrl + item.navigateParams,
-    })
+    // wx.navigateTo({
+    //   url: item.navigateUrl + item.navigateParams,
+    // })
+    this.navigateWrapper(item.navigateUrl + item.navigateParams);
   },
   onOrdresTrackClick: function (e) {
     var clickedIndex = e.currentTarget.dataset.index;
-    wx.navigateTo({
-      url: this.data.trackItems[clickedIndex].navigateUrl,
-    })
+    // wx.navigateTo({
+    //   url: this.data.trackItems[clickedIndex].navigateUrl,
+    // })
+    this.navigateWrapper(this.data.trackItems[clickedIndex].navigateUrl);
   },
   onCaseClick: function (e) {
     console.log(e);
     var clickedIndex = e.currentTarget.dataset.index;
+    var materialItem = app.globalData.material.item[clickedIndex];
+    this.navigateWrapper('../../pages/case-detail/case-detail?media_id=' + materialItem.mediaId);
+  },
+  navigateWrapper: function(url) {
+    console.log('onUnload', app.globalData.userInfo);
+    if (!app.globalData.userInfo) {
+      console.log('not authenticate');
+      wx.showToast({
+        title: '请先登录授权!',
+      }, 1500);
+      return;
+    }
     wx.navigateTo({
-      url: '../../pages/case-detail/case-detail?id=' + this.data.recommendCases[clickedIndex].uid,
+      url: url,
     })
   }
 })

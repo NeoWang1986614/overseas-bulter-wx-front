@@ -1,0 +1,56 @@
+<!--pages/repair-record/repair-record.wxml-->
+<view class="wrap">
+  <scroll-view style="height: 100%;" scroll-y="true">
+    <view class="block-container">
+      <view 
+      class="house-desc">
+        {{houseAddressDesc}}
+      </view>
+      <view class="report-time" style="margin-top: 100rpx;">
+        报修时间: {{repairRecord.reportTimeCn}}
+      </view>
+      <view class="repair-time">
+        维修时间: {{repairRecord.repairTimeCn}}
+      </view>
+      <view class="complete-time">
+        完成时间: {{repairRecord.completeTimeCn}}
+      </view>
+      <view class="status">
+        完成时间: {{repairRecord.status}}
+      </view>
+    </view>
+    <view class="block-container">
+      <view class="line" style="margin-top: 30rpx;">
+      </view>
+      <view class="comment" style="margin-top: 40rpx;">
+        概要说明: {{repairRecord.comment}}
+      </view>
+      <view class="related-image">
+        <span>相关图片:</span>
+        <view wx:for="{{repairRecord.relatedImage}}"
+            style="height: 60rpx; text-decoration:underline; color: blue; margin-left: 30rpx;"
+            bindtap="onImageLinkClick"
+            data-urls="{{item.urls}}">
+          {{item.title}}
+        </view>
+      </view>
+    </view>
+    <view class="block-container">
+      <view class="line" style="margin-top: 30rpx;">
+      </view>
+      <view class="cost" style="margin-top: 100rpx;">
+        <span>费用:</span> 
+        <span style="margin-right: 400rpx; color: green;">
+          ¥{{repairRecord.cost}}
+        </span>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view class="image-modal"
+      wx:if="{{isShowWebView}}"
+      bindtap="onWebViewClick">
+    <image mode="scaleToFill" src="{{imgUrl}}"/>
+</view>
+

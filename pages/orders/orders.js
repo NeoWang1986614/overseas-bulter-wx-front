@@ -93,9 +93,9 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  },
+  // },
   getOrdersAsync: function(callback) {
     app.getOrdersAsync(0, 1000, this.data.currentSelectTabOptions, orders => {
       console.log('get orders as follow:', orders);

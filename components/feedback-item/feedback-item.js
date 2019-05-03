@@ -28,7 +28,7 @@ Component({
     },
     refreshData: function() {
       app.getFeedbacksUnreadAsync(0, 10000, this.data.orderId, res => {
-        console.log(res.length);
+        console.log('unread count=', res.length);
         this.setData({
           feedbacks: res
         })

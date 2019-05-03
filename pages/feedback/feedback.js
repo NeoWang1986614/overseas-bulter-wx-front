@@ -76,9 +76,9 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  },
+  // },
   onFeedbackItemClick: function (e) {
     console.log('onFeedbackItemClick');
     var clickedIndex = e.currentTarget.dataset.index;

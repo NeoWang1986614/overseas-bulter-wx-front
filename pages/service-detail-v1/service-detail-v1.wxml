@@ -1,0 +1,54 @@
+<!--pages/service-detail-v1/service-detail-v1.wxml-->
+<view class="wrap">
+  <view class="layout-options-container" wx:if="{{isHomeDecoration}}">
+    <view class="layout-static">户型选择:</view>
+    <radio-group class="layout-radio-group" bindchange="onLayoutRadioChange">
+      <view class="layout-item-container" wx:for="{{layoutOptions}}">
+        <radio value="{{item.value}}" checked="{{item.isChecked}}">
+          <span>{{map.text[item.value]}}</span>
+        </radio>
+      </view>
+    </radio-group>
+  </view>
+  <view class="scroll-wrap">
+    <scroll-view scroll-y="true">
+      <view class="empty-data" wx:if="{{0 == services.length}}">
+        没有内容
+      </view>
+      <view class="service-content" wx:if="{{0 != services.length}}">
+        <text>{{service.content}}</text>
+      </view>
+    </scroll-view>
+  </view>
+  <view class="bottom-wrap">
+    <view class="price-container">
+      ¥ {{service.price}}
+    </view>
+    <button class="order-button" hover-class="order-button-hover" bindtap="onSelectHouseClick">
+      <text decode="true" space="emsp">选择房产</text>
+    </button>
+  </view>
+  <modal 
+    hidden="{{!isShowHouseModal}}" 
+    title="请选择您的房产" 
+    confirm-text="{{isHousesEmpty ? '添加房产' : '提交订单'}}" 
+    cancel-text="取消" 
+    bindcancel="onHouseModalCancel" 
+    bindconfirm="onHouseModalConfirmClick" 
+    no-confirm="{{isHousesEmpty}}">
+    <view class="empty-data" wx:if="{{isHousesEmpty}}">
+      您尚未添加房产
+    </view>
+    <scroll-view scroll-y="true" class="house-radio-container" wx:else>
+      <radio-group bindchange="onHouseRadioChange">
+        <view class="house-item-container" wx:for="{{housesDescriptions}}">
+          <radio class="house-radio" value="{{index}}"/>
+          <view class="house-desc">{{item}}</view>
+        </view>
+      </radio-group>
+    </scroll-view>
+    <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}"> 添加房产 </button>
+  </modal>
+</view>
+
+

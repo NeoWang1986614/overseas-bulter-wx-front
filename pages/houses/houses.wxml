@@ -1,12 +1,34 @@
 <!--pages/houses/houses.wxml-->
 <view class="wrap">
   <scroll-view scroll-y="true">
-    <view wx:for="{{houses}}" class="house-item-container">
+    <view class="empty-data" wx:if="{{0 ==houses.length}}">
+      没有添加房产
+    </view>
+    <view  wx:if="{{0!=houses.length}}" wx:for="{{houses}}" class="house-item-container">
       <view class="house-name house-sub-item">
         {{item.name}}
       </view>
       <view class="house-address house-sub-item">
-        {{item.address}}
+        <span>{{"Room " + item.roomNum}}</span>
+        <span>, </span>
+        <span>{{"Building " + item.buildingNum}}</span>
+        <span>, </span>
+        <span>{{item.streetNum + " "}}</span>
+        <span>{{item.streetName + " Street"}}</span>
+        <span>, </span>
+        <span>{{item.adLevel3}}</span>
+        <span>, </span>
+        <span>{{item.adLevel2}}</span>
+        <span>, </span>
+        <span>{{item.adLevel1}}</span>
+        <span>, </span>
+        <span>{{item.nation}}</span>
+        
+        
+        
+        
+        
+        
       </view>
       <view class="line"></view>
       <view class="house-operate-container house-sub-item">

@@ -76,9 +76,9 @@ Page({
   /**
    * Called when user click on the top right corner to share
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  },
+  // },
   nickNameInput: function(e) {
     this.data.nickName = e.detail.value;
   },
@@ -131,7 +131,7 @@ Page({
         id_card_number: this.data.idCardNumber
       },
       header: {
-        'content-type': 'application/json',
+        'content-type': 'applicfation/json',
         'Accept': 'application/json'
       },
       success: res => {
