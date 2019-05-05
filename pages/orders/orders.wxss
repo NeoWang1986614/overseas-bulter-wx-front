@@ -151,10 +151,6 @@ scroll-view {
   justify-content: center;
 }
 
-.trigger-container-hover {
-  background: rgb(241, 240, 240);
-}
-
 .operate-img {
   width: 34rpx;
   height: 34rpx;

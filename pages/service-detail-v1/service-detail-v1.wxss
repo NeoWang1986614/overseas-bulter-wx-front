@@ -185,7 +185,7 @@ scroll-view {
   background: green;
   color: white;
   font-size: 24rpx;
-  margin: 0 auto;
+  margin: 10rpx auto;
 }
 
 .add-house-btn:after {

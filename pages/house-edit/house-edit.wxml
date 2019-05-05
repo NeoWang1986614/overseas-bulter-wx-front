@@ -97,6 +97,15 @@
       </view>
       <view class="item-container">
         <view class="item-static">
+          面积:
+        </view>
+        <view class="item-input-container">
+          <input class="input-short-number" type="digit" value="{{area}}"bindinput="onAreaInput"></input>
+          平方米
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
           户型:
         </view>
         <view class="item-input-container">

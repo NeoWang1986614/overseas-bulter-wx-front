@@ -16,10 +16,14 @@ Page({
     constInvalidIndex: utils.invalidIndex,
     /*house data*/
     houses: [],
+    filtedHouses: [],
     housesDescriptions: [],
     isHousesEmpty: true,
-    houseCurrentIndex: utils.invalidIndex,
+    filtedHouseCurrentIndex: utils.invalidIndex,
     isShowHouseModal: false,
+    /* real price*/
+    computedPrice: 0.0, 
+
     /*service data*/
     services: [],
     service: {},
@@ -51,15 +55,54 @@ Page({
       console.log('parseOptions serviceType=', this.data.serviceType);
     }
   },
+  getCurrentLayoutOption:function(){
+    for (let i = 0; i < this.data.layoutOptions.length; i++){
+      if (this.data.layoutOptions[i].isChecked){
+        return this.data.layoutOptions[i].value;
+      }
+    }
+  },
+  housesFilter: function (houses){
+    if(this.data.isHomeDecoration && 0 != houses.length){
+      var ret = [];
+      var currentLayoutOption = this.getCurrentLayoutOption();
+      console.log('currentLayoutOption = ', currentLayoutOption);
+      for(let i=0; i< houses.length; i++){
+        if (currentLayoutOption == houses[i].layout){
+          ret.push(houses[i]);
+        }
+      }
+      console.log('housesFilter = ', ret);
+      return ret;
+    }
+    return houses;
+  },
+  /*当前服务类型判断*/
+  checkIsHomeDecoration:function(){
+    return 'home-decoration' == this.data.serviceType;
+  },
+  checkIsHouseMaintain: function () {
+    return 'house-maintain' == this.data.serviceType;
+  },
+  checkIsHouseRent: function () {
+    return 'house-rent' == this.data.serviceType;
+  },
+  updateFiltedHouses: function(){
+    var filtedHouses = this.housesFilter(this.data.houses);
+    this.setData({
+      filtedHouses: filtedHouses,
+      housesDescriptions: utils.generateHousesDescriptions(filtedHouses),
+      isHousesEmpty: 0 == filtedHouses.length
+    });
+    
+    console.log('select index = ', this.data.filtedHouseCurrentIndex);
+  },
   getHousesAsync: function (callback) {
     app.getHousesByOwnerIdAsync(app.globalData.loginInfo.userId, 0, this.data.constInvalidIndex, houses => {
       console.log('getHousesAsync', houses);
       this.setData({
-        houses: houses, 
-        housesDescriptions: utils.generateHousesDescriptions(houses),
-        isHousesEmpty: 0 == houses.length
+        houses: houses
       });
-      console.log('???? = ', this.data.housesDescriptions);
       if (callback) {
         callback();
       }
@@ -128,29 +171,17 @@ Page({
       title: map.text[this.data.serviceType] + ('other-service' == this.data.serviceType ? '' : '服务')
     });
   },
-  getCurrentHouseIndexByDefault: function () {
-    if (0 == this.data.houses) {
-      return utils.invalidIndex;
-    }
-    var defaultHouseUid = app.getDefaultHouseUid();
-    if (!defaultHouseUid) {
-      return utils.invalidIndex;
-    }
-    for (let i = 0; i < this.data.houses.length; i++) {
-      if (this.data.houses[i].uid == defaultHouseUid) {
-        return i;
-      }
-    }
-    return utils.invalidIndex;
-  },
   onShow: function () {
     this.setNavigationBarTitle();
     this.updateServices(_ => {
-      // this.changeHouseIndex(this.getCurrentHouseIndexByDefault());
     });
 
     this.getHousesAsync(_ => {
+      if (this.data.isShowHouseModal){
+        this.updateFiltedHouses();
+      }
     });
+    console.log('filtedHouseCurrentIndex = ', this.data.filtedHouseCurrentIndex);
   },
 
   /**
@@ -187,45 +218,9 @@ Page({
   // onShareAppMessage: function () {
 
   // },
-  onHousePickerChange: function (e) {
-    console.log(e);
-    var index = e.detail.value;
-    this.changeHouseIndex(index);
-  },
-  changeHouseIndex: function (index) {
-    this.setData({
-      houseCurrentIndex: index
-    });
-    this.changeServiceByHouse();
-  },
-  getServiceFromMultiServicesByHouseLayout: function () {
-    if (this.data.houseCurrentIndex == utils.invalidIndex ||
-      0 == this.data.houses.length ||
-      0 == this.data.services.length) {
-      return {};
-    }
-    var layout = this.data.houses[this.data.houseCurrentIndex].layout;
-    for (let i = 0; i < this.data.services.length; i++) {
-      if (layout == this.data.services[i].layout) {
-        return this.data.services[i];
-      }
-    }
-  },
-  changeServiceByHouse: function () {
-    var service = {};
-    if (1 == this.data.services.length) {
-      service = this.data.services[0];
-    } else {
-      service = this.getServiceFromMultiServicesByHouseLayout();
-    }
-    console.log('changeServiceByHouse:', service);
-    this.setData({
-      service: service
-    });
-  },
   /*save*/
   checkHouseValid: function () {
-    if (utils.invalidIndex == this.data.houseCurrentIndex) {
+    if (utils.invalidIndex == this.data.filtedHouseCurrentIndex) {
       wx.showToast({
         title: '请选择房产!',
       });
@@ -273,6 +268,9 @@ Page({
                 wx.showToast({
                   title: '订单已提交!',
                 }, 1500);
+                this.setData({
+                  filtedHouseCurrentIndex: this.data.constInvalidIndex
+                });
               });
             }
           }
@@ -284,17 +282,18 @@ Page({
     app.submitOrderAsync({
       type: this.data.serviceType,
       content: this.data.service.content,
-      houseNation: this.data.houses[this.data.houseCurrentIndex].nation,
-      houseAdLevel1: this.data.houses[this.data.houseCurrentIndex].adLevel1,
-      houseAdLevel2: this.data.houses[this.data.houseCurrentIndex].adLevel2,
-      houseAdLevel3: this.data.houses[this.data.houseCurrentIndex].adLevel3,
-      houseStreetName: this.data.houses[this.data.houseCurrentIndex].streetName,
-      houseStreetNum: this.data.houses[this.data.houseCurrentIndex].streetNum,
-      houseBuildingNum: this.data.houses[this.data.houseCurrentIndex].buildingNum,
-      houseRoomNum: this.data.houses[this.data.houseCurrentIndex].roomNum,
-      houseAddress: this.data.houses[this.data.houseCurrentIndex].address,
-      houseLayout: this.data.houses[this.data.houseCurrentIndex].layout,
-      price: this.data.service.price,
+      houseNation: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].nation,
+      houseAdLevel1: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].adLevel1,
+      houseAdLevel2: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].adLevel2,
+      houseAdLevel3: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].adLevel3,
+      houseStreetName: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].streetName,
+      houseStreetNum: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].streetNum,
+      houseBuildingNum: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].buildingNum,
+      houseRoomNum: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].roomNum,
+      houseAddress: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].address,
+      houseLayout: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].layout,
+      houseArea: this.data.filtedHouses[this.data.filtedHouseCurrentIndex].area,
+      price: this.data.computedPrice,
       status: 'non-payment',
       placerId: app.globalData.loginInfo.userId,
       accepterId: ''
@@ -313,28 +312,84 @@ Page({
         },1500);
         return;
       }
+      this.updateFiltedHouses();
       this.setData({
         isShowHouseModal: true
       });
+      console.log('computedPrice = ', this.data.computedPrice);
     });
   },
   onHouseModalCancel: function(){
     console.log('cancel');
     this.setData({
+      filtedHouseCurrentIndex: this.data.constInvalidIndex,
       isShowHouseModal: false
     });
   },
   onHouseModalConfirmClick: function(){
-    if(0 == this.data.houses.length){
+    if(0 == this.data.filtedHouses.length){
       this.navigateToAddHouse();
     }else{
       this.submitOrder();
     }
   },
+  /*价格计算*/
+  computeHomeDecorationPrice: function(){
+    var ret = 0.0;
+    var selectedHouse = this.data.filtedHouses[this.data.filtedHouseCurrentIndex];
+    switch (this.getCurrentLayoutOption()) {
+      case 'studio':
+        ret = utils.computeHomeDecorationPrice(selectedHouse.area, 20.0, this.data.service.price, 500.0);
+        break;
+      case 'one-bedroom':
+        ret = utils.computeHomeDecorationPrice(selectedHouse.area, 30.0, this.data.service.price, 500.0);
+        break;
+      case 'two-bedroom':
+        ret = utils.computeHomeDecorationPrice(selectedHouse.area, 40.0, this.data.service.price, 500.0);
+        break;
+      default:
+        break;
+    }
+    return ret;
+  },
+  computeHouseMaintainPrice:function(){
+    var ret = 0.0;
+    var selectedHouse = this.data.filtedHouses[this.data.filtedHouseCurrentIndex];
+    switch (selectedHouse.layout) {
+      case 'studio':
+        ret = 1000.0;
+        break;
+      case 'one-bedroom':
+        ret = 3000.0;
+        break;
+      case 'two-bedroom':
+        ret = 4000.0;
+        break;
+      default:
+        break;
+    }
+    return ret;
+  },
+  computePrice: function(){
+    var retPrice = 0.0
+    if (this.checkIsHomeDecoration()){
+      retPrice = this.computeHomeDecorationPrice();
+    }else if(this.checkIsHouseMaintain){
+      retPrice = this.computeHouseMaintainPrice();
+    }else if (this.checkIsHouseMaintain) {
+      //nothing;
+    }
+    this.setData({
+      computedPrice: retPrice
+    });
+  },
   onHouseRadioChange: function(e){
     console.log('onHouseRadioChange e=', e);
     var clickedIndex = e.detail.value;
-    this.data.houseCurrentIndex = clickedIndex;
+    this.setData({
+      filtedHouseCurrentIndex: clickedIndex
+    });
+    this.computePrice();
   },
   onNavigateToAddHouse: function(){
     this.navigateToAddHouse();

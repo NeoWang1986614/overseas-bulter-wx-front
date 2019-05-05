@@ -50,6 +50,8 @@ Page({
     buildingNum: '',
     /*room num*/
     roomNum: '',
+    /*area*/
+    area: '',
 
     /*layout*/
     layoutOptions: constant.layoutOptions,
@@ -165,6 +167,7 @@ Page({
       streetNum: this.data.houseInfo.streetNum,
       buildingNum: this.data.houseInfo.buildingNum,
       roomNum: this.data.houseInfo.roomNum,
+      area: this.data.houseInfo.area
     });
   },
   makeTextOptions(){
@@ -255,6 +258,12 @@ Page({
     this.setData({
       roomNum: e.detail.value
     });
+  },
+  onAreaInput: function(e){
+    this.setData({
+      area: e.detail.value
+    });
+    console.log('area = ', this.data.area);
   },
   onMapCheckChange: function(e){
     console.log('onMapCheckChange e=', e);
@@ -376,7 +385,9 @@ Page({
       toastTitle = '请填写完整单元号!';
     } else if (0 == this.data.roomNum.length) {
       toastTitle = '请填写完整单元号!';
-    } else if (this.data.invalidIndex == this.data.layoutCurrentIndex) {
+    } else if (0 == this.data.area) {
+      toastTitle = '请填写房产面积!';
+    }else if (this.data.invalidIndex == this.data.layoutCurrentIndex) {
       toastTitle = '请选择户型!';
     }
 
@@ -402,6 +413,7 @@ Page({
     this.data.houseInfo.streetNum = this.data.streetNum;
     this.data.houseInfo.buildingNum = this.data.buildingNum;
     this.data.houseInfo.roomNum = this.data.roomNum;
+    this.data.houseInfo.area = Number(parseFloat(this.data.area).toFixed(2));
     this.data.houseInfo.layout = this.data.layoutOptions[this.data.layoutCurrentIndex];
     this.data.houseInfo.ownerId = app.globalData.loginInfo.userId;
     console.log('makeHouseInfo:', this.data.houseInfo);

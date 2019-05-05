@@ -14,6 +14,7 @@ function convertHouseEntity(entity) {
     buildingNum: entity.building_num,
     roomNum: entity.room_num,
     layout: entity.layout,
+    area: entity.area,
     ownerId: entity.owner_id,
   }
 }
@@ -34,6 +35,7 @@ function convertHouseObject(obj) {
     building_num: obj.buildingNum,
     room_num: obj.roomNum,
     layout: obj.layout,
+    area: obj.area,
     owner_Id: obj.ownerId,
   }
 }

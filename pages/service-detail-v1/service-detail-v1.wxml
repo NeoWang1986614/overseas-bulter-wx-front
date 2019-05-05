@@ -23,12 +23,14 @@
   <view class="bottom-wrap">
     <view class="price-container">
       ¥ {{service.price}}
+      <span>起</span>
     </view>
     <button class="order-button" hover-class="order-button-hover" bindtap="onSelectHouseClick">
       <text decode="true" space="emsp">选择房产</text>
     </button>
   </view>
   <modal 
+    wx:if="{{isShowHouseModal}}"
     hidden="{{!isShowHouseModal}}" 
     title="请选择您的房产" 
     confirm-text="{{isHousesEmpty ? '添加房产' : '提交订单'}}" 
@@ -36,6 +38,9 @@
     bindcancel="onHouseModalCancel" 
     bindconfirm="onHouseModalConfirmClick" 
     no-confirm="{{isHousesEmpty}}">
+    <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}">
+      添加房产
+    </button>
     <view class="empty-data" wx:if="{{isHousesEmpty}}">
       您尚未添加房产
     </view>
@@ -43,11 +48,21 @@
       <radio-group bindchange="onHouseRadioChange">
         <view class="house-item-container" wx:for="{{housesDescriptions}}">
           <radio class="house-radio" value="{{index}}"/>
-          <view class="house-desc">{{item}}</view>
+            <view class="house-desc">
+              {{item}}
+            </view>
         </view>
       </radio-group>
     </scroll-view>
-    <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}"> 添加房产 </button>
+    <view wx:if="{{!isHousesEmpty}}"
+    style="height: 80rpx; line-height: 80rpx; text-align: center;">
+      <span style="font-family: Verdana, Geneva, Tahoma, sans-serif;font-size: 40rpx; color: green;" wx:if="{{constInvalidIndex != filtedHouseCurrentIndex}}">
+        ¥ {{computedPrice}}
+      </span>
+      <span style="font-size: 24rpx; " wx:else>
+        选择房产后将计算出价格
+      </span>
+    </view>
   </modal>
 </view>
 

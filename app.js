@@ -627,7 +627,7 @@ App({
         console.log('queryPublicAccountMaterialAsync res=', res);
         var convertedMaterial = null;
         if(0 != res.data.item_count){
-          publicAccountEntity.convertWxPublicAccountMaterialEntity(res.data);
+          convertedMaterial = publicAccountEntity.convertWxPublicAccountMaterialEntity(res.data);
         }
         console.log('convertedMaterial=', convertedMaterial);
         this.globalData.material = convertedMaterial;

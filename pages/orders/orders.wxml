@@ -14,7 +14,6 @@
         <view wx:for="{{orders}}" wx:if="{{0!=orders.length}}"
         class="list-item-container">
           <view class="trigger-container"
-                hover-class="trigger-container-hover"
                 bindtap="onListItemClick"
                 data-index="{{index}}">
             <view class="type-container">

@@ -128,14 +128,6 @@ Page({
   onShow: function () {
     console.log('home on show');
     console.log('userInfo: ', app.globalData.userInfo);
-    // wx.showShareMenu({
-    //   withShareTicket: true
-    // })
-    // app.getCasesAsync(0, 1000, 0, cases => {
-    //   this.setData({
-    //     recommendCases: cases
-    //   });
-    // });
     app.queryPublicAccountMaterialAsync("news", 0, 10000, res => {
       this.setData({
         material: res

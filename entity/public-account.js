@@ -40,6 +40,7 @@ function convertWxPublicAccountMaterialItemEntities(entities) {
     var temp = convertWxPublicAccountMaterialItemEntity(entities[i])
     result.push(temp)
   }
+  console.log('convertWxPublicAccountMaterialItemEntities result = ', result);
   return result;
 }
 

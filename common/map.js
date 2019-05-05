@@ -1,7 +1,7 @@
 module.exports.text = {
   'my-houses': '我的房产',
   'house-rent': '出租出售',
-  'home-decoration': '家居布置',
+  'home-decoration': '家装布置',
   'house-maintain': '维护保养',
   'customer-service': '客服咨询',
   'other-service': '其他服务',

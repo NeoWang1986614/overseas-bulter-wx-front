@@ -28,6 +28,7 @@ function generateHouseDescription(house) {
     return null;
   }
   return map.text[house.layout] + '-' +
+    [house.area] + 'm²' + '-' +
     'Room ' + house.roomNum + ', ' +
     'Building ' + house.buildingNum + ', ' +
     house.streetNum + ' ' + house.streetName + ' Street, ' +
@@ -35,16 +36,6 @@ function generateHouseDescription(house) {
     house.adLevel2 + ', ' +
     house.adLevel1 + ', ' +
     house.nation;
-  // return house.name + 
-  //   '-' + map.text[house.layout]
-  //   + '-' + map.text[house.nation]
-  //   + map.text[house.adLevel1]
-  //   + map.text[house.adLevel2]
-  //   + house.adLevel3
-  //   + house.streetName
-  //   + house.streetNum + '号'
-  //   + house.buildingNum + '栋'
-  //   + house.roomNum + '室';
 }
 
 function generateHouseInOrderDescription(orderObj) {
@@ -72,7 +63,7 @@ function generateHousesDescriptions(houses) {
 }
 
 function getDateCnText(dateStr) {
-  var d = new Date(dateStr);
+  var d = new Date(dateStr.replace(/-/g, '/'));
   var ret = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
   console.log(ret);
   return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
@@ -81,6 +72,19 @@ function getDateCnText(dateStr) {
 function convertDateToCnText(object, pro) {
   object[pro + 'Cn'] = getDateCnText(object[pro]);
 }
+
+/*家装布置*/
+/*
+  studio, 小于20平, 20000CNY; 每大于1平, 增加500CNY
+*/
+function computeHomeDecorationPrice(area, minArea, basePrice, priceStep) {
+  if (area <= minArea) {
+    return basePrice;
+  } else {
+    return basePrice + Math.ceil(area - minArea) * priceStep;
+  }
+}
+
 
 module.exports = {
   formatTime: formatTime,
@@ -91,5 +95,6 @@ module.exports = {
   generateHousesDescriptions: generateHousesDescriptions,
   generateHouseInOrderDescription: generateHouseInOrderDescription,
   getDateCnText: getDateCnText,
-  convertDateToCnText: convertDateToCnText
+  convertDateToCnText: convertDateToCnText,
+  computeHomeDecorationPrice: computeHomeDecorationPrice
 }

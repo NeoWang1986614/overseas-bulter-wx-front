@@ -12,6 +12,9 @@
         房产地址: {{houseDescription}}
       </view>
       <view class="item-container common-text">
+        房产面积: {{order.houseArea}}平方米
+      </view>
+      <view class="item-container common-text">
         <text>订单内容: {{order.content}}</text>
       </view>
       <view class="item-container common-text">
