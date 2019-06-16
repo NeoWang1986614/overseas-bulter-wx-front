@@ -1,0 +1,35 @@
+/* pages/rent-house-detail/rent-house-detail.wxss */
+page {
+  height: 100%;
+  background: whitesmoke;
+  font-size: 24rpx;
+  color: gray;
+  position: relative;
+}
+
+.info-container {
+  min-height: 100rpx; 
+  background: white; 
+  margin-top: 10rpx; 
+  overflow: hidden;
+}
+
+.sub-info {
+  margin-left: 10rpx; 
+  margin-top: 20rpx;
+}
+
+.config-container {
+  min-height: 400rpx; 
+  background: white; 
+  margin-top: 10rpx;
+  overflow: hidden;
+}
+
+.config-item {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx; 
+  margin-left: 40rpx; 
+  display: flex; 
+  flex-direction: row;
+}

@@ -3,26 +3,29 @@
   position: fixed;
   width: 100%;
   height: 100%;
-  background: whitesmoke;
+  background: white;
   display: flex;
   flex-direction: column;
 }
 
 .scroll-wrap {
+  position: relative;
   flex-grow: 1;
   height: 100rpx;
+  border-top: 1px solid lightblue;
+  border-bottom: 1px solid green;
 }
 
 .layout-options-container {
-  height: 100rpx;
+  height: 200rpx;
   background: white;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .layout-static {
-  width: 200rpx;
-  height: 100%;
+  width: 100%;
+  height: 80rpx;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +35,7 @@
 
 .layout-item-container {
   /* width:200rpx; */
-  font-size: 30rpx;
+  font-size: 24rpx;
   /* background: lightgreen; */
   margin-right: 10rpx;
   display: flex;
@@ -41,10 +44,11 @@
 }
 
 .layout-radio-group {
-  height: 100%;
+  height: 100rpx;
   /* background: lightgray; */
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 radio {
@@ -128,8 +132,9 @@ scroll-view {
 
 .service-content {
   padding: 20rpx;
-  font-size: 24rpx;
-  color: gray;
+  font-size: 26rpx;
+  line-height: 50rpx;
+  color: black;
   word-break: break-all;
 }
 
@@ -154,7 +159,7 @@ scroll-view {
 }
 
 .house-radio-container {
-  max-height: 600rpx;
+  max-height: 400rpx;
   /* background: purple; */
   overflow: scroll;
   margin-bottom: 30rpx;
@@ -190,4 +195,103 @@ scroll-view {
 
 .add-house-btn:after {
   border: none;
+}
+
+.attachment {
+  margin-top: 10rpx;
+  text-decoration: underline;
+  color: blue;
+}
+
+.year-input-container, .rent-price-input-container, .account-number-input-container, .account-bank-input-container {
+  min-height: 50rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+}
+
+.year-input {
+  width: 100rpx;
+  border-bottom: 1rpx solid black;
+  text-align: center;
+  color: black;
+}
+
+.modal-price-container {
+  height: 80rpx;
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+  justify-content:center;
+}
+
+.discount {
+  padding-left:20rpx;
+  padding-right:20rpx;
+  background: #FF0088;
+  color: white;
+  font-size: 30rpx;
+}
+
+.old-price {
+  text-decoration: line-through;
+  font-size: 30rpx;
+  color: gray;
+  margin-right: 20rpx;
+  margin-left: 10rpx;
+}
+
+.new-price {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 40rpx;
+  color: green;
+}
+
+.account-country-container {
+  height: 60rpx;
+  /* background: lightblue; */
+  font-size: 30rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.account-country-item {
+  min-width: 100rpx;
+  /* background: green; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  float: left;
+  margin-left: 14rpx;
+}
+
+.customer-service-btn {
+  position: absolute;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  bottom: 30rpx;
+  right: 20rpx;
+  background: green;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:0 1px 4px 0px rgb(145, 140, 140);
+}
+
+.customer-service-btn::after {
+  border: none;
+}
+
+.customer-service-img{
+  width: 80rpx;
+  height: 80rpx;
+  margin: auto auto;
+  /* background: lightgray; */
 }

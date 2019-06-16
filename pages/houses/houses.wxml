@@ -23,22 +23,10 @@
         <span>{{item.adLevel1}}</span>
         <span>, </span>
         <span>{{item.nation}}</span>
-        
-        
-        
-        
-        
-        
       </view>
       <view class="line"></view>
       <view class="house-operate-container house-sub-item">
         <view class="house-sub-left-operate">
-          <button class="operate-default" hover-class="house-operate-hover" bindtap="onDefaultClick" data-index="{{index}}">
-            <view class="house-operate-icon">
-              <image class="operate-icon" src="{{defaultHouseUid == item.uid ? checkUrl : unCheckUrl}}"  mode="scaleToFill"></image>
-            </view>
-            <view class="operate-title">{{defaultHouseUid == item.uid ? checkTitle : unCheckTitle}}</view>
-          </button>
         </view>
         <view class="house-sub-right-operate">
           <button class="operate-right-button" hover-class="operate-right-button-hover" bindtap="onEditClick" data-index="{{index}}">

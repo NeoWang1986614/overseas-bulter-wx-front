@@ -4,6 +4,7 @@ const config = require('../../common/config.js')
 const map = require('../../common/map.js')
 const constant = require('../../common/constant.js')
 const utils = require('../../utils/util.js')
+const http = require('../../utils/http.js')
 const houseEntity = require('../../entity/house.js')
 const qqMapWX = require('../../libs/qqmap-wx-jssdk.js');
 const wxMap = new qqMapWX({
@@ -23,8 +24,14 @@ Page({
     editType: '',
     houseInfo: {},
 
+    isEdit: false,
+    isEditable: false,
     /*house name*/
     houseName: '',
+    /*property*/
+    propertyOptions: constant.propertyOptions,
+    propertyTextOptions: [],
+    propertyCurrentIndex: utils.invalidIndex,
     /*location*/
     lat: '14.607107',
     lng: '121.015916',
@@ -52,18 +59,22 @@ Page({
     roomNum: '',
     /*area*/
     area: '',
+    // areaCharts: [],
+    // isAreaChartsModified: false,
+    /*layout chart*/
+    layoutCharts: [],
+    isLayoutChartsModified: false,
 
     /*layout*/
     layoutOptions: constant.layoutOptions,
     layoutTextOptions: [],
     layoutCurrentIndex: utils.invalidIndex,
 
-    currentIsDefault: false,
-    isDefaultIconUrl: '',
-
     /*map*/
     isOpenMap: false,
     mapCtx: {},
+    isRegionParseWaiting: false,
+    parseWaitingTimer: null,
     markers: [],
     isShowMapModal: false,
     mapNation:'',
@@ -85,26 +96,26 @@ Page({
       streetName: this.data.mapStreetName
     });
   },
-  regionchange(e) {
-    // console.log('region change e = ', e);
-    if('end'==e.type){
+  regionParse: function(e){
+    console.log('region parse');
+    if ('end' == e.type) {
       this.data.mapCtx = wx.createMapContext('map');
       this.data.mapCtx.getCenterLocation({
         type: 'gcj02',
-        success: res => {
-          console.log('regionchange res = ', res);
+        success: res1 => {
+          console.log('getCenterLocation success');
           wxMap.reverseGeocoder({
             location: {
-              latitude: res.latitude,
-              longitude: res.longitude
+              latitude: res1.latitude,
+              longitude: res1.longitude
             },
-            success: res => {
-              console.log('wxmap reverse: res =' ,res);
-              var adInfo = res.result.ad_info;
-              var adComponents = res.result.address_component;
+            success: res2 => {
+              console.log('reverseGeocoder success');
+              var adInfo = res2.result.ad_info;
+              var adComponents = res2.result.address_component;
+              this.data.lat=adInfo.location.lat;
+              this.data.lng= adInfo.location.lng;
               this.setData({
-                lat: adInfo.location.lat,
-                lng: adInfo.location.lng,
                 mapNation: adComponents.nation,
                 mapAdLevel1: adComponents.ad_level_1,
                 mapAdLevel2: adComponents.ad_level_2,
@@ -120,6 +131,16 @@ Page({
         }
       });
     }
+  },
+  regionchange(e) {
+    console.log('region change e = ', e);
+    if (this.data.parseWaitingTimer){
+      clearTimeout(this.data.parseWaitingTimer)
+      this.data.parseWaitingTimer = null;
+    }
+    this.data.parseWaitingTimer = setTimeout(_ => {
+      this.regionParse(e, null);
+    }, 1000);
   },
   markertap(e) {
     console.log(e.markerId)
@@ -156,8 +177,10 @@ Page({
     });
   },
   initHouseInfo(){
+    var meta = JSON.parse(this.data.houseInfo.meta);
     this.setData({
       houseName: this.data.houseInfo.name,
+      propertyCurrentIndex: this.data.propertyOptions.indexOf(this.data.houseInfo.property),
       nationCurrentIndex: this.data.nationOptions.indexOf(this.data.houseInfo.nation),
       adLevel1CurrentIndex: this.data.adLevel1Options.indexOf(this.data.houseInfo.adLevel1),
       adLevel2CurrentIndex: this.data.adLevel2Options.indexOf(this.data.houseInfo.adLevel2),
@@ -167,7 +190,10 @@ Page({
       streetNum: this.data.houseInfo.streetNum,
       buildingNum: this.data.houseInfo.buildingNum,
       roomNum: this.data.houseInfo.roomNum,
-      area: this.data.houseInfo.area
+      area: this.data.houseInfo.area,
+      layoutCharts: meta.layoutChart,
+      // areaCharts: meta.areaChart,
+      isEditable: 'editable' == this.data.houseInfo.status
     });
   },
   makeTextOptions(){
@@ -175,12 +201,14 @@ Page({
     this.makeOptionArrToTextArr(this.data.adLevel1Options, this.data.adLevel1TextOptions, true);
     this.makeOptionArrToTextArr(this.data.adLevel2Options, this.data.adLevel2TextOptions, true);
     this.makeOptionArrToTextArr(this.data.layoutOptions, this.data.layoutTextOptions, false);
-    console.log(this.data.layoutTextOptions);
+    this.makeOptionArrToTextArr(this.data.propertyOptions, this.data.propertyTextOptions, false);
+    console.log(this.data.propertyTextOptions);
     this.setData({
       nationTextOptions: this.data.nationTextOptions,
       adLevel1TextOptions: this.data.adLevel1TextOptions,
       adLevel2TextOptions: this.data.adLevel2TextOptions,
-      layoutTextOptions: this.data.layoutTextOptions
+      layoutTextOptions: this.data.layoutTextOptions,
+      propertyTextOptions: this.data.propertyTextOptions
     });
   },
   onLoad: function (options) {
@@ -190,17 +218,15 @@ Page({
     this.data.editType = options['type'];
     if (this.data.editType == 'add') {
       this.data.navigateTitle = '添加新房产';
+      this.data.isEdit = false;
     }else{
       this.data.navigateTitle = '编辑房产';
+      this.data.isEdit = true;
       if(!options.hasOwnProperty('uid')){
         return;
       }
       this.getHouseInfoAsync(options['uid'], res=>{
         this.initHouseInfo();
-      });
-      
-      this.setData({
-        currentIsDefault: app.getDefaultHouseUid() == options['uid']
       });
     }
   },
@@ -208,6 +234,12 @@ Page({
     console.log(e);
     this.setData({
       houseName: e.detail.value
+    });
+  },
+  onPropertyPickerChange(e) {
+    var index = e.detail.value;
+    this.setData({
+      propertyCurrentIndex: index
     });
   },
   onNationPickerChange(e){
@@ -271,6 +303,14 @@ Page({
       isOpenMap: !this.data.isOpenMap
     });
   },
+  onPreviwImageClick: function(e){
+    console.log(e);
+    var src = e.currentTarget.dataset.src;
+    wx.previewImage({
+      current: src,
+      urls: [src]
+    });
+  },
   /**
    * Lifecycle function--Called when page is initially rendered
    */
@@ -286,9 +326,27 @@ Page({
     wx.setNavigationBarTitle({
       title: this.data.navigateTitle
     });
-    this.updateIsDefaultUrl(); 
+    http.querySearchLayoutAsync(0, 10000, res => {
+      console.log('query search layouts = ');
+      console.log(res);
+      this.parseLayoutArray(res);
+    });
   },
-
+  parseLayoutArray: function(layouts){
+    var layoutOptions = [];
+    var layoutTextOptions = [];
+    if (0 == layouts.length){
+      return;
+    }
+    for(var i=0; i<layouts.length; i++){
+      layoutOptions.push(layouts[i].value);
+      layoutTextOptions.push(layouts[i].title);
+    }
+    this.setData({
+      layoutOptions: layoutOptions,
+      layoutTextOptions: layoutTextOptions
+    });
+  },
   /**
    * Lifecycle function--Called when page hide
    */
@@ -323,15 +381,6 @@ Page({
   // onShareAppMessage: function () {
 
   // },
-  onIsDefaultClick: function (e) {
-    this.data.currentIsDefault = !this.data.currentIsDefault; 
-    this.updateIsDefaultUrl(); 
-  },
-  updateIsDefaultUrl: function () {
-    this.setData({
-      isDefaultIconUrl: this.data.currentIsDefault ? '../../images/check.png' : '../../images/uncheck.png'
-    });
-  },
   onOpenMapClick(){
     this.setData({
       isShowMapModal: true
@@ -339,9 +388,6 @@ Page({
   },
   saveSuccess: function(res) {
     if (200 == res.statusCode) {
-      if (this.data.currentIsDefault) {
-        app.setDefaultHouseUid(res.data.uid);
-      }
       wx.showToast({
         title: '保存成功!',
         icon: 'success',
@@ -355,22 +401,15 @@ Page({
         }
       });
     } else {
-      wx.showToast({
-        title: '网络错误!',
-      })
+      app.notifyMessage('网络错误!');
     }
-  },
-  showToast: function(title){
-    wx.showToast({
-      title: title,
-      icon: 'none',
-      duration: 1500
-    });
   },
   checkHouseInfoValid: function() {
     var toastTitle = '';
     if (0 == this.data.houseName.length){
       toastTitle = '请填写楼盘名字!';
+    } else if (this.data.invalidIndex == this.data.propertyCurrentIndex) {
+      toastTitle = '请选择房源性质!'; 
     } else if (this.data.invalidIndex == this.data.nationCurrentIndex) {
       toastTitle = '请选择国家!';
     } else if (this.data.invalidIndex == this.data.adLevel1CurrentIndex) {
@@ -387,21 +426,29 @@ Page({
       toastTitle = '请填写完整单元号!';
     } else if (0 == this.data.area) {
       toastTitle = '请填写房产面积!';
-    }else if (this.data.invalidIndex == this.data.layoutCurrentIndex) {
+    } else if (this.data.invalidIndex == this.data.layoutCurrentIndex) {
       toastTitle = '请选择户型!';
+    } else if (0 == this.data.layoutCharts.length) {
+      toastTitle = '请上传户型图!';
     }
 
     if ('' == toastTitle){
       return true;
     }
-
-    this.showToast(toastTitle);
+    app.notifyMessage(toastTitle);
 
     return false;
 
   },
+  makeMetaData: function(){
+    var metaData = {
+      layoutChart: this.data.layoutCharts
+    };
+    return JSON.stringify(metaData);
+  },
   makeHouseInfo(){
     this.data.houseInfo.name = this.data.houseName;
+    this.data.houseInfo.property = this.data.propertyOptions[this.data.propertyCurrentIndex];
     this.data.houseInfo.lat = String(this.data.lat);
     this.data.houseInfo.lng = String(this.data.lng);
     this.data.houseInfo.nation = this.data.nationOptions[this.data.nationCurrentIndex];
@@ -416,30 +463,84 @@ Page({
     this.data.houseInfo.area = Number(parseFloat(this.data.area).toFixed(2));
     this.data.houseInfo.layout = this.data.layoutOptions[this.data.layoutCurrentIndex];
     this.data.houseInfo.ownerId = app.globalData.loginInfo.userId;
-    console.log('makeHouseInfo:', this.data.houseInfo);
+    this.data.houseInfo.meta = this.makeMetaData();
+    console.log('makeHouseInfo:');
+    console.log(this.data.houseInfo);
   },
   onSaveClick: function (e) {
+
+    if (this.data.isEdit && !this.data.isEditable){
+      app.notifyMessage('无法修改资料!');
+      return;
+    }
 
     if (!this.checkHouseInfoValid()){
       return;
     }
 
-    this.makeHouseInfo();
-    
-
     console.log('准备保存房产信息:', this.data.houseInfo);
 
-    if ('add' == this.data.editType) {
-      this.addHouse( res => {
-        console.log(res);
-        this.saveSuccess(res);
-      });
-    } else {
-      this.updateHouse( res => {
-        console.log(res);
-        this.saveSuccess(res);
-      });
+    this.uploadLayoutCharts(result=>{
+      if(!result){
+        app.notifyMessage('上传户型图错误!');
+        return;
+      }
+
+      this.makeHouseInfo();
+
+      if (!this.data.isEdit) {
+        this.addHouse(res => {
+          console.log(res);
+          this.saveSuccess(res);
+        });
+      } else {
+        this.updateHouse(res => {
+          console.log(res);
+          this.saveSuccess(res);
+        });
+      }
+
+    });
+    
+  },
+  uploadLayoutCharts: function(callback){
+    if(!this.data.isLayoutChartsModified && callback){
+      callback(true);
+      return;
     }
+    if(0==this.data.layoutCharts.length){
+      console.log('err: no layout charts to upload');
+      return;
+    }
+    console.log('uploadLayoutCharts');
+    console.log(this.data.layoutCharts);
+    wx.uploadFile({
+      url: 'https://bulter.mroom.com.cn:8008/overseas-bulter/v1/image',      //此处换上你的接口地址 
+      filePath: this.data.layoutCharts[0],
+      name: 'img',
+      header: {
+        "Content-Type": "multipart/form-data",
+        'accept': 'application/json'
+      },
+      formData: {
+        'user': 'test'  //其他额外的formdata，可不写 
+      },
+      success: res => {
+        console.log('success res = ', res);
+        var imagePath = JSON.parse(res.data);
+        console.log('imagePath = ', imagePath)
+        this.data.layoutCharts = [imagePath.path];
+        if(callback){
+          callback(true);
+        }
+      },
+      fail: res => {
+        console.log('error: fail res=', res);
+        if (callback) {
+          callback(false);
+        }
+      },
+    })
   },
   addHouse: function (callback) {
     wx.request({
@@ -454,6 +555,7 @@ Page({
     })
   },
   updateHouse: function (callback) {
+    console.log('准备更新房屋信息=', this.data.houseInfo);
     wx.request({
       url: config.generateFullUrl('/house'),
       method: 'PUT',
@@ -464,6 +566,28 @@ Page({
         }
       }
     })
+  },
+  chooseLocalLayoutImage: function () {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: res => {
+        console.log('images = ', res);
+        var tempFilePaths = res.tempFilePaths;
+        this.setData({
+          layoutCharts: tempFilePaths,
+          isLayoutChartsModified: true
+        });
+        console.log('chooseImage success');
+        console.log(this.data.layoutCharts);
+      }
+    })
+  },
+  onDeleteLayoutChart: function(){
+    console.log('onDeleteLayoutChart');
+    this.setData({
+      layoutCharts: []
+    });
   }
-  
 })

@@ -23,6 +23,19 @@ const intToBool = n => {
 const invalidIndex = 0xFFFF;
 const maxIndex = 10000;
 
+function getHouseAddress(house) {
+  if (!house) {
+    return null;
+  }
+  return 'Room ' + house.roomNum + ', ' +
+    'Building ' + house.buildingNum + ', ' +
+    house.streetNum + ' ' + house.streetName + ' Street, ' +
+    house.adLevel3 + ', ' +
+    house.adLevel2 + ', ' +
+    house.adLevel1 + ', ' +
+    house.nation;
+}
+
 function generateHouseDescription(house) {
   if(!house){
     return null;
@@ -66,11 +79,22 @@ function getDateCnText(dateStr) {
   var d = new Date(dateStr.replace(/-/g, '/'));
   var ret = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
   console.log(ret);
-  return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+  return ret;
+}
+
+function getTimeCnText(dateStr) {
+  var d = new Date(dateStr.replace(/-/g, '/'));
+  var timeStr = dateStr.split(' ')[1];
+  var ret = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + timeStr;
+  return ret;
 }
 
 function convertDateToCnText(object, pro) {
   object[pro + 'Cn'] = getDateCnText(object[pro]);
+}
+
+function convertTimeToCnText(object, pro) {
+  object[pro + 'Cn'] = getTimeCnText(object[pro]);
 }
 
 /*家装布置*/
@@ -91,10 +115,12 @@ module.exports = {
   intToBool: intToBool,
   invalidIndex: invalidIndex,
   maxIndex: maxIndex,
+  getHouseAddress: getHouseAddress,
   generateHouseDescription: generateHouseDescription,
   generateHousesDescriptions: generateHousesDescriptions,
   generateHouseInOrderDescription: generateHouseInOrderDescription,
   getDateCnText: getDateCnText,
   convertDateToCnText: convertDateToCnText,
+  convertTimeToCnText: convertTimeToCnText,
   computeHomeDecorationPrice: computeHomeDecorationPrice
 }

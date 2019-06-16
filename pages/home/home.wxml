@@ -1,12 +1,22 @@
 <!--pages/home/home.wxml-->
 <scroll-view class="wrap" scroll-y="true">
   <view class="head-wrap">
-    <image class="head-bg-img" mode="scaleToFill" src="../../images/home-bg1.jpg"></image>
+    <swiper class="head-bg-img"
+    indicator-dots="true"
+    autoplay="true"
+    interval="2000"
+    duration="500"
+    circular="true" >
+    <block wx:for="{{carouselFigureArr}}">
+      <swiper-item>
+        <image src="{{item.imageUrl}}" class="slide-image" style="width:100%;height:400rpx"/>
+      </swiper-item>
+    </block>
+  </swiper>
     <view class="user-container">
-    <button class="user-btn" open-type="getUserInfo" bindgetuserinfo="onUserAvatarClick">
-      <image class="user-icon" mode="scaleToFill" src="{{userAvatarUrl}}"></image>
-    </button>
-      
+      <button class="user-btn" open-type="getUserInfo" bindgetuserinfo="onUserAvatarClick">
+        <image class="user-icon" mode="scaleToFill" src="{{userAvatarUrl}}"></image>
+      </button>
     </view>
   </view>
   <view class="recommand-wrap">
@@ -23,33 +33,14 @@
           <view 
             class="recommand-list-item" 
             wx:for="{{material.item}}"
+            wx:key="mediaId"
             bindtap="onRecommandItemClick"
             data-index="{{index}}">
-            {{item.content.newsItem[0].digest}}
+            {{item.content.newsItem[0].title}}
           </view>
         </scroll-view>
       </view>
     </view>
-    <!--
-    <scroll-view class="recommand-scroll" scroll-x="true">
-      <view class="recommand-scroll-content">
-        <view class="recommand-scroll-item-container" wx:for="{{material.item}}"  bindtap="onCaseClick" data-index="{{index}}">
-          <view class="recommand-item-container">
-            <view class="recommand-item-image">
-              <image class="recommand-image" src="{{item.imageUrl}}" mode="scaleToFill"></image>
-            </view>
-            <view class="recommand-item-title">
-                {{item.content}}
-            </view>
-            <view class="recommand-item-sub-title-container">
-                <text class="recommand-item-sub-title-style-text">{{item.content.newsItem[0].title}}</text>
-                <text class="recommand-item-sub-title-price-text">{{item.price}}¥</text>
-            </view>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
-    -->
   </view>
   <view class="service-wrap">
     <view class="title-container">
@@ -60,21 +51,33 @@
       </view>
     </view>
     <view class="service-content-container">
-      <view wx:for="{{serviceItems}}" class="service-item-container">
-        <button class="service-item" hover-class="service-item-hover" bindtap="onServiceClick" data-index="{{index}}" wx:if="{{'customer-service'!=item.name}}">
+      <view
+      wx:for="{{servicePrimaryArr}}"
+      wx:key="name"
+      class="service-item-container">
+        <button
+        class="service-item"
+        hover-class="service-item-hover"
+        bindtap="onServiceClick"
+        data-index="{{index}}
+        data-value="{{item.value}}"
+        wx:if="{{'customer-service'!=item.value}}">
           <view class="service-item-icon">
-            <image class="service-icon" mode="scaleToFill" src="{{item.icon}}"></image>
+            <image 
+            class="service-icon" 
+            mode="scaleToFill" 
+            src="{{item.iconUrl}}"/>
           </view>
           <view class="service-item-title">
-            {{textMap[item.name]}}
+            {{item.title}}
           </view>
         </button>
-        <button class="service-item" hover-class="service-item-hover" open-type="contact" wx:if="{{'customer-service'==item.name}}">
+        <button class="service-item" hover-class="service-item-hover" open-type="contact" wx:if="{{'customer-service'==item.value}}">
           <view class="service-item-icon">
-            <image class="service-icon" mode="scaleToFill" src="{{item.icon}}"></image>
+            <image class="service-icon" mode="scaleToFill" src="{{item.iconUrl}}"/>
           </view>
           <view class="service-item-title">
-            {{textMap[item.name]}}
+            {{item.title}}
           </view>
         </button>
       </view>
@@ -89,7 +92,12 @@
       </view>
     </view>
     <view class="track-item-container">
-      <view wx:for="{{trackItems}}" class="track-item" bindtap="onOrdresTrackClick" data-index="{{index}}">
+      <view
+      wx:for="{{trackItems}}"
+      wx:key="name"
+      class="track-item"
+      bindtap="onOrdresTrackClick"
+      data-index="{{index}}">
         <view class="track-item-icon">
           <image class="track-icon" mode="scaleToFill" src="{{item.icon}}"></image>
         </view>

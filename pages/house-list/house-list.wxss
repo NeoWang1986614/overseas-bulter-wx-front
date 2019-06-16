@@ -1,0 +1,21 @@
+/* pages/house-list/house-list.wxss */
+page{
+  height:100%;
+  background: whitesmoke;
+  display: flex;
+  flex-direction: column;
+}
+
+scroll-view {
+  height: 100rpx;
+  flex-grow: 1;
+  /* background: whitesmoke; */
+}
+
+.customer-btn {
+  border-radius: 0;
+}
+
+.customer-btn::after {
+  border: none;
+}

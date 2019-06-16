@@ -2,6 +2,7 @@ function convertHouseEntity(entity) {
   return {
     uid: entity.uid,
     name: entity.name,
+    property: entity.property,
     lat: entity.lat,
     lng: entity.lng,
     adLevel1: entity.ad_level_1,
@@ -16,6 +17,8 @@ function convertHouseEntity(entity) {
     layout: entity.layout,
     area: entity.area,
     ownerId: entity.owner_id,
+    status: entity.status,
+    meta: entity.meta,
   }
 }
 
@@ -23,6 +26,7 @@ function convertHouseObject(obj) {
   return {
     uid: obj.uid,
     name: obj.name,
+    property: obj.property,
     lat: obj.lat,
     lng: obj.lng,
     ad_level_1: obj.adLevel1,
@@ -37,6 +41,7 @@ function convertHouseObject(obj) {
     layout: obj.layout,
     area: obj.area,
     owner_Id: obj.ownerId,
+    meta: obj.meta
   }
 }
 

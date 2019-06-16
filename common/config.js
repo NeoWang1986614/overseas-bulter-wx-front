@@ -1,4 +1,4 @@
-const urlPrefix = 'https://bulter.mroom.com.cn:8008/overseas-bulter/v1';
+const urlPrefix = 'https://bulter.mroom.com.cn:8012/overseas-bulter/v1';
 // const urlPrefix = 'https://bulter.mroom.com.cn:8008/overseas-bulter/v1';//'https://www.cqmygysdss.com:8008/overseas-bulter/v1'
 
 const appId = 'wx69af257300e856ce';

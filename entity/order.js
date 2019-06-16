@@ -1,8 +1,11 @@
+const utils = require('../utils/util.js')
+
 function convertOrderEntity(entity) {
-  return {
+  var ret = {
     uid: entity.id,
     type: entity.type,
     content: entity.content,
+    houseId: entity.house_id,
     houseNation: entity.house_nation,
     houseAdLevel1: entity.house_ad_level_1,
     houseAdLevel2: entity.house_ad_level_2,
@@ -17,8 +20,16 @@ function convertOrderEntity(entity) {
     status: entity.status,
     placerId: entity.placer_id,
     accepterId: entity.accepter_id,
+    meta: entity.meta,
     createTime: entity.create_time
   }
+  convertOrderTimeCnText(ret);
+  return ret;
+}
+
+/* chinese format*/
+function convertOrderTimeCnText(obj) {
+  utils.convertTimeToCnText(obj, "createTime");
 }
 
 function convertOrderEntities(entities) {
@@ -36,6 +47,7 @@ function convertOrderObject(obj) {
     id: obj.uid,
     type: obj.type,
     content: obj.content,
+    house_id: obj.houseId,
     house_nation: obj.houseNation,
     house_ad_level_1: obj.houseAdLevel1,
     house_ad_level_2: obj.houseAdLevel2,
@@ -49,7 +61,8 @@ function convertOrderObject(obj) {
     price: obj.price,
     status: obj.status,
     placer_id: obj.placerId,
-    accepter_id: obj.accepterId
+    accepter_id: obj.accepterId,
+    meta: obj.meta
   }
 }
 

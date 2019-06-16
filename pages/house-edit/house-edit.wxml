@@ -12,6 +12,22 @@
       </view>
       <view class="item-container">
         <view class="item-static">
+          房源性质:
+        </view>
+        <view class="item-input-container">
+          <picker
+            mode="selector"
+            bindchange="onPropertyPickerChange" 
+            value="{{propertyCurrentIndex}}"
+            range="{{propertyTextOptions}}">
+              <view>
+                {{invalidIndex == propertyCurrentIndex? '未选择' : propertyTextOptions[propertyCurrentIndex]}}
+              </view>
+            </picker>
+        </view>
+      </view>
+      <view class="item-container">
+        <view class="item-static">
           国家:
         </view>
         <view class="item-input-container">
@@ -59,8 +75,8 @@
         </view>
       </view>
       <view class="item-container">
-        <view class="item-static">
-          镇/社/村:
+        <view class="item-static" style="width: 200rpx;">
+          区域(可选):
         </view>
         <view class="item-input-container">
           <input class="item-input" placeholder="点击输入镇/社/村名字" value="{{adLevel3}}" bindblur="onAdLevel3Input"></input>
@@ -104,6 +120,30 @@
           平方米
         </view>
       </view>
+      <!--
+      <view class="item-container" style="height: 160rpx;">
+        <view class="item-static" style="width: 160rpx;">
+          面积确认图:
+        </view>
+        <view class="item-input-container">
+          <view wx:for="{{areaCharts}}"
+            class="layoutchart-item"
+            style="margin-right: 20rpx;">
+            <image
+              mode="scaleToFill"
+              style="width: 100rpx; height: 100rpx;"
+              src="{{item}}"
+              data-src="{{item}}"
+              bindtap="onPreviwImageClick">
+            </image>
+            <view class="layoutchart-delete-btn" bindtap="onDeleteAreaChart">
+              删 除
+            </view>
+          </view>
+          <button class="image-add-btn" bindtap="chooseLocalAreaImage">+</button>
+        </view>
+      </view>
+      -->
       <view class="item-container">
         <view class="item-static">
           户型:
@@ -115,16 +155,32 @@
               value="{{layoutCurrentIndex}}" 
               range="{{layoutTextOptions}}">
               <view class="picker">
-                {{invalidIndex == layoutCurrentIndex ? '未选择' : map.text[layoutOptions[layoutCurrentIndex]]}}
+                {{invalidIndex == layoutCurrentIndex ? '未选择' :layoutTextOptions[layoutCurrentIndex]}}
               </view>
             </picker>
         </view>
       </view>
-      <view class="is-default-container">
-        <button class="is-default-button" bindtap="onIsDefaultClick">
-          <image class="is-default-icon" src="{{isDefaultIconUrl}}"></image>
-          <view class="is-default-title">设为默认</view>
-        </button>
+      <view class="item-container" style="height: 160rpx;">
+        <view class="item-static" style="width: 160rpx;">
+          户型图:
+        </view>
+        <view class="item-input-container">
+          <view wx:for="{{layoutCharts}}"
+            class="layoutchart-item"
+            style="margin-right: 20rpx;">
+            <image
+              mode="scaleToFill"
+              style="width: 100rpx; height: 100rpx;"
+              src="{{item}}"
+              data-src="{{item}}"
+              bindtap="onPreviwImageClick">
+            </image>
+            <view class="layoutchart-delete-btn" bindtap="onDeleteLayoutChart">
+              删 除
+            </view>
+          </view>
+          <button class="image-add-btn" bindtap="chooseLocalLayoutImage">+</button>
+        </view>
       </view>
       <view style="height: 2rpx; background: lightgray;"></view>
       <view class="map-container">
@@ -165,36 +221,4 @@
       <text decode="true" space="emsp">保&emsp;&emsp;存</text>
     </button>
   </view>
-
-  <!--
-  <modal 
-    hidden="{{!isShowMapModal}}" 
-    title="请选择您的房产" 
-    confirm-text="地图" 
-    cancel-text="取消" 
-    bindcancel="onHouseModalCancel" 
-    bindconfirm="onHouseModalConfirmClick" 
-    no-confirm="{{isHousesEmpty}}">
-    <view>{{mapNation}}{{mapAdLevel1}}{{map.text[mapAdLevel2]}}{{mapStreet}}</view>
-    <map
-      id="map"
-      longitude="121.015916"
-      latitude="14.607107"
-      scale="14"
-      bindtap="onMapClick"
-      bindpoitap="onPoiClick"
-      controls="{{controls}}"
-      bindcontroltap="controltap"
-      markers="{{markers}}"
-      bindmarkertap="markertap"
-      polyline="{{polyline}}"
-      bindregionchange="regionchange"
-      show-location
-      style="width: 100%; height: 300rpx;">
-      <cover-view class="map-cover-view">
-        <cover-image class="map-cover-img" src="/images/location.png" />
-      </cover-view>
-    </map>
-  </modal>
-  -->
-  </view>
+</view>

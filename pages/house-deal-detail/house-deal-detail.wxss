@@ -1,0 +1,41 @@
+/* pages/house-deal-detail/house-deal-detail.wxss */
+
+page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background: blue; */
+  font-size: 24rpx;
+  color: gray;
+  font-weight: light;
+}
+
+scroll-view {
+  height: 100rpx;
+  flex-grow: 1;
+  /* background: pink; */
+}
+
+input {
+  height: 20rpx;
+  width: 300rpx;
+  margin-left: 10rpx;
+  text-align: center;
+  /* background: skyblue; */
+  font-size: 26rpx;
+  border-bottom: 1rpx solid black;
+  color: black;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.item-container {
+  height: 80rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+  /* background: lightcoral; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

@@ -1,0 +1,82 @@
+<!--pages/house-deal/house-deal.wxml-->
+<view class="header">
+  <span style="font-size: 24rpx; margin: auto auto;">
+    最新房源列表
+  </span>
+</view>
+<view style="width: 100%; height: 2rpx; background: lightcyan;">
+</view>
+<scroll-view scroll-y="true">
+  <view
+    wx:for="{{houseDeals}}"
+    wx:key="{{item.uid}}"
+    class="list-item"
+    data-index="{{index}}"
+    bindtap="onItemClick">
+    <image class="item-icon"
+      mode="scaleToFill"
+      src="{{'' == item.image ? null : item.image}}"/>
+    <view class="info">
+      <view class="sub-info-1" style="margin-top: 10rpx;">
+        房屋性质:
+        <span style="margin-left: 6rpx; width: 150rpx;">
+          {{map.text[item.property]}}
+        </span>
+        <span style="margin-left: 6rpx;">
+          {{map.text[item.source]}}{{isHouseSale?'出售':'出租'}}
+        </span>
+      </view>
+      <view class="sub-info-1" style="margin-top: 18rpx;">
+        面积: 
+        <span style="width: 200rpx; color: green; margin-left: 6rpx;">
+          {{item.area}}m²
+        </span>
+        装修:
+        <span style="color: green; margin-left: 6rpx;">
+          {{item.decoration}}
+        </span>
+      </view>
+      <view class="sub-info-1" style="margin-top: 18rpx;">
+        {{isHouseSale?'售价(比索):':'租金(比索):'}} 
+        <span style="color: red; margin-left: 6rpx;">
+          {{item.cost}}
+        </span>
+      </view>
+    </view>
+  </view>
+  <view class="more" bindtap="onMoreClick">
+    <span wx:if="{{isMoreData}}" style="font-size: 30rpx;">更多</span>
+    <span wx:else style="font-size: 30rpx;">没有更多了</span>
+  </view>
+</scroll-view>
+
+<button
+  class="customer-service-btn"
+  style="margin-top: 10rpx; margin-bottom: 10rpx;"
+  bindtap="onNeedHouseDeal">
+  <span style="color: white; font-weight: bold;">
+    {{isHouseSale ? '我 要 出 售' : '我 要 出 租'}}
+  </span>
+</button>
+
+<modal 
+    wx:if="{{isShowModal}}"
+    confirm-text="取消" 
+    bindconfirm="onModalCancel"
+    no-cancel
+    no-confirm>
+    <view
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green;"
+      bindtap="onExistHouseClick">
+      <span style="color: white;">
+        菲洋家装房源
+      </span>
+    </view>
+    <view
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
+      bindtap="onNewHouseDealsClick">
+      <span style="color: white;">
+        新房源
+      </span>
+    </view>
+</modal>

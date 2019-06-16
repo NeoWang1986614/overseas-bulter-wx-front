@@ -9,14 +9,27 @@ const userEntity = require('entity/user.js')
 const feedbackEntity = require('entity/feedback.js')
 const serviceEntity = require('entity/service.js')
 const publicAccountEntity = require('entity/public-account.js')
-const rentRecordEntity = require('entity/rent-record.js')
+const billingRecordEntity = require('entity/billing-record.js')
 const inspectRecordEntity = require('entity/inspect-record.js')
 const repairRecordEntity = require('entity/repair-record.js')
+const priceEntity = require('entity/price.js')
+const prepaymentEntity = require('entity/prepayment.js')
+const http = require('./utils/http.js')
+
+console.log = (function (oriLogFunc) {
+  return function (str) {
+    if (true) {// 需要打印 此处改为 true
+      oriLogFunc.call(console, str);
+    }
+  }
+})(console.log);
 
 App({
   onLaunch: function (options) {
     console.log('app.onLaunch : options =',options);
-
+    if (this.updateCheck()){
+      return;
+    }
     if(1044 == options.scene && options.shareTicket && options.query.hasOwnProperty('uid')){
       wx.getShareInfo({
         shareTicket: options.shareTicket,
@@ -38,7 +51,8 @@ App({
     wx.getSetting({
       success: res => {
         if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+          console.log('已获得获取用户信息授权');
+          //已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           this.loginAsync(res => {
             wx.getUserInfo({
               success: res => {
@@ -57,6 +71,40 @@ App({
         }
       }
     })
+  },
+  updateCheck: function(){
+    if (wx.canIUse('getUpdateManager')) {
+      console.log('can use getUpdateManager');
+      const updateManager = wx.getUpdateManager()
+      updateManager.onCheckForUpdate(function (res) {
+        console.log('onCheckForUpdate====', res)
+        // 请求完新版本信息的回调
+        if (res.hasUpdate) {
+          console.log('res.hasUpdate====')
+          updateManager.onUpdateReady(function () {
+            wx.showModal({
+              title: '更新提示',
+              content: '新版本已经准备好，是否重启应用？',
+              success: function (res) {
+                console.log('success====', res)
+                if (res.confirm) {
+                  updateManager.applyUpdate()
+                }
+              }
+            })
+          })
+          updateManager.onUpdateFailed(function () {
+            // 新的版本下载失败
+            wx.showModal({
+              title: '已经有新版本了哟~',
+              content: '新版本已经上线啦~，请您删除当前小程序，重新搜索打开哟~'
+            })
+          });
+          return true;
+        }
+      })
+    }
+    return false;
   },
   loginAsync: function(callback){
     // 登录
@@ -279,6 +327,11 @@ App({
     },
     ordersArray:[]
   },
+  notifyMessage: function(msg){
+    wx.showToast({
+      title: msg,
+    }, 1500);
+  },
   getLayoutTextByName: function (name) {
     for (let i=0; i < this.globalData.layoutOptionsArray.length; i++){
       if (name === this.globalData.layoutOptionsArray[i].name){
@@ -405,12 +458,6 @@ App({
       }
     })
   },
-  getDefaultHouseUid: function () {
-    return wx.getStorageSync('default-house-uid');
-  },
-  setDefaultHouseUid: function(uid) {
-    wx.setStorageSync('default-house-uid', uid);
-  },
   submitOrderAsync: function(orderObj, callback) {
     wx.request({
       url: config.generateFullUrl('/order'),
@@ -447,10 +494,30 @@ App({
       }
     })
   },
+  updateOrderAsync: function (orderObj, callback) {
+    wx.request({
+      url: config.generateFullUrl('/order'),
+      method: 'PUT',
+      data: orderEntity.convertOrderObject(orderObj),
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('update order async res');
+        console.log(res.data);
+        var convertedResult = orderEntity.convertOrderEntity(res.data);
+        if (callback) {
+          callback(convertedResult);
+        }
+      }
+    })
+  },
   checkUserInfoValid: function (callback) {
     console.log('check user info', this.globalData.loginInfo.userId);
     this.getUserAsync(this.globalData.loginInfo.userId, data => {
-      console.log('check user info response', data);
+      console.log('check user info response');
+      console.log(data);
       var result = false;
       if (0 != data.name.length 
       && 0 != data.phoneNumber.length 
@@ -624,12 +691,14 @@ App({
         'Accept': 'application/json'
       },
       success: res => {
-        console.log('queryPublicAccountMaterialAsync res=', res);
+        console.log('queryPublicAccountMaterialAsync res=');
+        console.log(res);
         var convertedMaterial = null;
         if(0 != res.data.item_count){
           convertedMaterial = publicAccountEntity.convertWxPublicAccountMaterialEntity(res.data);
         }
-        console.log('convertedMaterial=', convertedMaterial);
+        console.log('convertedMaterial=');
+        console.log(convertedMaterial);
         this.globalData.material = convertedMaterial;
         if (callback) {
           callback(convertedMaterial);
@@ -670,8 +739,8 @@ App({
       success: res => {
         // console.log('getRecordsAsync res=', res);
         var convertedRecords = [];
-        if('rent-record' == recordType){
-          convertedRecords = rentRecordEntity.convertRentRecordEntities(res.data.entities);
+        if('billing-record' == recordType){
+          convertedRecords = billingRecordEntity.convertBillingRecordEntities(res.data.entities);
         } else if ('inspect-record' == recordType){
           convertedRecords = inspectRecordEntity.convertInspectRecordEntities(res.data.entities);
         } else if ('repair-record' == recordType) {
@@ -695,8 +764,8 @@ App({
       success: res => {
         console.log('get record raw data =' , res);
         var convertedRecord = {};
-        if ('rent-record' == recordType) {
-          convertedRecord = rentRecordEntity.convertRentRecordEntity(res.data);;
+        if ('billing-record' == recordType) {
+          convertedRecord = billingRecordEntity.convertBillingRecordEntity(res.data);;
         } else if ('inspect-record' == recordType) {
           convertedRecord = inspectRecordEntity.convertInspectRecordEntity(res.data);
         } else if ('repair-record' == recordType) {
@@ -704,6 +773,46 @@ App({
         }
         if(callback){
           callback(convertedRecord);
+        }
+      }
+    })
+  },
+  queryPriceAsync: function (entity, callback) {
+    wx.request({
+      url: config.generateFullUrl('/price'),
+      data: entity,
+      method: 'POST',
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('get record raw data =');
+        console.log(res);
+        var convertedResult = priceEntity.convertPriceEntity(res.data)
+        if (callback) {
+          callback(convertedResult);
+        }
+      }
+    })
+  },
+  requestPrePaymentAsync: function (userId, orderId, callback) {
+    wx.request({
+      url: config.generateFullUrl('/prepayment'),
+      data: {
+        user_id: userId,
+        order_id: orderId
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+      success: res => {
+        console.log('pre pay response =', res);
+        var convertedResult = prepaymentEntity.convertPrepaymentResultEntity(res.data)
+        if (callback) {
+          callback(convertedResult);
         }
       }
     })

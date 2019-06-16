@@ -7,10 +7,10 @@
         {{houseAddressDesc}}
       </view>
       <view class="inspect-date" style="margin-top: 100rpx;">
-        验房时间: {{inspectRecord.inspectDateCn}}
+        完成时间: {{inspectRecord.inspectDateCn}}
       </view>
       <view class="inspector">
-        验房人员: {{inspectRecord.inspector}}
+        负责人员: {{inspectRecord.inspector}}
       </view>
       <view class="comment">
         概要说明: {{inspectRecord.comment}}
@@ -56,12 +56,14 @@
     <view class="block-container" style="font-size: 24rpx; margin-bottom: 30rpx;">
       <view class="line" style="margin-top: 30rpx;">
       </view>
-      <view style="margin-top: 20rpx;">
-          声明
-      </view>
-      <view class="declaration">
-        {{declaration}}
-      </view>
+      <button class="redirect-btn"
+        bindtap="onRedirectToHouseRentService"
+        style="margin-top: 40rpx;">是否委托出租</button>
+      <button class="redirect-btn" 
+        bindtap="onRedirectToHouseMaintainService"
+        style="margin-top: 20rpx;">是否委托年度维保</button>
+       <view class="line" style="margin-top: 40rpx;">
+       </view>
     </view>
   </scroll-view>
 </view>

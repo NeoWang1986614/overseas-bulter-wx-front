@@ -1,0 +1,63 @@
+<!--pages/house-list/house-list.wxml-->
+<scroll-view scroll-y="true">
+  <view
+  wx:for="{{houses}}"
+  style="height: 140rpx; margin-top: 10rpx; padding-top: 20rpx; background: white;"
+  data-uid="{{item.uid}}"
+  bindtap="onHouseItemClick">
+    <view style="margin-left: 10rpx; font-size: 24rpx; font-weigth: bold">
+      <span style="font-weight: bold;">
+        {{item.name}}
+      </span>
+    </view>
+    <view style="margin-left: 10rpx; margin-top: 20rpx; font-size: 20rpx;">
+      <span>
+        房屋性质: {{map.text[item.property]}}
+      </span>
+      <span style="margin-left: 100rpx;">
+        面积: {{item.area}}m²
+      </span>
+    </view>
+    <view style="width: 680rpx; margin-left: 10rpx; margin-top: 10rpx; font-size: 20rpx;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">
+      <span style="width: 300rpx;">
+        {{item.address}}
+      </span>
+    </view>
+  </view>
+  <view 
+    wx:if="{{0==houses.length}}"
+    style="height: 400rpx; display: flex; justify-content: center; align-items: center; font-size: 24rpx; color: gray;">
+    您还没有菲洋家装房源
+  </view>
+</scroll-view>
+
+<modal 
+    wx:if="{{isShowModal}}"
+    confirm-text="取消" 
+    bindconfirm="onModalCancel"
+    no-cancel
+    no-confirm>
+    <view
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
+      bindtap="onProxyRentClick">
+      <span style="color: white;">
+        发布并委托菲洋管家{{isHouseSale ? '出售' : '出租'}}
+      </span>
+    </view>
+    <view
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
+      bindtap="onSelfRentClick">
+      <span style="color: white;">
+        自己发布{{isHouseSale ? '出售' : '出租'}}
+      </span>
+    </view>
+    <button
+      class="customer-btn"
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
+      open-type="contact"
+      bindtap="onContactClick">
+      <span style="color: white; font-size: 34rpx;">
+        询问客服
+      </span>
+    </button>
+</modal>

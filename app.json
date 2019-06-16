@@ -5,14 +5,17 @@
     "pages/house-edit/house-edit",
     "pages/user-info/user-info",
     "pages/houses/houses",
-    "pages/case-detail/case-detail",
     "pages/feedback/feedback",
     "pages/orders/orders",
-    "pages/order-detail/order-detail",
     "pages/feedbacks/feedbacks",
-    "pages/rent-record/rent-record",
+    "pages/billing-record/billing-record",
+    "pages/repair-record/repair-record",
     "pages/inspect-record/inspect-record",
-    "pages/repair-record/repair-record"
+    "pages/order-detail/order-detail",
+    "pages/house-deal-view/house-deal-view",
+    "pages/house-deal/house-deal",
+    "pages/house-list/house-list",
+    "pages/house-deal-detail/house-deal-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -18,6 +18,7 @@
       <input type="number" placeholder="请输入您的手机号码" value="{{phoneNumber}}" bindinput="phoneNumberInput"></input>
     </view>
   </view>
+  <!--
   <view class="item-container">
     <view class="text-static">验证码:</view>
     <view class="input-container verification-input-container">
@@ -35,6 +36,7 @@
       <input type="idcard" placeholder="请输入身证份号码" value="{{idCardNumber}}" bindinput="idCardNumberInput"></input>
     </view>
   </view>
+  -->
   <view class="save-item-container">
     <button class="save-button" hover-class="save-button-hover" bindtap="onSaveClick">
       <text decode="true" space="emsp">保&emsp;&emsp;存</text>

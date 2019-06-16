@@ -1,3 +1,8 @@
+module.exports.propertyOptions = [
+  'office',
+  'apartment'
+];
+
 module.exports.nationOptions = [
   'Republika ng Pilipinas'
 ];

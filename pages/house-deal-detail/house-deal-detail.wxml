@@ -1,0 +1,141 @@
+<!--pages/house-deal-detail/house-deal-detail.wxml-->
+<scroll-view scroll-y="true">
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      房源性质:
+    </span>
+    <picker
+      disabled="{{isHouseExist}}"
+      style="width: 600rpx; float: left; text-align: center;"
+      mode="selector"
+      bindchange="onPropertyPickerChange" 
+      value="{{propertyCurrentIndex}}"
+      range="{{propertyTextOptions}}">
+        {{invalidIndex == propertyCurrentIndex? '未选择' : propertyTextOptions[propertyCurrentIndex]}}
+    </picker>
+  </view>
+  <view 
+  class="item-container">
+    <span style="margin-left: 10rpx;  float: left;">
+      面积(m²):
+    </span>
+    <input
+    style="width: 600rpx;"
+    disabled="{{isHouseExist}}"
+    type="number"
+    value="{{houseDeal.area}}"
+    bindblur="onAreaInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      具体地址:
+    </span>
+    <input
+    style="width: 600rpx;"
+    disabled="{{isHouseExist}}"
+    placeholder=""
+    value="{{houseDeal.address}}"
+    bindblur="onAddressInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      装修情况:
+    </span>
+    <input
+    style="width: 600rpx;"
+    placeholder=""
+    value="{{houseDeal.decoration}}"
+    bindblur="onDecorationInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      {{isHouseSale?'出售价格(比索):':'出租价格(比索):'}}
+    </span>
+    <input
+    style="width: 540rpx;"
+    placeholder=""
+    value="{{houseDeal.cost}}"
+    bindblur="onCostInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      联系人:
+    </span>
+    <input
+    style="width: 620rpx;"
+    placeholder=""
+    value="{{houseDeal.linkman}}"
+    bindblur="onLinkmanInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      联系电话:
+    </span>
+    <input
+    style="width: 600rpx;"
+    placeholder=""
+    value="{{houseDeal.contactNum}}"
+    bindblur="onContactNumInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      邮箱:
+    </span>
+    <input
+    style="width: 650rpx;"
+    placeholder=""
+    value="{{houseDeal.mail}}"
+    bindblur="onMailInput"/>
+  </view>
+  <view class="item-container">
+    <span style="margin-left: 10rpx; float: left;">
+      微信:
+    </span>
+    <input
+    style="width: 650rpx;"
+    placeholder=""
+    value="{{houseDeal.winxin}}"
+    bindblur="onWeixinInput"/>
+  </view>
+  <view class="item-container" style="height: 140rpx;">
+    <span style="margin-left: 10rpx; float: left;">
+      房源图片(可选):
+    </span>
+    <view style="width: 500rpx; height: 120rpx; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+      <view 
+        wx:for="{{imageArr}}"
+        style="width: 80rpx; height: 120rpx; margin-right: 10rpx;">
+        <image
+          style="width: 100%; height: 80rpx;"
+          data-url="{{item}}"
+          bindtap="onImageItemClick"
+          src="{{item}}"/>
+        <view style="width: 100%; height: 40rpx; background: red; color: white; font-size: 24rpx; display: flex; justify-content: center; align-items: center;"
+        data-index="{{index}}"
+        bindtap="onImageDeleteClick">
+          删除
+        </view>
+      </view>
+      <button
+      wx:if="{{3 > imageArr.length}}"
+      style="width: 80rpx; height: 80rpx; display: flex; justify-content: center; align-items: center; margin: 0;"
+      bindtap="onChooseLocalImage">
+        +
+      </button>
+    </view>
+  </view>
+  <view style="min-height: 100rpx;">
+    <textarea
+    style="margin: 0 auto; margin-top: 6rpx; margin-bottom: 30rpx; width: 96%; height: 200rpx; border: 1rpx solid gray;"
+    placeholder="输入补充说明(可选)"
+    value="{{houseDeal.note}}"
+    bindblur="onNoteInput"/>
+  </view>
+</scroll-view>
+<button
+  style="width: 98%; height: 100rpx; background: green; margin: 10rpx auto;display: flex; justify-content: center; align-items: center;"
+  bindtap="onPublishClick">
+  <span style="color: white; font-weight: bold;">
+   {{buttonTitle}}
+  </span>
+</button>

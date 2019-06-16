@@ -6,14 +6,14 @@
     </view>
   </view>
   <scroll-view class="list-container">
-    <block wx:if="{{'rent-record'==currentSelectTabOption}}">
+    <block wx:if="{{'billing-record'==currentSelectTabOption}}">
       <view style="height: 200rpx; line-height:200rpx; color: gray; font-size: 24rpx; display: flex; justify-content: center;"
-        wx:if="{{0 == rentRecords.length}}">
+        wx:if="{{0 == billingRecords.length}}">
         没有数据
       </view>
-      <view wx:if="{{0 != rentRecords.length}}" class="record-item-container"
-          wx:for="{{rentRecords}}"
-          bindtap="onRentRecordItemClick"
+      <view wx:if="{{0 != billingRecords.length}}" class="record-item-container"
+          wx:for="{{billingRecords}}"
+          bindtap="onBillingRecordItemClick"
           data-index="{{index}}">
           <view>
             结算范围: {{item.timeRange.fromCn}}-{{item.timeRange.toCn}}
@@ -42,10 +42,10 @@
           bindtap="onInspectRecordItemClick"
           data-index="{{index}}">
           <view style="width: 400rpx;">
-            验房日期: {{item.inspectDateCn}}
+            完成日期: {{item.inspectDateCn}}
           </view>
           <view style="margin-top: 10rpx;">
-            验房人员: {{item.inspector}}
+            负责人员: {{item.inspector}}
           </view>
           <view style="margin-top: 10rpx;line-height: 30rpx;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">
             备注: {{item.comment}}

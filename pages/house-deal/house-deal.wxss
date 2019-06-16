@@ -1,0 +1,104 @@
+/* pages/house-deal/house-deal.wxss */
+page{
+  height:100%;
+  background: whitesmoke;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 80rpx;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+scroll-view {
+  height: 100rpx;
+  flex-grow: 1;
+  /* background: lightcyan; */
+}
+
+.list-item {
+  height: 200rpx; 
+  background: white;
+  margin-bottom: 10rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.item-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin-left: 20rpx;
+  background: whitesmoke;
+}
+
+.info {
+  width: 540rpx;
+  height: 160rpx;
+  /* background: lightblue; */
+  margin-left: 20rpx;
+}
+
+.name {
+  /* background: red; */
+  font-size: 30rpx;
+  /* margin-top: 20rpx; */
+  font-weight: bold;
+}
+
+.sub-info-1 {
+  width: 100%;
+  /* background: gray; */
+  font-size: 24rpx;
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+}
+
+.price {
+  /* background: pink; */
+  font-size: 24rpx;
+}
+
+.layout {
+  /* background: green;  */
+  margin-right: 20rpx;
+  color: green;
+}
+
+.customer-service-btn {
+  width: 98%;
+  height: 100rpx;
+  border-radius: 10rpx;
+  background: green;
+  margin: auto auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:0 1px 4px 0px rgb(145, 140, 140);
+}
+
+.customer-service-btn::after {
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+}
+
+.more {
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+}

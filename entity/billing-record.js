@@ -1,6 +1,7 @@
+
 const utils = require('../utils/util.js')
 
-function convertRentRecordEntity(entity) {
+function convertBillingRecordEntity(entity) {
    var ret = {
     uid: entity.uid,
     orderId: entity.order_id,
@@ -13,14 +14,14 @@ function convertRentRecordEntity(entity) {
     updateTime: entity.update_time,
     createTime: entity.create_time,
   }
-  convertRentRecordsDateCnText(ret);
+  convertBillingRecordsDateCnText(ret);
   return ret;
 }
 
-function convertRentRecordEntities(entities) {
+function convertBillingRecordEntities(entities) {
   var result = [];
   for (let i = 0; i < entities.length; i++) {
-    var temp = convertRentRecordEntity(entities[i]);
+    var temp = convertBillingRecordEntity(entities[i]);
     result.push(temp)
   }
   return result;
@@ -52,7 +53,7 @@ function convertTimeRangeEntity(entity) {
 }
 
 /* chinese format*/
-function convertRentRecordsDateCnText(obj) {
+function convertBillingRecordsDateCnText(obj) {
   utils.convertDateToCnText(obj, "accountingDate");
   utils.convertDateToCnText(obj.timeRange, "from");
   utils.convertDateToCnText(obj.timeRange, "to");
@@ -61,6 +62,6 @@ function convertRentRecordsDateCnText(obj) {
 
 
 module.exports = {
-  convertRentRecordEntity: convertRentRecordEntity,
-  convertRentRecordEntities: convertRentRecordEntities
+  convertBillingRecordEntity: convertBillingRecordEntity,
+  convertBillingRecordEntities: convertBillingRecordEntities
 };

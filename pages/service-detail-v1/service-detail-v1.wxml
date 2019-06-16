@@ -4,25 +4,54 @@
     <view class="layout-static">户型选择:</view>
     <radio-group class="layout-radio-group" bindchange="onLayoutRadioChange">
       <view class="layout-item-container" wx:for="{{layoutOptions}}">
-        <radio value="{{item.value}}" checked="{{item.isChecked}}">
-          <span>{{map.text[item.value]}}</span>
+        <radio value="{{index}}" checked="{{item.isChecked}}">
+          <span style="font-size: 24rpx;">{{item.title}}</span>
         </radio>
       </view>
     </radio-group>
   </view>
   <view class="scroll-wrap">
     <scroll-view scroll-y="true">
-      <view class="empty-data" wx:if="{{0 == services.length}}">
-        没有内容
-      </view>
-      <view class="service-content" wx:if="{{0 != services.length}}">
-        <text>{{service.content}}</text>
+      <view class="service-content">
+        <text>
+          {{servicePrimary.content}}
+        </text>
+<!-- isOthers -->
+        <view 
+          wx:if="{{isOthers}}"
+          wx:for="{{attachments}}"
+          class="attachment"
+          bindtap="onOthersAttachmentClick"
+          data-index="{{index}}">
+          <span>
+            {{item.title}}
+          </span>
+        </view>
+        <view 
+          wx:if="{{isHomeDecoration}}"
+          class="attachment"
+          bindtap="onAttachmentClick">
+          <span>
+          附件: {{layoutOptions[layoutOptionsCurrentIndex].title}}-家装布置清单
+          </span>
+        </view>
+        <view 
+          wx:if="{{isHouseMaintain}}"
+          class="attachment"
+          bindtap="onAttachmentClick">
+          <span>
+          附件: 房屋保养清单
+          </span>
+        </view>
       </view>
     </scroll-view>
+    <button class="customer-service-btn" open-type="contact">
+      <image class="customer-service-img" mode="scaleToFill" src="/images/customer-service.png"/>
+    </button>
   </view>
-  <view class="bottom-wrap">
+  <view class="bottom-wrap" wx:if="{{!isOthers}}">
     <view class="price-container">
-      ¥ {{service.price}}
+      ¥ {{minPriceForDisplay}}
       <span>起</span>
     </view>
     <button class="order-button" hover-class="order-button-hover" bindtap="onSelectHouseClick">
@@ -39,7 +68,7 @@
     bindconfirm="onHouseModalConfirmClick" 
     no-confirm="{{isHousesEmpty}}">
     <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}">
-      添加房产
+      <span>继续添加房产</span>
     </button>
     <view class="empty-data" wx:if="{{isHousesEmpty}}">
       您尚未添加房产
@@ -54,10 +83,96 @@
         </view>
       </radio-group>
     </scroll-view>
-    <view wx:if="{{!isHousesEmpty}}"
-    style="height: 80rpx; line-height: 80rpx; text-align: center;">
-      <span style="font-family: Verdana, Geneva, Tahoma, sans-serif;font-size: 40rpx; color: green;" wx:if="{{constInvalidIndex != filtedHouseCurrentIndex}}">
-        ¥ {{computedPrice}}
+    <view  style="display: flex; flex-direction: column; align-items: flex-start;"
+    wx:if="{{!isHousesEmpty && isHouseRent}}">
+      <view class="rent-price-input-container">
+        <span>期望出租价格范围(比索):</span>
+        <input
+          class="year-input"
+          type="number"
+          value="{{houseRentPrice.from}}"
+          bindblur="onHouseRentPriceFromInput">
+        </input>
+        <span>-</span>
+        <input
+          class="year-input"
+          type="number"
+          value="{{houseRentPrice.to}}"
+          bindblur="onHouseRentPriceToInput">
+        </input>
+      </view>
+      <view class="year-input-container" style="margin-top: 10rpx;">
+        <span>出租时间(可选):</span>
+        <input
+          class="year-input"
+          type="number"
+          value="{{houseRentYear}}"
+          bindblur="onHouseRentYearInput">
+        </input>
+        <span>年</span>
+      </view>
+      <view class="account-country-container" style="margin-top: 20rpx;">
+        <span>银行账户所在国家:</span>
+        <radio-group bindchange="onHouseRentAccountCountryRadioChange">
+          <view
+          class="account-country-item" 
+          wx:for="{{houseRentAccountCountryOptions}}">
+            <radio value="{{index}}"/>
+            <span>
+              {{item.title}}
+            </span>
+          </view>
+        </radio-group>
+      </view>
+      <view class="account-bank-input-container" style="margin-top: 10rpx;">
+        <span>银行名称:</span>
+        <input
+          class="year-input"
+          style="width: 400rpx;"
+          type="text"
+          value="{{houseRentAccountBank}}"
+          bindblur="onHouseRentAccountBankInput">
+        </input>
+      </view>
+      <view class="account-number-input-container" style="margin-top: 10rpx;">
+        <span>银行账号:</span>
+        <input
+          class="year-input"
+          style="width: 400rpx;"
+          type="number"
+          value="{{houseRentAccountNumber}}"
+          bindblur="onHouseRentAccountNumberInput">
+        </input>
+      </view>
+    </view>
+    <view 
+        wx:if="{{!isHousesEmpty && isHouseMaintain}}"
+        class="year-input-container">
+      <span>年限:</span>
+      <input
+        class="year-input"
+        placeholder="1"
+        type="number"
+        value="{{houseMaintainYear}}"
+        bindblur="onHouseMaintainYearInput">
+      </input>
+      <span>年</span>
+    </view>
+    <view
+      wx:if="{{!isHousesEmpty && !isHouseRent}}"
+      class="modal-price-container">
+      <span
+        wx:if="{{1.0 != priceResult.discount && constInvalidIndex != filtedHouseCurrentIndex}}"
+        class="discount">
+          {{priceResult.discount*10}}折
+      </span>
+      <span class="old-price"
+        wx:if="{{1.0!=priceResult.discount && constInvalidIndex != filtedHouseCurrentIndex}}">
+        ¥{{priceResult.oldPrice}}
+      </span>
+      <span class="new-price"
+        wx:if="{{constInvalidIndex != filtedHouseCurrentIndex}}">
+        ¥{{priceResult.newPrice}}
       </span>
       <span style="font-size: 24rpx; " wx:else>
         选择房产后将计算出价格

@@ -12,8 +12,8 @@ Page({
     orders: [],
     tabOptions: [
       {
-        value: 'rent-record',
-        title: '出租记录'
+        value: 'billing-record',
+        title: '账单记录'
       },
       {
         value: 'inspect-record',
@@ -24,8 +24,8 @@ Page({
         title: '维修记录'
       }
     ],
-    currentSelectTabOption: 'rent-record',
-    rentRecords: [],
+    currentSelectTabOption: 'billing-record',
+    billingRecords: [],
     inspectRecords: [],
     repairRecords: []
   },
@@ -120,7 +120,7 @@ Page({
     }
   },
   updateRecordList: function() {
-    this.data.rentRecords=[];
+    this.data.billingRecords=[];
     this.data.inspectRecords=[];
     this.data.repairRecords=[];
     this.localGetOrdersAsync(res => {
@@ -134,9 +134,9 @@ Page({
             10000,
             records=>{
               console.log('get records = ', records);
-              if('rent-record' == this.data.currentSelectTabOption){
+              if('billing-record' == this.data.currentSelectTabOption){
                 this.setData({
-                  rentRecords: this.data.rentRecords.concat(records)
+                  billingRecords: this.data.billingRecords.concat(records)
                 });
               } else if ('inspect-record' == this.data.currentSelectTabOption) {
                 this.setData({
@@ -152,13 +152,13 @@ Page({
       }
     });
   },
-  onRentRecordItemClick: function(e){
-    console.log('onRentRecordItemClick =', e);
+  onBillingRecordItemClick: function(e){
+    console.log('onBillingRecordItemClick =', e);
     var clickedIndex = e.currentTarget.dataset.index;
     wx.navigateTo({
-      url: '../../pages/rent-record/rent-record?uid=' + this.data.rentRecords[clickedIndex].uid,
+      url: '../../pages/billing-record/billing-record?uid=' + this.data.billingRecords[clickedIndex].uid,
     });
-  },
+  }, 
   onInspectRecordItemClick: function (e) {
     console.log('onInspectRecordItemClick =', e);
     var clickedIndex = e.currentTarget.dataset.index;

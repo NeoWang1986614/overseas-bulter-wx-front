@@ -3,6 +3,7 @@
 const app = getApp()
 const entityCase = require('../../entity/case.js')
 const map = require('../../common/map.js')
+const http = require('../../utils/http.js')
 
 Page({
 
@@ -10,58 +11,45 @@ Page({
    * Page initial data
    */
   data: {
+    carouselFigureArr: [],
     recommendCases:[],
     textMap: {},
     material:[],
-    serviceItems:[
+    servicePrimaryFixedArr: [
       {
-        icon: '/images/home-decoration.png',
-        name: 'home-decoration',
-        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
-        navigateParams: '?type=home-decoration'
+        value: 'house-rent',
+        title: '房屋出租',
+        iconUrl: '/images/house-rent.png'
       },
       {
-        icon: '/images/house-maintain.png',
-        name: 'house-maintain',
-        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
-        navigateParams: '?type=house-maintain'
+        value: 'house-sale',
+        title: '二手房买卖',
+        iconUrl: '/images/house-sale.png'
       },
       {
-        icon: '/images/house-rent.png',
-        name: 'house-rent',
-        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
-        navigateParams: '?type=house-rent'
+        value: 'customer-service',
+        title: '客服咨询',
+        iconUrl: '/images/customer-service.png'
       },
       {
-        icon: '/images/other-service.png',
-        name: 'other-service',
-        navigateUrl: '../../pages/service-detail-v1/service-detail-v1',
-        navigateParams: '?type=other-service'//没有参数
-      },
-      {
-        icon: '/images/customer-service.png',
-        name: 'customer-service',
-        navigateUrl: '',
-        navigateParams: ''
-      },
-      {
-        icon: '/images/my-house.png',
-        name: 'my-houses',
-        navigateUrl: '../../pages/houses/houses',
-        navigateParams: ''//没有参数
+        value: 'my-house',
+        title: '我的房产',
+        iconUrl: '/images/my-house.png'
       },
     ],
+    servicePrimaryArr: [],
+    servicePrimaryNavigateUrl: '../../pages/service-detail-v1/service-detail-v1',
+    myHouseNavigateUrl: '../../pages/houses/houses',
+    houseDealNavigateUrl: '../../pages/house-deal/house-deal',
     trackItems:[
-      // {
-      //   icon: '/images/requirement.png',
-      //   title: '我的需求跟踪'
-      // },
       {
+        name: 'order-track',
         icon: '/images/order.png',
         title: '我的订单跟踪',
         navigateUrl: '../../pages/orders/orders'
       },
       {
+        name: 'feedback-track',
         icon: '/images/feedback.png',
         title: '我的反馈跟踪',
         navigateUrl: '../../pages/feedbacks/feedbacks'
@@ -76,7 +64,19 @@ Page({
   /**
    * Lifecycle function--Called when page load
    */
+  parseOptions: function(options){
+    console.log('home options = ', options);
+    if (options.hasOwnProperty('redirect')) {
+      var redirectToServiceIndex = options['redirect'];
+      console.log('redirect to index', redirectToServiceIndex);
+      var item = this.data.serviceItems[redirectToServiceIndex];
+      this.navigateWrapper(item.navigateUrl + item.navigateParams);
+    }
+  },
   onLoad: function (options) {
+
+    this.parseOptions(options);
+
     wx.showShareMenu({
       withShareTicket: true
     })
@@ -121,10 +121,13 @@ Page({
   onReady: function () {
 
   },
-
   /**
    * Lifecycle function--Called when page show
    */
+  exchangeItemInArr: function(fromIndex, toIndex, arr){
+    arr[fromIndex] =  arr.splice(toIndex, 1, arr[fromIndex])[0];
+    return arr;
+  },
   onShow: function () {
     console.log('home on show');
     console.log('userInfo: ', app.globalData.userInfo);
@@ -133,12 +136,29 @@ Page({
         material: res
       });
     });
+    http.queryCarouselFigureAsync(0, 10000, res=>{
+      console.log('carousel configure = ');
+      console.log(res);
+      this.setData({
+        carouselFigureArr: res
+      });
+    });
+    http.querySearchServicePrimaryAsync(0, 10000, res=>{
+      console.log('home page services = ');
+      console.log(res);
+      var newArr = res.concat(this.data.servicePrimaryFixedArr);
+      this.exchangeItemInArr(2, 3, newArr);
+      this.setData({
+        servicePrimaryArr: this.exchangeItemInArr(3, 4, newArr)
+      });
+    });
   },
   onRecommandItemClick: function(e){
     console.log('onRecommandItemClick e=',e);
     var clickedIndex = e.currentTarget.dataset.index;
     var materialItem = app.globalData.material.item[clickedIndex];
     this.navigateWrapper('../../pages/case-detail/case-detail?media_id=' + materialItem.mediaId);
+    
   },
   /**
    * Lifecycle function--Called when page hide
@@ -175,7 +195,7 @@ Page({
     console.log(options);
     console.log('userId = ', 'pages/home/home?uid=' + app.globalData.loginInfo.userId);
     return {
-      title: '海外管家',
+      title: '菲洋管家',
       path: 'pages/home/home?uid=' + app.globalData.loginInfo.userId,
       success(res){
         console.log('转发成功');
@@ -189,16 +209,20 @@ Page({
     };
   },
   onUserAvatarClick: function (e) {
+    console.log('onUserAvatarClick e=');
+    console.log(e);
     if (!e.detail.hasOwnProperty("userInfo")) {
       return;
     }
 
+    /*已获得用户信息*/
     if (null != app.globalData.userInfo) {
       wx.navigateTo({
         url: '../user-info/user-info',
       });
       return;
     }
+    
     this.getUserInfo(e);
     app.loginAsync(res=>{
       
@@ -216,25 +240,29 @@ Page({
   },
   onServiceClick: function(e) {
     console.log('on service click');
-    var clickedIndex = e.currentTarget.dataset.index;
-    var item = this.data.serviceItems[clickedIndex];
-    // wx.navigateTo({
-    //   url: item.navigateUrl + item.navigateParams,
-    // })
-    this.navigateWrapper(item.navigateUrl + item.navigateParams);
+    console.log(e);
+    var index = e.currentTarget.dataset.index;
+    var value = e.currentTarget.dataset.value;
+    var serviceItem = this.data.servicePrimaryArr[index];
+    console.log(serviceItem);
+    if('my-house' == serviceItem.value){
+      this.navigateWrapper(this.data.myHouseNavigateUrl);
+    } else if('house-rent' == serviceItem.value
+      || 'house-sale' == serviceItem.value){
+      var naviUrl = this.data.houseDealNavigateUrl + '?type=' + serviceItem.value;
+      this.navigateWrapper(naviUrl);
+    }else{
+      var naviUrl = this.data.servicePrimaryNavigateUrl + '?type=' + value;
+      if (serviceItem.hasOwnProperty('uid')) {
+        naviUrl += '&uid=' + serviceItem.uid;
+      }
+      console.log(naviUrl);
+      this.navigateWrapper(naviUrl);
+    }
   },
   onOrdresTrackClick: function (e) {
     var clickedIndex = e.currentTarget.dataset.index;
-    // wx.navigateTo({
-    //   url: this.data.trackItems[clickedIndex].navigateUrl,
-    // })
     this.navigateWrapper(this.data.trackItems[clickedIndex].navigateUrl);
-  },
-  onCaseClick: function (e) {
-    console.log(e);
-    var clickedIndex = e.currentTarget.dataset.index;
-    var materialItem = app.globalData.material.item[clickedIndex];
-    this.navigateWrapper('../../pages/case-detail/case-detail?media_id=' + materialItem.mediaId);
   },
   navigateWrapper: function(url) {
     console.log('onUnload', app.globalData.userInfo);

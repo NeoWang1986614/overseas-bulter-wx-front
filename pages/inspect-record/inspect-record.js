@@ -12,7 +12,7 @@ Page({
     inspectRecord: {},
     order: {},
     houseAddressDesc: '',
-    declaration: '请注意此物业验房只是一个视觉上的检查，并非专业验房师。如果您需要一位更全面的检查，我们建议您聘请一位专业的验房师进行检查。'
+    // declaration: '请注意此物业验房只是一个视觉上的检查，并非专业验房师。如果您需要一位更全面的检查，我们建议您聘请一位专业的验房师进行检查。'
   },
 
   /**
@@ -91,5 +91,15 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  onRedirectToHouseRentService: function(){
+    wx.reLaunch({
+      url: '../../pages/home/home?redirect=2'
+    });
+  },
+  onRedirectToHouseMaintainService: function () {
+    wx.reLaunch({
+      url: '../../pages/home/home?redirect=1'
+    });
   }
 })

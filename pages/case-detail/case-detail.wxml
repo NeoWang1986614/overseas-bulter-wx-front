@@ -1,4 +1,0 @@
-<!--pages/case-detail/case-detail.wxml-->
-<view class="wrap">
-  <web-view class="material-web-view" src="{{materialDetailNewsItem.url}}"></web-view>
-</view>

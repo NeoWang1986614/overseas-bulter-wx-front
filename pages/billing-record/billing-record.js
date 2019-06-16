@@ -1,4 +1,4 @@
-// pages/rent-record/rent-record.js
+// pages/billing-record/billing-record.js
 const app = getApp()
 const utils = require('../../utils/util.js')
 
@@ -9,7 +9,7 @@ Page({
    */
   data: {
     recordId: '',
-    rentRecord: {},
+    billingRecord: {},
     order: {},
     houseAddressDesc: '',
     incomeTotal: 0.0,
@@ -35,14 +35,14 @@ Page({
     if (options && options.hasOwnProperty('uid')) {
       this.data.recordId = options['uid'],
       console.log('order id =', this.data.recordId);
-      app.getRecordAsync('rent-record', this.data.recordId, res=>{
+      app.getRecordAsync('billing-record', this.data.recordId, res=>{
         console.log('test res = ', res);
         this.setData({
-          rentRecord: res,
+          billingRecord: res,
           incomeTotal: this.computeFeeItemsTotal(res.income),
           outgoingsTotal: this.computeFeeItemsTotal(res.outgoings),
         });
-        app.getOrderAsync(this.data.rentRecord.orderId, order=>{
+        app.getOrderAsync(this.data.billingRecord.orderId, order=>{
           console.log('order = ', order);
           this.setData({
             order: order,

@@ -182,3 +182,40 @@ input {
 .map-check-group {
   margin-top: 30rpx;
 }
+
+.image-add-btn {
+  width: 100rpx;
+  height: 100rpx;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50rpx;
+  color: gray;
+  /* background: orange; */
+}
+
+.image-add-btn:after {
+  border: 4rpx dashed gray;
+}
+
+.layoutchart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background: lightcoral; */
+}
+
+.layoutchart-delete-btn {
+  margin-top: 10rpx;
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: red;
+  color: white;
+}

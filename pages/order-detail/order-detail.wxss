@@ -24,7 +24,7 @@ scroll-view {
 
 .item-container {
   width: 90%;
-  min-height: 60rpx;
+  min-height: 10rpx;
   display: flex;
   align-items: center;
   /* background: lightcoral; */
@@ -33,6 +33,7 @@ scroll-view {
 
 .common-text {
   font-size: 28rpx;
+  color: gray;
 }
 
 .operate-container {
@@ -105,4 +106,16 @@ scroll-view {
   align-items: center;
   font-size: 40rpx;
   color: gray;
+}
+
+.line {
+  width: 94%; 
+  height: 4rpx;
+  background: lightblue; 
+}
+
+.attachment {
+  margin-top: 10rpx;
+  text-decoration: underline;
+  color: blue;
 }

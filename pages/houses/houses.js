@@ -22,13 +22,13 @@ Page({
         title: '删除'
       }
     ],
-    unCheckTitle: '设为默认',
-    checkTitle: '默认',
-    unCheckUrl: '/images/uncheck.png',
-    checkUrl: '/images/check.png',
+    // unCheckTitle: '设为默认',
+    // checkTitle: '默认',
+    // unCheckUrl: '/images/uncheck.png',
+    // checkUrl: '/images/check.png',
     currentDefaultItemIndex: 0,
     readyToDeleteIndex: 0,
-    defaultHouseUid: 0
+    // defaultHouseUid: 0
   },
 
   /**
@@ -49,26 +49,15 @@ Page({
    */
   updateHouseList: function () {
     app.getHousesByOwnerIdAsync(app.globalData.loginInfo.userId, 0, 1000, data => {
-      console.log(data)
-
       app.globalData.houses = data;
-
-      if (0 != data.length && !app.getDefaultHouseUid()){
-        app.setDefaultHouseUid(data[0].uid);
-      }
-      console.log('key set data');
       this.setData({
-        houses: data,
-        defaultHouseUid: app.getDefaultHouseUid()
+        houses: data
       });
     });
   },
   onShow: function () {
-    console.log(app.getDefaultHouseUid());
-
     this.setData({
-      houses: app.globalData.houses,
-      defaultHouseUid: app.getDefaultHouseUid()
+      houses: app.globalData.houses
     });
 
     var that = this;
@@ -110,21 +99,23 @@ Page({
   // onShareAppMessage: function () {
 
   // },
-  onDefaultClick: function (e) {
-    console.log(e);
-    var clickedIndex = e.currentTarget.dataset.index;
-    if (this.data.houses[clickedIndex].uid == this.data.defaultHouseUid){
-      return;
-    }
-    app.setDefaultHouseUid(this.data.houses[clickedIndex].uid);
-    this.setData({
-      houses: this.data.houses,
-      defaultHouseUid: app.getDefaultHouseUid()
-    });
-  },
   onDeleteClick: function (e) {
     var clickedIndex = e.currentTarget.dataset.index;
     this.data.readyToDeleteIndex = clickedIndex;
+    var house = this.data.houses[clickedIndex];
+    if('editable' != house.status){
+      wx.showModal({
+        title: '无法删除',
+        content: '房产订单正在进行中...',
+        showCancel: false,
+        confirmText: '确定',
+        confirmColor: '#0f0',
+        success: res => {
+          console.log(res);
+        }
+      });
+      return;
+    }
     wx.showModal({
       title: "删除",
       content: "确定删除?",

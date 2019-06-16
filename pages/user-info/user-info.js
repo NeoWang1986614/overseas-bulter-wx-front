@@ -12,7 +12,7 @@ Page({
     nickName: '',
     name: '',
     phoneNumber: '',
-    idCardNumber: ''
+    idCardNumber: '000000'
   },
 
   /**
@@ -40,7 +40,7 @@ Page({
       this.setData({
         name: userData.name,
         phoneNumber: userData.phoneNumber,
-        idCardNumber: userData.idCardNumber
+        // idCardNumber: userData.idCardNumber
       });
     });
   },
@@ -88,9 +88,9 @@ Page({
   phoneNumberInput: function (e) {
     this.data.phoneNumber = e.detail.value;
   },
-  idCardNumberInput: function (e) {
-    this.data.idCardNumber = e.detail.value;
-  },
+  // idCardNumberInput: function (e) {
+  //   this.data.idCardNumber = e.detail.value;
+  // },
   checkUserInfoValid: function(){
     var toastTitle = null;
     console.log('nick name', this.data.nickName);
@@ -103,10 +103,11 @@ Page({
     } else if(0 == this.data.phoneNumber.length) {
       console.log('empty phone number');
       toastTitle = '电话号码为空!';
-    } else if (0 == this.data.idCardNumber.length) {
-      console.log('empty id card number');
-      toastTitle = '身份证号码为空!';
-    }
+    } 
+    // else if (0 == this.data.idCardNumber.length) {
+    //   console.log('empty id card number');
+    //   toastTitle = '身份证号码为空!';
+    // }
     console.log('toastTitle', toastTitle);
     if(toastTitle){
       wx.showToast({
