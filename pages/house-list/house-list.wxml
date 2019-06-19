@@ -2,10 +2,15 @@
 <scroll-view scroll-y="true">
   <view
   wx:for="{{houses}}"
-  style="height: 140rpx; margin-top: 10rpx; padding-top: 20rpx; background: white;"
-  data-uid="{{item.uid}}"
+  style="height: 140rpx; margin-top: 10rpx; padding-top: 20rpx; background: white; position: relative;"
+  data-index="{{index}}"
   bindtap="onHouseItemClick">
-    <view style="margin-left: 10rpx; font-size: 24rpx; font-weigth: bold">
+    <view 
+      wx:if="{{'home-decoration#completed' == item.status}}"
+      style="position: absolute; right: 100rpx; top: 30rpx; width: 50rpx; height: 50rpx; border: 2rpx solid red; border-radius: 50%; text-align: center; line-height: 50rpx; color: red;">
+      菲
+    </view>
+    <view style="margin-left: 10rpx; font-size: 24rpx; font-weigth: bold;">
       <span style="font-weight: bold;">
         {{item.name}}
       </span>
@@ -27,9 +32,12 @@
   <view 
     wx:if="{{0==houses.length}}"
     style="height: 400rpx; display: flex; justify-content: center; align-items: center; font-size: 24rpx; color: gray;">
-    您还没有菲洋家装房源
+    您还没有添加房产
   </view>
 </scroll-view>
+<button class="customer-service-btn" open-type="contact">
+  <image class="customer-service-img" mode="scaleToFill" src="/images/customer-service.png"/>
+</button>
 
 <modal 
     wx:if="{{isShowModal}}"
@@ -38,26 +46,18 @@
     no-cancel
     no-confirm>
     <view
-      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
+      wx:if="{{isSelectHouseDecoration}}"
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx; "
       bindtap="onProxyRentClick">
-      <span style="color: white;">
+      <span style="color: white;font-size: 32rpx;">
         发布并委托菲洋管家{{isHouseSale ? '出售' : '出租'}}
       </span>
     </view>
     <view
       style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
       bindtap="onSelfRentClick">
-      <span style="color: white;">
+      <span style="color: white;font-size: 32rpx;">
         自己发布{{isHouseSale ? '出售' : '出租'}}
       </span>
     </view>
-    <button
-      class="customer-btn"
-      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
-      open-type="contact"
-      bindtap="onContactClick">
-      <span style="color: white; font-size: 34rpx;">
-        询问客服
-      </span>
-    </button>
 </modal>

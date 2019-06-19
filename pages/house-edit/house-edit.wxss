@@ -174,8 +174,8 @@ input {
 }
 
 .map-container {
-  margin-top: 20rpx;
-  min-height:100rpx;
+  /* margin-top: 20rpx; */
+  min-height:140rpx;
   /* background: lightblue;  */
 }
 
@@ -218,4 +218,18 @@ input {
   align-items: center;
   background: red;
   color: white;
+}
+
+.rent-input {
+  height: 20rpx;
+  width: 300rpx;
+  margin-left: 10rpx;
+  text-align: center;
+  /* background: skyblue; */
+  font-size: 26rpx;
+  border-bottom: 1rpx solid gray;
+  color: black;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
 }

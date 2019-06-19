@@ -1,49 +1,73 @@
 <!--pages/houses/houses.wxml-->
 <view class="wrap">
   <scroll-view scroll-y="true">
-    <view class="empty-data" wx:if="{{0 ==houses.length}}">
+    <view class="empty-data" wx:if="{{0 ==sortedHouses.length}}">
       没有添加房产
     </view>
-    <view  wx:if="{{0!=houses.length}}" wx:for="{{houses}}" class="house-item-container">
-      <view class="house-name house-sub-item">
-        {{item.name}}
-      </view>
-      <view class="house-address house-sub-item">
-        <span>{{"Room " + item.roomNum}}</span>
-        <span>, </span>
-        <span>{{"Building " + item.buildingNum}}</span>
-        <span>, </span>
-        <span>{{item.streetNum + " "}}</span>
-        <span>{{item.streetName + " Street"}}</span>
-        <span>, </span>
-        <span>{{item.adLevel3}}</span>
-        <span>, </span>
-        <span>{{item.adLevel2}}</span>
-        <span>, </span>
-        <span>{{item.adLevel1}}</span>
-        <span>, </span>
-        <span>{{item.nation}}</span>
-      </view>
-      <view class="line"></view>
-      <view class="house-operate-container house-sub-item">
-        <view class="house-sub-left-operate">
+    <view
+      wx:if="{{0!=sortedHouses.length}}"
+      wx:for-index='key'
+      wx:for="{{sortedHouses}}">
+        <view
+          wx:if="{{0!=item.length}}" 
+          style="height: 40rpx; line-height: 40rpx; padding-left: 20rpx; margin-top: 40rpx; font-size: 24rpx;">
+         {{layoutMap[key]}}
         </view>
-        <view class="house-sub-right-operate">
-          <button class="operate-right-button" hover-class="operate-right-button-hover" bindtap="onEditClick" data-index="{{index}}">
-            <view class="house-operate-icon">
-              <image class="operate-icon" src="../../images/edit.png"  mode="scaleToFill"></image>
+        <view
+          wx:if="{{0!=item.length}}"
+          wx:for="{{item}}"
+          class="house-item-container">
+          <view class="house-name house-sub-item">
+            {{item.name}}
+          </view>
+          <view class="house-address house-sub-item">
+            <span>{{"Room " + item.roomNum}}</span>
+            <span>, </span>
+            <span>{{"Building " + item.buildingNum}}</span>
+            <span>, </span>
+            <span>{{item.streetNum + " "}}</span>
+            <span>{{item.streetName + " Street"}}</span>
+            <span>, </span>
+            <span>{{item.adLevel3}}</span>
+            <span>, </span>
+            <span>{{item.adLevel2}}</span>
+            <span>, </span>
+            <span>{{item.adLevel1}}</span>
+            <span>, </span>
+            <span>{{item.nation}}</span>
+          </view>
+          <view class="line"></view>
+          <view class="house-operate-container house-sub-item">
+            <view class="house-sub-left-operate">
             </view>
-            <view class="operate-title">编辑</view>
-          </button>
-          <button class="operate-delete" hover-class="operate-right-button-hover" bindtap="onDeleteClick" data-index="{{index}}">
-            <view class="house-operate-icon">
-              <image class="operate-icon" src="../../images/trash.png"  mode="scaleToFill"></image>
+            <view class="house-sub-right-operate">
+              <button
+                class="operate-right-button" 
+                hover-class="operate-right-button-hover" 
+                bindtap="onEditClick"
+                data-index="{{index}}"
+                data-key="{{key}}">
+                <view class="house-operate-icon">
+                  <image class="operate-icon" src="../../images/edit.png"  mode="scaleToFill"></image>
+                </view>
+                <view class="operate-title">编辑</view>
+              </button>
+              <button
+                class="operate-delete"    
+                hover-class="operate-right-button-hover" 
+                bindtap="onDeleteClick"
+                data-index="{{index}}"
+                data-key="{{key}}">
+                <view class="house-operate-icon">
+                  <image class="operate-icon" src="../../images/trash.png"  mode="scaleToFill"></image>
+                </view>
+                <view class="operate-title">删除</view>
+              </button>
             </view>
-            <view class="operate-title">删除</view>
-          </button>
+          </view>
         </view>
-      </view>
     </view>
+    
   </scroll-view>
   <view class="add-button-container">
     <button class="add-button" hover-class="add-button-hover" bindtap="onAddClick">

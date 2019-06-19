@@ -52,7 +52,9 @@
   <view class="bottom-wrap" wx:if="{{!isOthers}}">
     <view class="price-container">
       ¥ {{minPriceForDisplay}}
-      <span>起</span>
+      <span>
+        {{isHouseMaintain?'元/年起':'元起'}}
+      </span>
     </view>
     <button class="order-button" hover-class="order-button-hover" bindtap="onSelectHouseClick">
       <text decode="true" space="emsp">选择房产</text>
@@ -61,7 +63,7 @@
   <modal 
     wx:if="{{isShowHouseModal}}"
     hidden="{{!isShowHouseModal}}" 
-    title="请选择您的房产" 
+    title="{{isHousesEmpty?'':'请选择您的房产'}}" 
     confirm-text="{{isHousesEmpty ? '添加房产' : '提交订单'}}" 
     cancel-text="取消" 
     bindcancel="onHouseModalCancel" 
@@ -70,10 +72,12 @@
     <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}">
       <span>继续添加房产</span>
     </button>
-    <view class="empty-data" wx:if="{{isHousesEmpty}}">
-      您尚未添加房产
-    </view>
-    <scroll-view scroll-y="true" class="house-radio-container" wx:else>
+    <text class="empty-data" style="text-align: center; margin-top: -20rpx; line-height: 50rpx;" wx:if="{{isHousesEmpty}}">
+      {{'您还没有"' + layoutOptions[layoutOptionsCurrentIndex].title + '"户型的房产\n请添加该户型房产！'}}
+    </text>
+    <scroll-view scroll-y="true"
+      class="house-radio-container" 
+      wx:if="{{!isHousesEmpty}}">
       <radio-group bindchange="onHouseRadioChange">
         <view class="house-item-container" wx:for="{{housesDescriptions}}">
           <radio class="house-radio" value="{{index}}"/>

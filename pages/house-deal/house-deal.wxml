@@ -17,26 +17,31 @@
       mode="scaleToFill"
       src="{{'' == item.image ? null : item.image}}"/>
     <view class="info">
+      <view class="sub-info-1" >
+        <span style="width: 150rpx; font-weight: bold; font-size: 28rpx;">
+          {{houseInfoMap[item.houseId].name}}
+        </span>
+      </view>
       <view class="sub-info-1" style="margin-top: 10rpx;">
         房屋性质:
         <span style="margin-left: 6rpx; width: 150rpx;">
-          {{map.text[item.property]}}
+          {{map.text[houseInfoMap[item.houseId].property]}}
         </span>
         <span style="margin-left: 6rpx;">
           {{map.text[item.source]}}{{isHouseSale?'出售':'出租'}}
         </span>
       </view>
-      <view class="sub-info-1" style="margin-top: 18rpx;">
+      <view class="sub-info-1" style="margin-top: 9rpx;">
         面积: 
         <span style="width: 200rpx; color: green; margin-left: 6rpx;">
-          {{item.area}}m²
+          {{houseInfoMap[item.houseId].area}}m²
         </span>
-        装修:
+        装修情况:
         <span style="color: green; margin-left: 6rpx;">
           {{item.decoration}}
         </span>
       </view>
-      <view class="sub-info-1" style="margin-top: 18rpx;">
+      <view class="sub-info-1" style="margin-top: 9rpx;">
         {{isHouseSale?'售价(比索):':'租金(比索):'}} 
         <span style="color: red; margin-left: 6rpx;">
           {{item.cost}}
@@ -65,18 +70,27 @@
     bindconfirm="onModalCancel"
     no-cancel
     no-confirm>
+    <!--
     <view
       style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green;"
-      bindtap="onExistHouseClick">
+      bindtap="onDecorationHouseClick">
       <span style="color: white;">
         菲洋家装房源
+      </span>
+    </view>
+    -->
+    <view
+      style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; margin-top: 10rpx; background: green;"
+      bindtap="onHouseListClick">
+      <span style="color: white;">
+        我的房产
       </span>
     </view>
     <view
       style="width: 100%; height: 100rpx; line-height: 100rpx; text-align: center; background: green; margin-top: 10rpx;"
       bindtap="onNewHouseDealsClick">
       <span style="color: white;">
-        新房源
+        我的新房产
       </span>
     </view>
 </modal>

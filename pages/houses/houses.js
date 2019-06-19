@@ -3,6 +3,7 @@
 const app=getApp()
 const config = require('../../common/config.js')
 const map = require('../../common/map.js')
+const http = require('../../utils/http.js')
 
 Page({
 
@@ -10,7 +11,8 @@ Page({
    * Page initial data
    */
   data: {
-    houses: [],
+    sortedHouses:{},
+    layoutMap: {},
     map: map,
     operateItems:[
       {
@@ -22,19 +24,41 @@ Page({
         title: '删除'
       }
     ],
-    // unCheckTitle: '设为默认',
-    // checkTitle: '默认',
-    // unCheckUrl: '/images/uncheck.png',
-    // checkUrl: '/images/check.png',
+    
     currentDefaultItemIndex: 0,
     readyToDeleteIndex: 0,
-    // defaultHouseUid: 0
+
   },
 
   /**
    * Lifecycle function--Called when page load
    */
+  parseLayoutsToMap: function(layouts){
+    if (0 == layouts.length){
+      return;
+    }
+    var ret = {};
+    for(var i=0;i<layouts.length;i++){
+      ret[layouts[i].value] = layouts[i].title;
+    }
+    console.log('layout map = ');
+    console.log(ret);
+    return ret;
+  },
+  querySearchLayout: function (callback) {
+    http.querySearchLayoutAsync(0, 10000, res => {
+      console.log('query search layouts = ');
+      console.log(res);
+      this.setData({
+        layoutMap: this.parseLayoutsToMap(res)
+      });
+      if (callback) {
+        callback();
+      }
+    });
+  },
   onLoad: function (options) {
+    
   },
 
   /**
@@ -47,22 +71,49 @@ Page({
   /**
    * Lifecycle function--Called when page show
    */
+  initSortHouses: function(){
+    this.data.sortedHouses ={
+      'studio': [],
+      'one-bedroom': [],
+      'two-bedroom': [],
+      'two-bedroom-two-bathroom': []
+    };
+  },
+  sortHouses: function(houses){
+    if(0==houses.length){
+      return;
+    }
+    var ret = this.data.sortedHouses;
+    for(var i=0;i<houses.length;i++){
+      var tempHouse = houses[i];
+      if (ret.hasOwnProperty(tempHouse.layout)){
+        ret[tempHouse.layout].push(tempHouse);
+      } else {
+        console.log(tempHouse.layout);
+        ret[tempHouse.layout] = [tempHouse];
+      }
+    }
+    this.setData({
+      sortedHouses:ret
+    });
+  },
+  refreshList: function(){
+    this.querySearchLayout(_ => {
+      this.updateHouseList();
+    });
+  },
   updateHouseList: function () {
     app.getHousesByOwnerIdAsync(app.globalData.loginInfo.userId, 0, 1000, data => {
       app.globalData.houses = data;
-      this.setData({
-        houses: data
-      });
+      this.sortHouses(data);
     });
   },
   onShow: function () {
     this.setData({
       houses: app.globalData.houses
     });
-
-    var that = this;
-    //get houses
-    this.updateHouseList();
+    this.initSortHouses();
+    this.refreshList();
   },
 
   /**
@@ -100,9 +151,10 @@ Page({
 
   // },
   onDeleteClick: function (e) {
-    var clickedIndex = e.currentTarget.dataset.index;
-    this.data.readyToDeleteIndex = clickedIndex;
-    var house = this.data.houses[clickedIndex];
+    console.log(e);
+    var index = e.currentTarget.dataset.index;
+    var key = e.currentTarget.dataset.key;
+    var house = this.data.sortedHouses[key][index];
     if('editable' != house.status){
       wx.showModal({
         title: '无法删除',
@@ -127,15 +179,14 @@ Page({
       success: res => {
         console.log(res)
         if(true == res.confirm){
-          this.deleteHouseByIndex(this.data.readyToDeleteIndex);
+          this.deleteHouseByHouseId(house.uid);
         }
       }
     });
   },
-  deleteHouseByIndex: function (index) {
-    var deletedHouse = this.data.houses[index];
+  deleteHouseByHouseId: function (houseId) {
     wx.request({
-      url: config.generateFullUrl('/house?uid=' + deletedHouse.uid),
+      url: config.generateFullUrl('/house?uid=' + houseId),
       method: 'DELETE',
       header: {
         'content-type': 'application/json',
@@ -146,7 +197,7 @@ Page({
         if(200 == res.statusCode) {
           if(0 == res.data.code){
             console.log('delete success');
-            this.updateHouseList();
+            this.refreshList();
           }
         }
       }
@@ -154,13 +205,16 @@ Page({
   },
   onEditClick: function (e) {
     console.log(e);
+    var index = e.currentTarget.dataset.index;
+    var key = e.currentTarget.dataset.key;
+    var house = this.data.sortedHouses[key][index];
     wx.navigateTo({
-      url: '../../pages/house-edit/house-edit?uid=' + this.data.houses[e.currentTarget.dataset.index].uid + '&type=edit',
+      url: '../../pages/house-edit/house-edit?houseId=' + house.uid + '&editType=edit',
     });
   },
   onAddClick: function () {
     wx.navigateTo({
-      url: '../../pages/house-edit/house-edit?type=add',
+      url: '../../pages/house-edit/house-edit?editType=add',
     });
   }
 })

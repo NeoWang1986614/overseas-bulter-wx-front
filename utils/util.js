@@ -109,6 +109,97 @@ function computeHomeDecorationPrice(area, minArea, basePrice, priceStep) {
   }
 }
 
+function isIPhoneModel(){
+//判断机型
+  var model = "";
+  wx.getSystemInfo({
+    success: function (res) {
+      model = res.model;
+    }
+  })
+  console.log('get phone model');
+  console.log(model);
+  if (model.indexOf("iPhone") <= 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function compressImage(imgPath, canvasId, width, height, callback){
+
+  wx.getImageInfo({
+    src: imgPath,
+    success: res => {
+      console.log('get image info');
+      console.log(res);
+
+      //---------利用canvas压缩图片--------------
+      var ratio = 2;
+      var canvasWidth = res.width //图片原始长宽
+      var canvasHeight = res.height
+      while (canvasWidth > width || canvasHeight > height) {// 保证宽高在400以内
+        canvasWidth = Math.trunc(res.width / ratio)
+        canvasHeight = Math.trunc(res.height / ratio)
+        ratio++;
+      }
+
+      //----------绘制图形并取出图片路径--------------
+      var ctx = wx.createCanvasContext(canvasId)
+      ctx.drawImage(res.path, 0, 0, canvasWidth, canvasHeight)
+      ctx.draw(false, setTimeout(function () {
+        wx.canvasToTempFilePath({
+          canvasId: canvasId,
+          fileType: 'jpg',
+          destWidth: canvasWidth,
+          destHeight: canvasHeight,
+          success: function (res) {
+            console.log('最终图片:');
+            console.log(res.tempFilePath)//最终图片路径
+            console.log(res);
+            callback(res.tempFilePath);
+          },
+          fail: function (res) {
+            console.log(res.errMsg)
+          }
+        })
+      }, 100))    //留一定的时间绘制canvas
+
+    },
+    fail: res => {
+      console.log(res.errMsg);
+    }
+  });
+
+}
+
+function calculateCompressImageSize(imagePath, maxWidth, maxHeight, callback) {
+  wx.getImageInfo({
+    src: imagePath,
+    success: res => {
+      console.log('get image info');
+      console.log(res);
+
+      //---------利用canvas压缩图片--------------
+      var ratio = 2;
+      var canvasWidth = res.width //图片原始长宽
+      var canvasHeight = res.height
+      while (canvasWidth > maxWidth || canvasHeight > maxHeight) {// 保证宽高在指定以内
+        canvasWidth = Math.trunc(res.width / ratio)
+        canvasHeight = Math.trunc(res.height / ratio)
+        ratio++;
+      }
+
+      if (callback) {
+        callback(canvasWidth, canvasHeight)
+      }
+
+    },
+    fail: res => {
+      console.log(res.errMsg);
+    }
+  });
+}
 
 module.exports = {
   formatTime: formatTime,
@@ -122,5 +213,8 @@ module.exports = {
   getDateCnText: getDateCnText,
   convertDateToCnText: convertDateToCnText,
   convertTimeToCnText: convertTimeToCnText,
-  computeHomeDecorationPrice: computeHomeDecorationPrice
+  computeHomeDecorationPrice: computeHomeDecorationPrice,
+  compressImage: compressImage,
+  isIPhoneModel: isIPhoneModel,
+  calculateCompressImageSize: calculateCompressImageSize
 }

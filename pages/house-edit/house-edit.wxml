@@ -7,7 +7,13 @@
           楼盘名字:
         </view>
         <view class="item-input-container">
-          <input class="item-input" placeholder="点击输入楼盘名字" value="{{houseName}}" bindblur="onHouseNameInput"></input>
+          <input
+            class="item-input"
+            placeholder="点击输入楼盘名字"
+            value="{{houseName}}"
+            bindblur="onHouseNameInput"
+            disabled="{{isHouseInfoReadOnly}}">
+          </input>
         </view>
       </view>
       <view class="item-container">
@@ -16,6 +22,7 @@
         </view>
         <view class="item-input-container">
           <picker
+            disabled="{{isHouseInfoReadOnly}}"
             mode="selector"
             bindchange="onPropertyPickerChange" 
             value="{{propertyCurrentIndex}}"
@@ -32,6 +39,7 @@
         </view>
         <view class="item-input-container">
             <picker
+            disabled="{{isHouseInfoReadOnly}}"
             mode="selector"
             bindchange="onNationPickerChange" 
             value="{{nationCurrentIndex}}"
@@ -48,6 +56,7 @@
         </view>
         <view class="item-input-container">
             <picker
+            disabled="{{isHouseInfoReadOnly}}"
             mode="selector"
             bindchange="onAdLevel1PickerChange" 
             value="{{adLevel1CurrentIndex}}"
@@ -64,6 +73,7 @@
         </view>
         <view class="item-input-container">
             <picker
+            disabled="{{isHouseInfoReadOnly}}"
             mode="selector"
             bindchange="onAdLevel2PickerChange" 
             value="{{adLevel2CurrentIndex}}"
@@ -79,7 +89,13 @@
           区域(可选):
         </view>
         <view class="item-input-container">
-          <input class="item-input" placeholder="点击输入镇/社/村名字" value="{{adLevel3}}" bindblur="onAdLevel3Input"></input>
+          <input
+            disabled="{{isHouseInfoReadOnly}}"
+            class="item-input"
+            placeholder="点击输入镇/社/村名字"
+            value="{{adLevel3}}"
+            bindblur="onAdLevel3Input">
+          </input>
         </view>
       </view>
       <view class="item-container">
@@ -88,7 +104,14 @@
             街道名称:
           </view>
           <view class="input-short-text">
-            <input type="text" placeholder="请输入街道名称" value="{{streetName}}" bindinput="onStreetNameInput" fixed="true"></input>
+            <input
+              disabled="{{isHouseInfoReadOnly}}"
+              type="text"
+              placeholder="请输入街道名称"
+              value="{{streetName}}"
+              bindinput="onStreetNameInput"
+              fixed="true">
+            </input>
           </view>
         </view>
         <view class="item-container" style="width: 300rpx;">
@@ -96,7 +119,13 @@
             街道号码:
           </view>
           <view class="input-short-text">
-            <input type="number" placeholder="请输入街道号码" value="{{streetNum}}" bindinput="onStreetNumInput"></input>
+            <input
+              disabled="{{isHouseInfoReadOnly}}"
+              type="number"
+              placeholder="请输入街道号码"
+              value="{{streetNum}}"
+              bindinput="onStreetNumInput">
+            </input>
           </view>
         </view>
       </view>
@@ -105,9 +134,23 @@
           单元号:
         </view>
         <view class="item-input-container">
-          <input class="input-short-number" type="number" placeholder="" value="{{buildingNum}}" bindinput="onBuildingNumberInput"></input>
+          <input
+            disabled="{{isHouseInfoReadOnly}}"
+            class="input-short-number"
+            type="number"
+            placeholder=""
+            value="{{buildingNum}}"
+            bindinput="onBuildingNumberInput">
+          </input>
           栋
-          <input class="input-short-number" type="number" placeholder="" value="{{roomNum}}" bindinput="onRoomNumberInput"></input>
+          <input
+            disabled="{{isHouseInfoReadOnly}}"
+            class="input-short-number"
+            type="number"
+            placeholder="(可选)"
+            value="{{roomNum}}"
+            bindinput="onRoomNumberInput">
+          </input>
           号
         </view>
       </view>
@@ -116,40 +159,23 @@
           面积:
         </view>
         <view class="item-input-container">
-          <input class="input-short-number" type="digit" value="{{area}}"bindinput="onAreaInput"></input>
+          <input
+            disabled="{{isHouseInfoReadOnly}}"
+            class="input-short-number"
+            type="digit"
+            value="{{area}}"
+            bindinput="onAreaInput">
+          </input>
           平方米
         </view>
       </view>
-      <!--
-      <view class="item-container" style="height: 160rpx;">
-        <view class="item-static" style="width: 160rpx;">
-          面积确认图:
-        </view>
-        <view class="item-input-container">
-          <view wx:for="{{areaCharts}}"
-            class="layoutchart-item"
-            style="margin-right: 20rpx;">
-            <image
-              mode="scaleToFill"
-              style="width: 100rpx; height: 100rpx;"
-              src="{{item}}"
-              data-src="{{item}}"
-              bindtap="onPreviwImageClick">
-            </image>
-            <view class="layoutchart-delete-btn" bindtap="onDeleteAreaChart">
-              删 除
-            </view>
-          </view>
-          <button class="image-add-btn" bindtap="chooseLocalAreaImage">+</button>
-        </view>
-      </view>
-      -->
       <view class="item-container">
         <view class="item-static">
           户型:
         </view>
         <view class="item-input-container">
-            <picker 
+            <picker
+              disabled="{{isHouseInfoReadOnly}}" 
               mode="selector" 
               bindchange="onLayoutPickerChange" 
               value="{{layoutCurrentIndex}}" 
@@ -161,8 +187,8 @@
         </view>
       </view>
       <view class="item-container" style="height: 160rpx;">
-        <view class="item-static" style="width: 160rpx;">
-          户型图:
+        <view class="item-static" style="width: 190rpx;">
+          户型图(可选):
         </view>
         <view class="item-input-container">
           <view wx:for="{{layoutCharts}}"
@@ -175,15 +201,141 @@
               data-src="{{item}}"
               bindtap="onPreviwImageClick">
             </image>
-            <view class="layoutchart-delete-btn" bindtap="onDeleteLayoutChart">
+            <view
+              wx:if="{{!isHouseInfoReadOnly}}"
+              class="layoutchart-delete-btn"
+              bindtap="onDeleteLayoutChart">
               删 除
             </view>
           </view>
-          <button class="image-add-btn" bindtap="chooseLocalLayoutImage">+</button>
+          <button
+            wx:if="{{!isHouseInfoReadOnly}}"
+            class="image-add-btn"
+            bindtap="chooseLocalLayoutImage">
+            +
+          </button>
         </view>
       </view>
-      <view style="height: 2rpx; background: lightgray;"></view>
-      <view class="map-container">
+
+      <!-- 出租信息 开始-->
+      <view
+        wx:if="{{isHouseDeal}}"
+        style="height: 4rpx; background: lightblue; margin-top: 10rpx; margin-bottom: 30rpx;"></view>
+      <view
+        wx:if="{{isHouseDeal}}"
+        style="min-height: 200rpx; font-size: 26rpx; color: gray; font-weight: light;">
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            装修情况:
+          </span>
+          <input
+          class="rent-input"
+          style="width: 600rpx;"
+          placeholder=""
+          value="{{houseDeal.decoration}}"
+          bindblur="onDecorationInput"/>
+        </view>
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            {{isHouseSale?'出售价格(比索):':'出租价格(比索/月):'}}
+          </span>
+          <input
+          class="rent-input"
+          style="width: 490rpx;"
+          placeholder=""
+          value="{{houseDeal.cost}}"
+          bindblur="onCostInput"/>
+        </view>
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            联系人:
+          </span>
+          <input
+          class="rent-input"
+          style="width: 620rpx;"
+          placeholder=""
+          value="{{houseDeal.linkman}}"
+          bindblur="onLinkmanInput"/>
+        </view>
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            联系电话:
+          </span>
+          <input
+          class="rent-input"
+          style="width: 600rpx;"
+          placeholder=""
+          value="{{houseDeal.contactNum}}"
+          bindblur="onContactNumInput"/>
+        </view>
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            邮箱:
+          </span>
+          <input
+          class="rent-input"
+          style="width: 650rpx;"
+          placeholder=""
+          value="{{houseDeal.mail}}"
+          bindblur="onMailInput"/>
+        </view>
+        <view class="item-container">
+          <span style="margin-left: 10rpx; float: left;">
+            微信:
+          </span>
+          <input
+          class="rent-input"
+          style="width: 650rpx;"
+          placeholder=""
+          value="{{houseDeal.winxin}}"
+          bindblur="onWeixinInput"/>
+        </view>
+        <view class="item-container" style="height: 140rpx;">
+          <span style="margin-left: 10rpx; float: left;">
+            房源图片(可选):
+          </span>
+          <view style="width: 500rpx; height: 120rpx; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+            <view 
+              wx:for="{{houseDealImageArr}}"
+              style="width: 80rpx; height: 120rpx; margin-right: 10rpx;">
+              <image
+                style="width: 100%; height: 80rpx;"
+                data-url="{{item}}"
+                bindtap="onImageItemClick"
+                src="{{item}}"
+                data-src="{{item}}"
+                bindtap="onPreviwImageClick"/>
+              <view style="width: 100%; height: 40rpx; background: red; color: white; font-size: 24rpx; display: flex; justify-content: center; align-items: center;"
+              data-index="{{index}}"
+              bindtap="onHouseDealImageDeleteClick">
+                删除
+              </view>
+            </view>
+            <button
+            wx:if="{{houseDealImageTotalCount > houseDealImageArr.length}}"
+            style="width: 80rpx; height: 80rpx; display: flex; justify-content: center; align-items: center; margin: 0;"
+            bindtap="onChooseHouseDealImage">
+              +
+            </button>
+          </view>
+        </view>
+        <view style="min-height: 100rpx;">
+          <textarea
+          style="margin: 0 auto; margin-top: 6rpx; margin-bottom: 30rpx; width: 96%; height: 200rpx; border: 1rpx solid gray;"
+          placeholder="输入补充说明(可选)"
+          value="{{houseDeal.note}}"
+          bindblur="onNoteInput"/>
+        </view>
+      </view>
+       <!-- 出租信息 结束-->
+
+      <!-- 地图 开始 -->
+      <view
+        wx:if="{{!isHouseInfoReadOnly}}"
+        style="height: 4rpx; background: lightblue; margin-top: 10rpx;margin-bottom: 10rpx;"></view>
+      <view
+        wx:if="{{!isHouseInfoReadOnly}}"
+        class="map-container">
         <checkbox-group  style="font-size: 30rpx; color: gray;" bindchange="onMapCheckChange">
             <checkbox style="transform:scale(0.8);" checked="{{isOpenMap}}">
               使用地图来定位地址
@@ -213,12 +365,16 @@
           </cover-view>
         </map>
       </view>
+      <!-- 地图 结束 -->
     </scroll-view>
   </view>
 
   <view class="save-item-container">
-    <button class="save-button" hover-class="save-button-hover" bindtap="onSaveClick">
-      <text decode="true" space="emsp">保&emsp;&emsp;存</text>
+    <button class="save-button" hover-class="save-button-hover" bindtap="onSaveOrPublishClick">
+        {{isHouseDeal?'发 布':'保 存'}}
     </button>
   </view>
 </view>
+
+<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;">
+</canvas>

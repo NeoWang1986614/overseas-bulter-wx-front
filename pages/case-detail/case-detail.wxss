@@ -1,0 +1,12 @@
+/* pages/case-detail/case-detail.wxss */
+.wrap {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: whitesmoke;
+}
+
+.material-web-view {
+  height: 100%;
+  background: lightcyan;
+}

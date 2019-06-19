@@ -1,5 +1,5 @@
 <!--pages/rent-house-detail/rent-house-detail.wxml-->
-<scroll-view style="height: 90%;" scroll-y="true">
+<scroll-view style="height: 100%;" scroll-y="true">
   <swiper style="height:400rpx"
     indicator-dots="true"
     autoplay="true"
@@ -16,21 +16,33 @@
 
   <view class="info-container">
     <view class="sub-info">
+      楼盘名字:
+      <span style="color: black;">
+        {{houseInfo.name}}
+      </span>
+    </view>
+    <view class="sub-info">
       房屋性质: 
       <span style="color: black">
-        {{map.text[houseDeal.property]}}
+        {{map.text[houseInfo.property]}}
       </span>
     </view>
     <view class="sub-info">
       面积: 
       <span style="color: black;">
-        {{houseDeal.area}}m²
+        {{houseInfo.area}}m²
+      </span>
+    </view>
+    <view class="sub-info">
+      户型: 
+      <span style="color: black;">
+        {{layoutTitleMap[houseInfo.layout]}}
       </span>
     </view>
     <view class="sub-info">
       地址: 
       <span style="color: black;">
-        {{houseDeal.address}}
+        {{houseAddress}}
       </span>
     </view>
     <view class="sub-info">
@@ -106,5 +118,4 @@
       </span>
     </button>
   </view>
-
 </scroll-view>

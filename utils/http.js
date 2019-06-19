@@ -317,6 +317,27 @@ function getHouseDealAsync(uid, callback) {
   })
 }
 
+function getHousesByUidsAsync(uids, callback) {
+  wx.request({
+    url: config.generateFullUrl('/house/search?queryType=uids'),
+    method: 'POST',
+    data: {
+      uids: uids
+    },
+    header: {
+      'content-type': 'application/json',
+      'Accept': 'application/json'
+    },
+    success: res => {
+      console.log(res.data);
+      var convertedHouses = houseEntity.convertHouseEntities(res.data)
+      if (callback) {
+        callback(convertedHouses);
+      }
+    }
+  })
+}
+
 module.exports = {
   loginAsync: loginAsync,
   querySearchServicePrimaryAsync: querySearchServicePrimaryAsync,
@@ -331,5 +352,6 @@ module.exports = {
   queryCarouselFigureAsync: queryCarouselFigureAsync,
   queryHouseDealAsync: queryHouseDealAsync,
   addHouseDealAsync: addHouseDealAsync,
-  getHouseDealAsync: getHouseDealAsync
+  getHouseDealAsync: getHouseDealAsync,
+  getHousesByUidsAsync: getHousesByUidsAsync
 }

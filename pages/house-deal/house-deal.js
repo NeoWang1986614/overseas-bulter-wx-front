@@ -14,6 +14,7 @@ Page({
     isHouseRent: false,
     map: map,
     houseDeals: [],
+    houseInfoMap: {},
     isShowModal: false,
     isMoreData: false,
     countPerPage: 5,
@@ -84,6 +85,44 @@ Page({
         });
         this.checkIsMoreData(total);
         this.data.currentOffset += this.data.countPerPage;
+        this.getHousesByUidsAsync();
+    });
+  },
+  getHouseIdsFromHouseDeals: function(){
+    if (0 == this.data.houseDeals.length){
+      return [];
+    }
+    var ret = [];
+    for(var i = 0;i<this.data.houseDeals.length;i++){
+      ret.push(this.data.houseDeals[i].houseId);
+    }
+    return ret;
+  },
+  makeHouseInfoMap: function(arr){
+    if(0==arr.length){
+      return;
+    }
+    var tempMap={};
+    for (var i = 0; i < arr.length; i++) {
+      tempMap[arr[i].uid] = arr[i];
+    }
+    console.log('house info map');
+    console.log(tempMap);
+
+    this.setData({
+      houseInfoMap: tempMap
+    });
+  },
+  getHousesByUidsAsync: function(){
+    var houseIds = this.getHouseIdsFromHouseDeals();
+    if(0==houseIds.length){
+      return;
+    }
+    console.log(houseIds);
+    http.getHousesByUidsAsync(houseIds, res=>{
+      console.log('getHousesByUidsAsync');
+      console.log(res);
+      this.makeHouseInfoMap(res);
     });
   },
   parseImageArr: function(arr){
@@ -166,7 +205,15 @@ Page({
       isShowModal: false
     });
   },
-  onExistHouseClick: function(){
+  onDecorationHouseClick: function(){
+    wx.navigateTo({
+      url: '../../pages/house-list/house-list?type=' + this.data.houseDealType + '&category=decoration',
+    });
+    this.setData({
+      isShowModal: false
+    });
+  },
+  onHouseListClick: function () {
     wx.navigateTo({
       url: '../../pages/house-list/house-list?type=' + this.data.houseDealType,
     });
@@ -176,7 +223,7 @@ Page({
   },
   onNewHouseDealsClick: function(){
     wx.navigateTo({
-      url: '../../pages/house-deal-detail/house-deal-detail?type='+this.data.houseDealType + '&source=self',
+      url: '../../pages/house-edit/house-edit?dealtype='+this.data.houseDealType + '&source=self&isHouseDeal',
     });
     this.setData({
       isShowModal: false

@@ -374,7 +374,7 @@ App({
   },
   getHousesByOwnerIdAsync: function(ownerId, offset, count, callback) {
     wx.request({
-      url: config.generateFullUrl('/house/search'),
+      url: config.generateFullUrl('/house/search?queryType=ownerId'),
       method: 'POST',
       data: {
         offset: offset,

@@ -18,6 +18,8 @@ Page({
     isHouseRent: false,
     isProxy: false,
     houseDeal: {},
+    houseInfo: {},
+    houseAddress: '',
     headImageArr:[],
 
     orderId: '',
@@ -62,16 +64,29 @@ Page({
     });
   },
   makeHeadImageArr: function(){
-    if(0==this.data.houseDeal.image.length){
-      return;
+    var headImageArr = [];
+    if(0!=this.data.houseDeal.image.length){
+      console.log(this.data.houseDeal.image);
+      headImageArr = headImageArr.concat(JSON.parse(this.data.houseDeal.image))
     }
+    if(0!=this.data.houseInfo.meta){
+      console.log(this.data.houseInfo.meta);
+      headImageArr = headImageArr.concat(JSON.parse(this.data.houseInfo.meta).layoutChart);
+    }
+
     this.setData({
-      headImageArr: JSON.parse(this.data.houseDeal.image)
+      headImageArr: headImageArr
     });
+    
   },
   checkIsProxy: function(){
     this.setData({
       isProxy: 'proxy' == this.data.houseDeal.source
+    });
+  },
+  makeHouseAddress: function(){
+    this.setData({
+      houseAddress: util.getHouseAddress(this.data.houseInfo)
     });
   },
   onLoad: function (options) {
@@ -83,12 +98,24 @@ Page({
       this.makeLayoutTitleMap();
     });
     http.getHouseDealAsync(this.data.houseDealId, res=>{
+      console.log(' house deal = ');
       console.log(res);
       this.setData({
         houseDeal: res
       });
-      this.makeHeadImageArr();
+
       this.checkIsProxy();
+
+      http.getHouseAsync(this.data.houseDeal.houseId, res1=>{
+        console.log('house info = ');
+        console.log(res1);
+        this.setData({
+          houseInfo: res1
+        });
+        this.makeHouseAddress();
+        this.makeHeadImageArr();
+      });
+
     });
   },
 
@@ -194,6 +221,19 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    console.log('转发');
+    console.log(this.data.houseInfo);
+    var title = this.data.map.text[this.data.houseInfo.adLevel2] + this.data.houseInfo.name + this.data.houseInfo.area + 'm²' + this.data.map.text[this.data.houseInfo.property] + (this.data.isHouseSale?'出售':'出租') + '...';
+    console.log(this.data.isHouseSale);
+    console.log(title);
+    return{
+      title: title,
+      success: res => {
+        console.log(res);
+      },
+      fail: res => {
+        console.log(res);
+      }
+    }
   }
 })

@@ -16,6 +16,39 @@ Page({
    * Page initial data
    */
   data: {
+    isHouseDeal: false,
+    houseId: '',
+    isHouseIdExist: false,
+    /*出租信息*/
+    isHouseInfoReadOnly: false,
+    houseDealType: '',
+    houseDealSource: '',
+    isProxy: false,
+    isHouseRent: false,
+    isHouseSale: false,
+    houseDeal: {
+      dealType: '',
+      source: '',
+      houseId: '',
+      decoration: '',
+      cost: '',
+      linkman: '',
+      contactNum: '',
+      mail: '',
+      weixin: '',
+      image: '',
+      note: '',
+      creator: '',
+      meta: ''
+    },
+    houseDealImageTotalCount: 4,
+    houseDealImageArr:[],
+    rentUncompressImages:[],
+
+
+
+    cWidth: 400,
+    cHeight: 400,
     /*const*/
     invalidIndex: utils.invalidIndex,
     map: map,
@@ -192,7 +225,6 @@ Page({
       roomNum: this.data.houseInfo.roomNum,
       area: this.data.houseInfo.area,
       layoutCharts: meta.layoutChart,
-      // areaCharts: meta.areaChart,
       isEditable: 'editable' == this.data.houseInfo.status
     });
   },
@@ -211,23 +243,85 @@ Page({
       propertyTextOptions: this.data.propertyTextOptions
     });
   },
+  parseOptions: function(options){
+    if (options && options.hasOwnProperty('houseId')) {
+      this.data.houseId = options['houseId'];
+      this.data.isHouseIdExist = true;
+      console.log('house id = ' + this.data.houseId);
+    }
+    if (options && options.hasOwnProperty('editType')) {
+      this.data.editType = options['editType'];
+    }
+    if (options && options.hasOwnProperty('isHouseDeal')) {
+      this.setData({
+        isHouseDeal: true
+      });
+    }
+    if (options && options.hasOwnProperty('source')) {
+      this.setData({
+        houseDealSource: options['source']
+      });
+      console.log('parseOptions source=');
+      console.log(this.data.houseDealType);
+      this.setData({
+        isProxy: 'proxy' == this.data.houseDealSource
+      });
+    }
+    if (options && options.hasOwnProperty('dealtype')) {
+      this.setData({
+        houseDealType: options['dealtype']
+      });
+      console.log('parseOptions dealtype=');
+      console.log(this.data.houseDealType);
+      this.setData({
+        isHouseRent: 'house-rent' == this.data.houseDealType,
+        isHouseSale: 'house-sale' == this.data.houseDealType
+      });
+    }
+
+    if(this.data.isHouseDeal && this.data.isHouseIdExist){
+      this.setData({
+        isHouseInfoReadOnly: true
+      });
+    }
+
+  },
+  initHouseInfoPage:function(){
+    if (this.data.editType == 'add') {
+      this.data.navigateTitle = '添加新房产';
+      this.data.isEdit = false;
+      this.setData({
+        propertyCurrentIndex: 0
+      });
+    } else {
+      this.data.navigateTitle = '编辑房产信息';
+      this.data.isEdit = true;
+      this.getHouseInfoAsync(this.data.houseId, res => {
+        this.initHouseInfo();
+      });
+    }
+  },
+  initHouseDealPage: function () {
+    this.data.navigateTitle = '出租信息填写';
+    this.setData({
+      propertyCurrentIndex: 0
+    });
+    if(this.data.isHouseIdExist){
+      this.getHouseInfoAsync(this.data.houseId, res => {
+        this.initHouseInfo();
+      });
+    }
+  },
   onLoad: function (options) {
     console.log(options);
     this.makeTextOptions();
 
-    this.data.editType = options['type'];
-    if (this.data.editType == 'add') {
-      this.data.navigateTitle = '添加新房产';
-      this.data.isEdit = false;
+    this.parseOptions(options);
+
+    if(this.data.isHouseDeal){
+      this.initHouseDealPage();
     }else{
-      this.data.navigateTitle = '编辑房产';
-      this.data.isEdit = true;
-      if(!options.hasOwnProperty('uid')){
-        return;
-      }
-      this.getHouseInfoAsync(options['uid'], res=>{
-        this.initHouseInfo();
-      });
+      this.initHouseInfoPage();
     }
   },
   onHouseNameInput: function (e) {
@@ -311,6 +405,84 @@ Page({
       urls: [src]
     });
   },
+
+  /*出租*/
+  onNoteInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.note = e.detail.value;
+  },
+  onWeixinInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.weixin = e.detail.value;
+  },
+  onMailInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.mail = e.detail.value;
+  },
+  onContactNumInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.contactNum = e.detail.value;
+  },
+  onLinkmanInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.linkman = e.detail.value;
+  },
+  onCostInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.cost = e.detail.value;
+  },
+  onDecorationInput: function (e) {
+    console.log(e);
+    this.data.houseDeal.decoration = e.detail.value;
+  },
+  compressImageSingle: function (index) {
+
+    utils.calculateCompressImageSize(
+      this.data.rentUncompressImages[index],
+      400,
+      400,
+      (w, h) => {
+        console.log('宽 = ' + w);
+        console.log('高 = ' + h);
+        this.setData({
+          cWidth: w,
+          cHeight: h
+        });
+        utils.compressImage(
+          this.data.rentUncompressImages[index],
+          'canvas',
+          this.data.cWidth,
+          this.data.cHeight,
+          res1 => {
+            console.log('res1 = ');
+            console.log(res1);
+            if (res1) {
+              this.data.houseDealImageArr.push(res1);
+              this.setData({
+                houseDealImageArr: this.data.houseDealImageArr
+              });
+              if (++index < this.data.rentUncompressImages.length) {
+                this.compressImageSingle(index);
+              }
+            }
+          });
+      });
+  },
+  onChooseHouseDealImage: function () {
+    var leftCount = this.data.houseDealImageTotalCount - this.data.houseDealImageArr.length;
+    wx.chooseImage({
+      count: leftCount,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: res => {
+        console.log('images = ');
+        console.log(res);
+        this.data.rentUncompressImages = res.tempFilePaths;
+        this.compressImageSingle(0, null);
+      }
+    })
+  },
+
   /**
    * Lifecycle function--Called when page is initially rendered
    */
@@ -422,15 +594,11 @@ Page({
       toastTitle = '请填写街道号码!';
     } else if (0 == this.data.buildingNum.length) {
       toastTitle = '请填写完整单元号!';
-    } else if (0 == this.data.roomNum.length) {
-      toastTitle = '请填写完整单元号!';
     } else if (0 == this.data.area) {
       toastTitle = '请填写房产面积!';
     } else if (this.data.invalidIndex == this.data.layoutCurrentIndex) {
       toastTitle = '请选择户型!';
-    } else if (0 == this.data.layoutCharts.length) {
-      toastTitle = '请上传户型图!';
-    }
+    } 
 
     if ('' == toastTitle){
       return true;
@@ -467,22 +635,137 @@ Page({
     console.log('makeHouseInfo:');
     console.log(this.data.houseInfo);
   },
-  onSaveClick: function (e) {
 
-    if (this.data.isEdit && !this.data.isEditable){
-      app.notifyMessage('无法修改资料!');
+  /*发布出租*/
+  uploadHouseDealImages: function (imgArr, callback) {
+    this.uploadHouseDealImageOneByOne(imgArr, 0, res => {
+      console.log('uploadImages = ');
+      console.log(res);
+      callback(res);
+    });
+  },
+  uploadHouseDealImageOneByOne: function (imgArr, index, callback) {
+
+    console.log('read to upload index = ');
+    console.log(index);
+
+    if ((0 == imgArr.length || index == imgArr.length)
+      && callback) {
+      callback([]);
       return;
     }
 
-    if (!this.checkHouseInfoValid()){
+    console.log('wx.uploadFile= ');
+    console.log(imgArr[index]);
+
+    wx.uploadFile({
+      url: 'https://bulter.mroom.com.cn:8008/overseas-bulter/v1/image',
+      filePath: imgArr[index],
+      name: 'img',
+      header: {
+        "Content-Type": "multipart/form-data",
+        'accept': 'application/json'
+      },
+      success: res1 => {
+        console.log('success res = ');
+        console.log(res1);
+        var imagePath = JSON.parse(res1.data);
+        var ret = [imagePath.path];
+
+        setTimeout(_ => {
+          this.uploadHouseDealImageOneByOne(imgArr, index + 1, res3 => {
+            ret = ret.concat(res3);
+            console.log('ret = ');
+            console.log(ret);
+            callback(ret);
+          });
+        }, 1000);
+
+      },
+      fail: res2 => {
+        console.log('error: fail res=', res2);
+        if (callback) {
+          callback(null);
+        }
+      },
+    });
+  },
+  checkHouseDealValid: function () {
+    if (0 == this.data.houseDeal.decoration.length) {
+      app.notifyMessage('未填写装修情况!');
+      return false;
+    }
+    if (0 == this.data.houseDeal.cost.length) {
+      app.notifyMessage('未填写租金!');
+      return false;
+    }
+    if (0 == this.data.houseDeal.linkman.length) {
+      app.notifyMessage('未填写联系人!');
+      return false;
+    }
+    if (0 == this.data.houseDeal.contactNum.length) {
+      app.notifyMessage('未填写联系电话!');
+      return false;
+    }
+    if (0 == this.data.houseDeal.mail.length) {
+      app.notifyMessage('未填写邮箱!');
+      return false;
+    }
+    if (0 == this.data.houseDeal.weixin.length) {
+      app.notifyMessage('未填写微信!');
+      return false;
+    }
+    return true;
+  },
+  onHouseDealImageDeleteClick: function(e){
+    var index = e.currentTarget.dataset.index;
+    this.data.houseDealImageArr.splice(index, 1);
+    this.setData({
+      houseDealImageArr: this.data.houseDealImageArr
+    });
+  },
+  makeHouseDealImageArr: function (imgArr) {
+    if (0 == imgArr.length) {
       return;
     }
+    this.data.houseDeal.image = JSON.stringify(imgArr);
+  },
+  makeHouseDeal: function () {
+    this.data.houseDeal.source = this.data.houseDealSource;
+    this.data.houseDeal.dealType = this.data.houseDealType;
+    this.data.houseDeal.houseId = this.data.houseId;
+    this.data.houseDeal.creator = app.globalData.loginInfo.userId;
+  },
+  doHouseDealPublish: function(callback){
+
+    this.uploadHouseDealImages(this.data.houseDealImageArr, res => {
+      console.log("upload images success");
+      console.log(res);
+      this.makeHouseDealImageArr(res);
+      this.makeHouseDeal();
+      http.addHouseDealAsync(this.data.houseDeal, res => {
+        console.log('add house deal async success!');
+        if (callback){
+          callback(true);
+        }
+      });
+    });
+
+  },
+  
+  doHouseSave: function(callback){
 
     console.log('准备保存房产信息:', this.data.houseInfo);
 
-    this.uploadLayoutCharts(result=>{
-      if(!result){
+    if(this.data.isHouseInfoReadOnly){
+      callback(true);
+      return;
+    }
+
+    this.uploadLayoutCharts(result => {
+      if (!result) {
         app.notifyMessage('上传户型图错误!');
+        callback(false);
         return;
       }
 
@@ -491,15 +774,96 @@ Page({
       if (!this.data.isEdit) {
         this.addHouse(res => {
           console.log(res);
-          this.saveSuccess(res);
+          this.data.houseId = res.data.uid;
+          callback(true);
         });
       } else {
         this.updateHouse(res => {
           console.log(res);
-          this.saveSuccess(res);
+          callback(true);
         });
       }
 
+    });
+  },
+  getLoadingText: function () {
+    if (this.data.isHouseDeal) {
+      return '发布中...';
+    } else {
+      return '保存中...';
+    }
+  },
+  showLoading: function(){
+    var title = '';
+    if(this.data.isHouseDeal){
+      title = '发布中...';
+    }else{
+      title = '保存中...';
+    }
+    wx.showLoading({
+      title: title,
+    })
+  },
+  hideLoading: function(){
+    wx.hideLoading();
+  },
+  delayToNavigate: function(){
+    setTimeout(_=>{
+      var backDelta = 1;
+      if (this.data.isHouseDeal) {
+        if(this.data.isHouseIdExist){
+          backDelta = 2;
+        }
+      }
+      wx.navigateBack({
+        delta: backDelta
+      });
+    }, 1500);
+    
+  },
+  checkAllValid: function(){
+
+    if (!this.data.isHouseDeal && this.data.isEdit && !this.data.isEditable) {
+      app.notifyMessage('无法修改资料!');
+      return false;
+    }
+
+    if (!this.checkHouseInfoValid()) {
+      return false;
+    }
+
+    if (this.data.isHouseDeal && !this.checkHouseDealValid()) {
+      return false;
+    }
+
+    return true;
+  },
+  onSaveOrPublishClick: function (e) {
+
+    if(!this.checkAllValid()){
+      return;
+    }
+
+
+    this.showLoading();
+    this.doHouseSave(isSuccess1=>{
+
+      if(!this.data.isHouseDeal){
+        this.hideLoading();
+        if (isSuccess1) {
+          app.notifyMessage('保存成功!');
+          this.delayToNavigate();
+        }
+      }else{
+        this.doHouseDealPublish(isSuccess2=>{
+          this.hideLoading();
+          if (isSuccess1) {
+            app.notifyMessage('发布成功!');
+            this.delayToNavigate();
+          }
+        });
+      }
+      
     });
     
   },
@@ -570,17 +934,34 @@ Page({
   chooseLocalLayoutImage: function () {
     wx.chooseImage({
       count: 1,
-      sizeType: ['original', 'compressed'],
+      sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: res => {
-        console.log('images = ', res);
-        var tempFilePaths = res.tempFilePaths;
-        this.setData({
-          layoutCharts: tempFilePaths,
-          isLayoutChartsModified: true
+        console.log('images = ');
+        console.log(res);
+        var tempFile = res.tempFiles[0];
+
+        utils.calculateCompressImageSize(tempFile.path, 400, 400, (w, h)=>{
+          console.log('宽 = ' + w);
+          console.log('高 = ' + h);
+          this.setData({
+            cWidth: w,
+            cHeight: h
+          });
+          utils.compressImage(
+            tempFile.path,
+            'canvas',
+            this.data.cWidth,
+            this.data.cHeight,
+            res1 => {
+              console.log('res1 = ');
+              console.log(res1);
+              this.setData({
+                layoutCharts: [res1],
+                isLayoutChartsModified: true
+              });
+            });
         });
-        console.log('chooseImage success');
-        console.log(this.data.layoutCharts);
       }
     })
   },

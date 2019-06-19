@@ -1,6 +1,6 @@
 module.exports.propertyOptions = [
-  'office',
-  'apartment'
+  'apartment',
+  'office'
 ];
 
 module.exports.nationOptions = [
@@ -33,5 +33,6 @@ module.exports.adLevel2Options = [
 module.exports.layoutOptions =[
   'studio',
   'one-bedroom',
-  'two-bedroom'
+  'two-bedroom',
+  'two-bedroom-two-bathroom',
 ];

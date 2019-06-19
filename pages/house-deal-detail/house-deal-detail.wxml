@@ -49,10 +49,10 @@
   </view>
   <view class="item-container">
     <span style="margin-left: 10rpx; float: left;">
-      {{isHouseSale?'出售价格(比索):':'出租价格(比索):'}}
+      {{isHouseSale?'出售价格(比索):':'出租价格(比索/月):'}}
     </span>
     <input
-    style="width: 540rpx;"
+    style="width: 510rpx;"
     placeholder=""
     value="{{houseDeal.cost}}"
     bindblur="onCostInput"/>
@@ -117,7 +117,7 @@
         </view>
       </view>
       <button
-      wx:if="{{3 > imageArr.length}}"
+      wx:if="{{imageTotalCount > imageArr.length}}"
       style="width: 80rpx; height: 80rpx; display: flex; justify-content: center; align-items: center; margin: 0;"
       bindtap="onChooseLocalImage">
         +
@@ -139,3 +139,5 @@
    {{buttonTitle}}
   </span>
 </button>
+<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;">
+</canvas>

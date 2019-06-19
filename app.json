@@ -15,7 +15,8 @@
     "pages/house-deal-view/house-deal-view",
     "pages/house-deal/house-deal",
     "pages/house-list/house-list",
-    "pages/house-deal-detail/house-deal-detail"
+    "pages/house-deal-detail/house-deal-detail",
+    "pages/case-detail/case-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

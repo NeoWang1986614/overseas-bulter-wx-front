@@ -11,6 +11,11 @@ Page({
    * 页面的初始数据
    */
   data: {
+    /*compress*/
+    cWidth: 0,
+    cHeight: 0,
+    uncompressImages: [],
+
     houseDealType: '',
     source: '',
     houseId: '',
@@ -38,6 +43,7 @@ Page({
       meta: ''
     },
     imageArr: [],
+    imageTotalCount: 4,
     /*const*/
     invalidIndex: utils.invalidIndex,
     map: map,
@@ -165,6 +171,9 @@ Page({
     this.initAction();
     this.getHouseAsync();
     this.setButtonTitle();
+    if(''==this.data.houseId){
+      this.setProperty(0);
+    }
   },
 
   /**
@@ -187,7 +196,7 @@ Page({
   onShow: function () {
     wx.setNavigationBarTitle({
       title: this.getNaviBarTitle(),
-    })
+    });
   },
 
   /**
@@ -224,12 +233,19 @@ Page({
   onShareAppMessage: function () {
 
   },
-  onPropertyPickerChange(e) {
-    var index = e.detail.value;
+  setProperty: function(index){
     this.setData({
       propertyCurrentIndex: index
     });
     this.data.houseDeal.property = this.data.propertyOptions[this.data.propertyCurrentIndex];
+  },
+  onPropertyPickerChange(e) {
+    var index = e.detail.value;
+    // this.setData({
+    //   propertyCurrentIndex: index
+    // });
+    // this.data.houseDeal.property = this.data.propertyOptions[this.data.propertyCurrentIndex];
+    this.setProperty(index);
   },
   onAreaInput: function (e) {
     console.log(e);
@@ -283,18 +299,50 @@ Page({
       imageArr: this.data.imageArr
     });
   },
+  compressImageSingle: function(index){
+    
+    utils.calculateCompressImageSize(
+      this.data.uncompressImages[index],
+      400,
+      400,
+      (w, h) => {
+        console.log('宽 = ' + w);
+        console.log('高 = ' + h);
+        this.setData({
+          cWidth: w,
+          cHeight: h
+        });
+        utils.compressImage(
+          this.data.uncompressImages[index],
+          'canvas',
+          this.data.cWidth,
+          this.data.cHeight,
+          res1 => {
+            console.log('res1 = ');
+            console.log(res1);
+            if(res1){
+              this.data.imageArr.push(res1);
+              this.setData({
+                imageArr: this.data.imageArr
+              });
+              if(++index < this.data.uncompressImages.length){
+                this.compressImageSingle(index);
+              }
+            }
+          });
+      });
+  },
   onChooseLocalImage: function () {
+    var leftCount = this.data.imageTotalCount - this.data.imageArr.length;
     wx.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
+      count: leftCount,
+      sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: res => {
         console.log('images = ');
         console.log(res);
-        this.setData({
-          imageArr: this.data.imageArr.concat(res.tempFilePaths)
-        });
-        console.log(this.data.imageArr);
+        this.data.uncompressImages = res.tempFilePaths;
+        this.compressImageSingle(0, null);
       }
     })
   },

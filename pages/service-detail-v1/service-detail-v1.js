@@ -126,7 +126,13 @@ Page({
           ret.push(houses[i]);
         }
       }
-    } else{
+    } else if (this.data.isHouseMaintain && 0 != houses.length){
+      for (let i = 0; i < houses.length; i++) {
+        if ('home-decoration#completed' == houses[i].status) {
+          ret.push(houses[i]);
+        }
+      }
+    } else {
       ret = houses;
     }
 
@@ -150,7 +156,7 @@ Page({
       housesDescriptions: utils.generateHousesDescriptions(filtedHouses),
       isHousesEmpty: 0 == filtedHouses.length
     });
-    
+    console.log(this.data.housesDescriptions);
     console.log('select index = ', this.data.filtedHouseCurrentIndex);
   },
   getHousesAsync: function (callback) {
@@ -590,11 +596,67 @@ Page({
     }
     return false;
   },
+  checkRoomNumAndLayoutChartsValid: function(){
+    if (utils.invalidIndex == this.data.filtedHouseCurrentIndex) {
+      return;
+    }
+
+    var house = this.data.filtedHouses[this.data.filtedHouseCurrentIndex];
+
+    console.log('checkRoomNumAndLayoutChartsValid');
+    console.log(house.roomNum);
+    console.log(house.meta);
+   
+   var isValid = true;
+   var noRoomNum = true;
+   var noLayouChart = true;
+    if (0 != house.roomNum.length){
+      noRoomNum = false;
+    }
+
+    if (0 != house.meta.length) {
+      var meta = JSON.parse(house.meta);
+      if (meta.hasOwnProperty("layoutChart") && 0 < meta.layoutChart.length) {
+        noLayouChart = false;
+      }
+    }
+    
+    var modalTitle = '';
+    if(noRoomNum && noLayouChart){
+      modalTitle = '请补充完整该房产的房号和户型图!';
+      isValid = false;
+    }
+    if(noRoomNum && !noLayouChart){
+      modalTitle = '请补充完整该房产的房号!';
+      isValid = false;
+    }
+    if (!noRoomNum && noLayouChart) {
+      modalTitle = '请补充完整该房产的户型图!';
+      isValid = false;
+    }
+    if (!isValid){
+      wx.showModal({
+        content: modalTitle,
+        showCancel: true,
+        confirmText: '去补充',
+        confirmColor: '#0f0',
+        success: res => {
+          if (true==res.confirm){
+            console.log('去填!');
+            this.navigateToEditHouse();
+          }
+        }
+      })
+    }
+    return isValid;
+  },
   onHouseModalConfirmClick: function(){
     if(0 == this.data.filtedHouses.length){
       this.navigateToAddHouse();
     }else{
-      this.submitOrder();
+      if (this.checkRoomNumAndLayoutChartsValid()){
+        this.submitOrder();
+      }
     }
   },
   onHouseMaintainYearInput: function(e){
@@ -711,7 +773,18 @@ Page({
   },
   navigateToAddHouse: function () {
     wx.navigateTo({
-      url: '../../pages/house-edit/house-edit?type=add',
+      url: '../../pages/house-edit/house-edit?editType=add',
+    });
+  },
+  navigateToEditHouse: function () {
+    if (utils.invalidIndex == this.data.filtedHouseCurrentIndex) {
+      return;
+    }
+
+    var house = this.data.filtedHouses[this.data.filtedHouseCurrentIndex];
+
+    wx.navigateTo({
+      url: '../../pages/house-edit/house-edit?houseId=' + house.uid + '&editType=edit',
     });
   },
   onOthersAttachmentClick: function(e){
