@@ -16,7 +16,10 @@
     "pages/house-deal/house-deal",
     "pages/house-list/house-list",
     "pages/house-deal-detail/house-deal-detail",
-    "pages/case-detail/case-detail"
+    "pages/case-detail/case-detail",
+    "pages/other-service/other-service",
+    "pages/message-edit/message-edit",
+    "pages/external-link/external-link"
   ],
   "window": {
     "backgroundTextStyle": "light",

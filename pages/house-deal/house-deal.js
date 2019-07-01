@@ -139,7 +139,7 @@ Page({
     if(this.data.isHouseRent){
       return '房屋出租';
     } else if(this.data.isHouseSale){
-      return '二手房买卖';
+      return '房屋买卖';
     }
   },
   onShow: function () {

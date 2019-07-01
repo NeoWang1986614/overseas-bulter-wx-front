@@ -158,7 +158,7 @@ Page({
     if('editable' != house.status){
       wx.showModal({
         title: '无法删除',
-        content: '房产订单正在进行中...',
+        content: '该房产正在使用中...',
         showCancel: false,
         confirmText: '确定',
         confirmColor: '#0f0',
@@ -197,6 +197,7 @@ Page({
         if(200 == res.statusCode) {
           if(0 == res.data.code){
             console.log('delete success');
+            this.initSortHouses();
             this.refreshList();
           }
         }

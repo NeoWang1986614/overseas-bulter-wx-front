@@ -64,7 +64,7 @@
     wx:if="{{isShowHouseModal}}"
     hidden="{{!isShowHouseModal}}" 
     title="{{isHousesEmpty?'':'请选择您的房产'}}" 
-    confirm-text="{{isHousesEmpty ? '添加房产' : '提交订单'}}" 
+    confirm-text="{{modalConfirmTitle}}" 
     cancel-text="取消" 
     bindcancel="onHouseModalCancel" 
     bindconfirm="onHouseModalConfirmClick" 
@@ -72,8 +72,11 @@
     <button class="add-house-btn" bindtap="onNavigateToAddHouse" wx:if="{{!isHousesEmpty}}">
       <span>继续添加房产</span>
     </button>
-    <text class="empty-data" style="text-align: center; margin-top: -20rpx; line-height: 50rpx;" wx:if="{{isHousesEmpty}}">
-      {{'您还没有"' + layoutOptions[layoutOptionsCurrentIndex].title + '"户型的房产\n请添加该户型房产！'}}
+    <text
+      class="empty-data"
+      style="text-align: center; margin-top: -20rpx; line-height: 50rpx;" 
+      wx:if="{{isHousesEmpty}}">
+      {{isHouseMaintain?'您没有菲洋管家家装委托的房产，无法直接提供维保服务，请咨询客服，谢谢！':('您还没有"' + layoutOptions[layoutOptionsCurrentIndex].title + '"户型的房产\n请添加该户型房产！')}}
     </text>
     <scroll-view scroll-y="true"
       class="house-radio-container" 

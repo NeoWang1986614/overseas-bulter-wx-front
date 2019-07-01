@@ -1,0 +1,52 @@
+/* pages/other-service/other-service.wxss */
+page {
+  height: 100%;
+  background: whitesmoke;
+  font-size: 24rpx;
+  color: gray;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+scroll-view {
+  height: 100rpx;
+  flex-grow: 1;
+  background: whitesmoke;
+}
+
+.customer-service-btn {
+  position: absolute;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  bottom: 130rpx;
+  right: 20rpx;
+  background: green;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:0 1px 4px 0px rgb(145, 140, 140);
+}
+
+.customer-service-btn::after {
+  border: none;
+}
+
+.customer-service-img{
+  width: 80rpx;
+  height: 80rpx;
+  margin: auto auto;
+  /* background: lightgray; */
+}
+
+.bottom-btn {
+  border: none;
+}
+
+text{
+  word-break: keep-all;
+  word-wrap: break-word;
+}

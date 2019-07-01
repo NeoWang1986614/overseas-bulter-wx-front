@@ -1,0 +1,36 @@
+<!--pages/other-service/other-service.wxml-->
+<scroll-view scroll-y="true">
+  
+  <view style="position: relative; min-height: 10rpx; border-bottom: 1rpx solid lightblue; overflow: hidden; background: white;"
+    wx:for="{{messages}}">
+    <view style="padding-left: 10rpx; padding-top: 30rpx; height: 40rpx; line-height: 40rpx;">
+      <span style="font-size: 28rpx; color: black; font-weight: bold;">({{item.category}}){{item.title}}</span>
+    </view>
+    
+    <view style="min-height: 40rpx; margin-top: 10rpx; padding-left: 10rpx; padding-right: 10rpx; line-height: 30rpx; font-size: 22rpx;">
+      <text>{{item.content}}</text>
+    </view>
+
+    <view style="padding-right: 10rpx; margin-top: 10rpx; margin-bottom: 10rpx; height: 40rpx; line-height: 40rpx; text-align: right; font-size: 22rpx;">
+      {{item.createTimeCn}}
+    </view>
+    <view style="position: absolute; right: 100rpx; top: 30rpx; color: red;{{0!=item.levelText.length?'border: 1rpx solid red; padding: 0 6rpx;':''}}">
+      {{item.levelText}}
+    </view>
+  </view>
+  <view style="height: 100rpx; line-height: 100rpx; text-align: center; background: white; margin-top: 10rpx; color: black;"
+    bindtap="onGetMoreData">
+    {{isMoreData?'更多':'没有更多了'}}
+  </view>
+</scroll-view>
+<button class="customer-service-btn" open-type="contact">
+    <image class="customer-service-img" mode="scaleToFill" src="/images/customer-service.png"/>
+</button>
+<button
+  class="bottom-btn"
+  style="height: 100rpx; width: 98%; margin-top: 10rpx; margin-bottom: 10rpx; background: green;"
+  bindtap="onNewMessageClick">
+  <span style="color: white; font-weight: bold;">
+    我 要 发 布
+  </span>
+</button>

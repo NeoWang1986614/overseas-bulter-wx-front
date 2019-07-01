@@ -210,6 +210,10 @@ Page({
     });
   },
   initHouseInfo(){
+    var isAllowModified = false;
+    if ('editable' == this.data.houseInfo.status || 'house-rent#proxy' == this.data.houseInfo.status || 'house-rent#self' == this.data.houseInfo.status || 'house-sale#proxy' == this.data.houseInfo.status || 'house-sale#self' == this.data.houseInfo.status){
+      isAllowModified = true;
+    }
     var meta = JSON.parse(this.data.houseInfo.meta);
     this.setData({
       houseName: this.data.houseInfo.name,
@@ -225,7 +229,7 @@ Page({
       roomNum: this.data.houseInfo.roomNum,
       area: this.data.houseInfo.area,
       layoutCharts: meta.layoutChart,
-      isEditable: 'editable' == this.data.houseInfo.status
+      isEditable: isAllowModified
     });
   },
   makeTextOptions(){
@@ -302,7 +306,7 @@ Page({
     }
   },
   initHouseDealPage: function () {
-    this.data.navigateTitle = '出租信息填写';
+    this.data.navigateTitle = this.data.isHouseRent ? '房屋出租信息填写' :'房屋出售信息填写';
     this.setData({
       propertyCurrentIndex: 0
     });

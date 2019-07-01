@@ -1,0 +1,21 @@
+/* pages/message-edit/message-edit.wxss */
+
+page {
+  height: 100%;
+  background: white;
+  font-size: 28rpx;
+  color: gray;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+scroll-view {
+  height: 100rpx;
+  flex-grow: 1;
+  background: white;
+}
+
+.bottom-btn {
+  border: none;
+}

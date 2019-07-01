@@ -23,8 +23,13 @@ Page({
       },
       {
         value: 'house-sale',
-        title: '二手房买卖',
+        title: '房屋买卖',
         iconUrl: '/images/house-sale.png'
+      },
+      {
+        value: 'other-service',
+        title: '其他服务',
+        iconUrl: '/images/other-service.png'
       },
       {
         value: 'customer-service',
@@ -41,6 +46,7 @@ Page({
     servicePrimaryNavigateUrl: '../../pages/service-detail-v1/service-detail-v1',
     myHouseNavigateUrl: '../../pages/houses/houses',
     houseDealNavigateUrl: '../../pages/house-deal/house-deal',
+    otherServiceNavigateUrl: '../../pages/other-service/other-service',
     trackItems:[
       {
         name: 'order-track',
@@ -128,10 +134,31 @@ Page({
     arr[fromIndex] =  arr.splice(toIndex, 1, arr[fromIndex])[0];
     return arr;
   },
+  publicAccountMaterialFilter: function(material){
+    var ret = [];
+    if(!material ||
+       !material.hasOwnProperty('item') ||
+       !0 == material.item.length){ 
+        return;
+       }
+    for(var i=0;i<material.item.length; i++){
+      var strArr = material.item[i].content.newsItem[0].title.split('#');
+      if(1 <= strArr.length){
+        if ('temporary' == strArr[1]) {
+          continue;
+        }
+      }
+      ret.push(material.item[i]);
+    }
+    material.item = ret;
+  },
   onShow: function () {
     console.log('home on show');
     console.log('userInfo: ', app.globalData.userInfo);
     app.queryPublicAccountMaterialAsync("news", 0, 10000, res => {
+      console.log('公众号文章');
+      console.log(res);
+      this.publicAccountMaterialFilter(res);
       this.setData({
         material: res
       });
@@ -147,9 +174,9 @@ Page({
       console.log('home page services = ');
       console.log(res);
       var newArr = res.concat(this.data.servicePrimaryFixedArr);
-      this.exchangeItemInArr(2, 3, newArr);
+      // this.exchangeItemInArr(2, 3, newArr);
       this.setData({
-        servicePrimaryArr: this.exchangeItemInArr(3, 4, newArr)
+        servicePrimaryArr: newArr//this.exchangeItemInArr(3, 4, newArr)
       });
     });
   },
@@ -229,6 +256,19 @@ Page({
     });
 
   },
+  onCarouselFigureItemClick: function(e){
+    var cf = this.data.carouselFigureArr[e.currentTarget.dataset.index];
+    console.log(cf);
+    if ('external-link' == cf.category) {
+      var url = JSON.parse(cf.meta).externalLinkUrl;
+      this.navigateWrapper('../../pages/external-link/external-link?url=' + url);
+    } else if('house-rent' == cf.category || 'house-sale' == cf.category){
+      if(0 != cf.meta.length){
+        var houseDealUid = JSON.parse(cf.meta).houseDealUid;
+        this.navigateWrapper('../../pages/house-deal-view/house-deal-view?uid=' + houseDealUid + '&type=' + cf.category);
+      }
+    }
+  },
   getUserInfo: function (e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
@@ -251,6 +291,8 @@ Page({
       || 'house-sale' == serviceItem.value){
       var naviUrl = this.data.houseDealNavigateUrl + '?type=' + serviceItem.value;
       this.navigateWrapper(naviUrl);
+    } else if ('other-service' == serviceItem.value){
+      this.navigateWrapper(this.data.otherServiceNavigateUrl);
     }else{
       var naviUrl = this.data.servicePrimaryNavigateUrl + '?type=' + value;
       if (serviceItem.hasOwnProperty('uid')) {

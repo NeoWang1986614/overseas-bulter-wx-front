@@ -190,7 +190,7 @@ Page({
     if (this.data.isHouseRent) {
       return '房屋出租信息填写';
     } else if (this.data.isHouseSale) {
-      return '二手房出售信息填写';
+      return '房屋出售信息填写';
     }
   },
   onShow: function () {

@@ -1,0 +1,49 @@
+<!--pages/message-edit/message-edit.wxml-->
+<scroll-view scroll-y="true">
+  <view style="height: 100rpx; display: flex; flex-direction: row; align-items: center; background: white;">
+    <span style="margin-left: 10rpx; margin-right: 10rpx;">类别:</span>
+    <picker
+      mode="selector"
+      bindchange="onCategoryChange" 
+      value="{{categoryCurrentIndex}}"
+      range="{{categoryOptions}}">
+        <view style="width: 600rpx; text-align: center; color: black;">
+          {{categoryOptions[categoryCurrentIndex]}}
+        </view>
+    </picker>
+  </view>
+  <view style="height: 100rpx;margin-top: 10rpx; display: flex; flex-direction: row; align-items: center; background: white;">
+    <span style="margin-left: 10rpx; margin-right: 10rpx;">标题:</span>
+    <input
+      style="width: 600rpx; border-bottom: 1rpx solid black; color: black;"
+      type="text"
+      maxlength="{{maxCountOfTitle}}"
+      placeholder="{{maxCountOfTitle}}字以内"
+      value="{{message.title}}"
+      bindinput="onTitleInput">
+    </input>
+  </view>
+  <view style="min-height: 100rpx; margin-top: 10rpx; display: flex; flex-direction: column; align-items: center; overflow: hidden; background: white;">
+    <span style="margin-right: 670rpx; margin-top: 10rpx; margin-bottom: 10rpx;">内容:</span>
+    <textarea
+      style="padding: 5rpx; margin: 0 auto; margin-top: 6rpx; margin-bottom: 30rpx; width: 96%; height: 200rpx; border: 1rpx solid gray; color: black;"
+      maxlength="{{maxCountOfContent}}"
+      placeholder="{{maxCountOfContent}}字以内"
+      value="{{message.content}}"
+      bindinput="onContentInput">
+      <text style="position: absolute; bottom: 6rpx; right: 10rpx;">
+        {{message.content.length}}/{{maxCountOfContent}}
+      </text>
+    </textarea>
+  </view>
+</scroll-view>
+
+<button
+  class="bottom-btn"
+  style="height: 100rpx; width: 98%; margin-top: 10rpx; margin-bottom: 10rpx; background: green;"
+  bindtap="onPublishClick">
+  <span style="color: white; font-weight: bold;">
+    发 布
+  </span>
+</button>
+

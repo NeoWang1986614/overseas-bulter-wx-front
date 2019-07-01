@@ -133,7 +133,7 @@ Page({
     if(this.data.isHouseRent){
       return '房屋出租详情';
     } else if (this.data.isHouseSale){
-      return '二手房出售详情';
+      return '房屋出售详情';
     }
   },
   onShow: function () {
@@ -223,7 +223,7 @@ Page({
   onShareAppMessage: function () {
     console.log('转发');
     console.log(this.data.houseInfo);
-    var title = this.data.map.text[this.data.houseInfo.adLevel2] + this.data.houseInfo.name + this.data.houseInfo.area + 'm²' + this.data.map.text[this.data.houseInfo.property] + (this.data.isHouseSale?'出售':'出租') + '...';
+    var title = this.data.houseInfo.adLevel2 + this.data.houseInfo.name + this.data.houseInfo.area + 'm²' + this.data.map.text[this.data.houseInfo.property] + (this.data.isHouseSale?'出售':'出租') + '...';
     console.log(this.data.isHouseSale);
     console.log(title);
     return{

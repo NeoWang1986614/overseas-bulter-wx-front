@@ -36,6 +36,7 @@ Page({
     filtedHouses: [],
     housesDescriptions: [],
     isHousesEmpty: true,
+    modalConfirmTitle: '',
     filtedHouseCurrentIndex: utils.invalidIndex,
     isShowHouseModal: false,
     /* modal*/
@@ -151,10 +152,19 @@ Page({
   },
   updateFiltedHouses: function(){
     var filtedHouses = this.housesFilter(this.data.houses);
+    var isEmpty = 0 == filtedHouses.length;
+    var modalConfirmTitle = '确定';
+    if(!isEmpty){
+      modalConfirmTitle = '提交订单';
+    }else if(this.data.isHomeDecoration){
+      modalConfirmTitle = '添加房产';
+    }
+
     this.setData({
       filtedHouses: filtedHouses,
       housesDescriptions: utils.generateHousesDescriptions(filtedHouses),
-      isHousesEmpty: 0 == filtedHouses.length
+      isHousesEmpty: isEmpty,
+      modalConfirmTitle: modalConfirmTitle
     });
     console.log(this.data.housesDescriptions);
     console.log('select index = ', this.data.filtedHouseCurrentIndex);
@@ -402,6 +412,8 @@ Page({
   // },
   /*save*/
   checkHouseValid: function () {
+    console.log('房产是否选择');
+    console.log(this.data.filtedHouseCurrentIndex);
     if (utils.invalidIndex == this.data.filtedHouseCurrentIndex) {
       wx.showToast({
         title: '请选择房产!',
@@ -445,7 +457,7 @@ Page({
       })
       return;
     }
-    if (!this.checkHouseValid() || !this.checkInputParamsValid()) {
+    if (!this.checkInputParamsValid()) {
       return;
     }
 
@@ -651,10 +663,19 @@ Page({
     return isValid;
   },
   onHouseModalConfirmClick: function(){
+    if(this.data.isHouseMaintain && this.data.isHousesEmpty){
+      this.setData({
+        isShowHouseModal: false
+      });
+      return;
+    }
+
+    console.log(this.data.filtedHouses.length);
     if(0 == this.data.filtedHouses.length){
       this.navigateToAddHouse();
     }else{
-      if (this.checkRoomNumAndLayoutChartsValid()){
+      if (this.checkHouseValid() && 
+          this.checkRoomNumAndLayoutChartsValid()){
         this.submitOrder();
       }
     }

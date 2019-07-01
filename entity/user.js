@@ -2,6 +2,7 @@ function convertUserEntity(entity) {
   return {
     uid: entity.uid,
     name: entity.name,
+    level: entity.level,
     phoneNumber: entity.phone_number,
     idCardNumber: entity.id_card_number
   }

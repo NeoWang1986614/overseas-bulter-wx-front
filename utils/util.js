@@ -27,7 +27,8 @@ function getHouseAddress(house) {
   if (!house) {
     return null;
   }
-  return 'Room ' + house.roomNum + ', ' +
+  var roomTitle = (0==house.roomNum.length)?'':('Room ' + house.roomNum + ', ');
+  return roomTitle +
     'Building ' + house.buildingNum + ', ' +
     house.streetNum + ' ' + house.streetName + ' Street, ' +
     house.adLevel3 + ', ' +
@@ -40,9 +41,10 @@ function generateHouseDescription(house) {
   if(!house){
     return null;
   }
+  var roomTitle = (0 == house.roomNum.length) ? '' : ('Room ' + house.roomNum + ', ');
   return map.text[house.layout] + '-' +
     [house.area] + 'm²' + '-' +
-    'Room ' + house.roomNum + ', ' +
+    roomTitle +
     'Building ' + house.buildingNum + ', ' +
     house.streetNum + ' ' + house.streetName + ' Street, ' +
     house.adLevel3 + ', ' +
@@ -55,6 +57,7 @@ function generateHouseInOrderDescription(orderObj) {
   if (!orderObj) {
     return null;
   }
+  
   return 'Room ' + orderObj.houseRoomNum + ', ' +
   'Building ' + orderObj.houseBuildingNum + ', ' +
   orderObj.houseStreetNum + ' ' + orderObj.houseStreetName + ' Street, ' +
@@ -201,6 +204,17 @@ function calculateCompressImageSize(imagePath, maxWidth, maxHeight, callback) {
   });
 }
 
+function filterEmoji(content) {
+
+  if(0==content.length){
+    return content;
+  }
+  var str = content.replace(/[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF][\u200D|\uFE0F]|[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF]|[0-9|*|#]\uFE0F\u20E3|[0-9|#]\u20E3|[\u203C-\u3299]\uFE0F\u200D|[\u203C-\u3299]\uFE0F|[\u2122-\u2B55]|\u303D|[\A9|\AE]\u3030|\uA9|\uAE|\u3030/ig, "");
+
+  return str;
+
+}
+
 module.exports = {
   formatTime: formatTime,
   intToBool: intToBool,
@@ -216,5 +230,6 @@ module.exports = {
   computeHomeDecorationPrice: computeHomeDecorationPrice,
   compressImage: compressImage,
   isIPhoneModel: isIPhoneModel,
-  calculateCompressImageSize: calculateCompressImageSize
+  calculateCompressImageSize: calculateCompressImageSize,
+  filterEmoji: filterEmoji
 }

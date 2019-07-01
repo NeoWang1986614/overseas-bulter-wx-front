@@ -4,7 +4,9 @@ function convertCarouselFigureEntity(entity) {
     uid: entity.uid,
     imageUrl: entity.image_url,
     location: entity.location,
+    category: entity.category,
     desc: entity.desc,
+    meta: entity.meta,
   }
 }
 
@@ -13,7 +15,9 @@ function convertCarouselFigureObject(obj) {
     uid: obj.uid,
     image_url: obj.imageUrl,
     location: obj.location,
-    desc: obj.desc
+    category: obj.category,
+    desc: obj.desc,
+    meta: obj.meta,
   }
 }
 

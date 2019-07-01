@@ -1,6 +1,7 @@
 // pages/user-info/user-info.js
 const app = getApp()
 const config = require('../../common/config.js')
+const utils = require('../../utils/util.js')
 const entityUser = require('../../entity/user.js')
 
 Page({

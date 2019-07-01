@@ -12,6 +12,7 @@ const houseEntity = require('../entity/house.js')
 const priceParamEntity = require('../entity/price-param.js')
 const carouselFigureEntity = require('../entity/carousel-figure.js')
 const houseDealEntity = require('../entity/house-deal.js')
+const messageEntity = require('../entity/message.js')
 
 const consHttpHeader = {
   'content-type': 'application/json',
@@ -36,9 +37,6 @@ function loginAsync(code, appId, appSecret, callback) {
     success: res => {
       console.log('',res);
       var convertedUser = userEntity.convertUserEntity(res.data);
-      // app.globalData.loginInfo.userId = res.data.uid;
-      // app.globalData.loginInfo.phoneNumber = res.data.phoneNumber;
-      // app.globalData.loginInfo.idCardNumber = res.data.idCardNumber;
       if (callback) {
         callback(user, );
       }
@@ -59,6 +57,10 @@ function querySearchServicePrimaryAsync(offset, count, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if(200 != res.statusCode){
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var ret = servicePrimaryEntity.convertServicePrimaryEntities(res.data);
       if (callback) {
         callback(ret);
@@ -76,6 +78,10 @@ function getServicePrimaryAsync(uid, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var ret = servicePrimaryEntity.convertServicePrimaryEntity(res.data);
       if (callback) {
         callback(ret);
@@ -97,6 +103,10 @@ function querySearchLayoutAsync(offset, count, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var ret = layoutEntity.convertLayoutEntities(res.data);
       if (callback) {
         callback(ret);
@@ -119,6 +129,10 @@ function querySearchOrderByOrderTypeAsync(orderType, offset, length, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var ret = orderEntity.convertOrderEntities(res.data.entities);
       if (callback) {
         callback(res.data.total,ret);
@@ -140,6 +154,10 @@ function querySearchRentHouseAsync(offset, count, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var ret = rentHouseEntity.convertRentHouseEntities(res.data.entities);
       if (callback) {
         callback(res.data.total, ret);
@@ -158,6 +176,10 @@ function getOrderAsync(orderId, callback) {
     },
     success: res => {
       console.log('getOrderAsync');
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedOrder = orderEntity.convertOrderEntity(res.data);
       if (callback) {
         callback(convertedOrder);
@@ -180,6 +202,10 @@ function getRecordsAsync(recordType, orderId, offset, count, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedRecords = [];
       if ('billing-record' == recordType) {
         convertedRecords = billingRecordEntity.convertBillingRecordEntities(res.data.entities);
@@ -204,6 +230,10 @@ function getHouseAsync(id, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedHouse = houseEntity.convertHouseEntity(res.data)
       if (callback) {
         callback(convertedHouse);
@@ -226,6 +256,10 @@ function queryPriceParamAsync(serviceId, layoutId, callback) {
     },
     success: res => {
       console.log(res);
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedPriceParams = priceParamEntity.convertPriceParamEntities(res.data)
       if (callback) {
         callback(convertedPriceParams);
@@ -249,6 +283,10 @@ function queryCarouselFigureAsync(offset, count, callback) {
     success: res => {
       console.log('queryCarouselFigureAsync');
       console.log(res);
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedCarouselFigure = carouselFigureEntity.convertCarouselFigureEntities(res.data)
       if (callback) {
         callback(convertedCarouselFigure);
@@ -273,6 +311,10 @@ function queryHouseDealAsync(dealType, offset, count, callback) {
     success: res => {
       console.log('queryHouseDealAsync');
       console.log(res);
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedHouseDeal = houseDealEntity.convertHouseDealEntities(res.data.entities)
       if (callback) {
         callback(res.data.total,convertedHouseDeal);
@@ -291,6 +333,10 @@ function addHouseDealAsync(obj, callback) {
       'Accept': 'application/json'
     },
     success: res => {
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       console.log('addHouseDealAsync = ');
       if (callback) {
         callback();
@@ -309,6 +355,10 @@ function getHouseDealAsync(uid, callback) {
     },
     success: res => {
       console.log('getHouseDealAsync = ');
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedHouseDeal = houseDealEntity.convertHouseDealEntity(res.data)
       if (callback) {
         callback(convertedHouseDeal);
@@ -330,9 +380,62 @@ function getHousesByUidsAsync(uids, callback) {
     },
     success: res => {
       console.log(res.data);
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
       var convertedHouses = houseEntity.convertHouseEntities(res.data)
       if (callback) {
         callback(convertedHouses);
+      }
+    }
+  })
+}
+
+function queryMessagesAsync(offset, count, callback) {
+  wx.request({
+    url: config.generateFullUrl('/message/search?queryType=range'),
+    method: 'POST',
+    data: {
+      offset: offset,
+      count: count
+    },
+    header: {
+      'content-type': 'application/json',
+      'Accept': 'application/json'
+    },
+    success: res => {
+      console.log('queryMessagesAsync');
+      console.log(res);
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
+      var convertedRet = messageEntity.convertMessageEntities(res.data.entities)
+      if (callback) {
+        callback(res.data.total, convertedRet);
+      }
+    }
+  })
+}
+
+function addMessageAsync(obj, callback) {
+  wx.request({
+    url: config.generateFullUrl('/message'),
+    method: 'POST',
+    data: messageEntity.convertMessageObject(obj),
+    header: {
+      'content-type': 'application/json',
+      'Accept': 'application/json'
+    },
+    success: res => {
+      console.log('adaMessageAsync = ');
+      if (200 != res.statusCode) {
+        app.notifyMessage('网络错误!');
+        return;
+      }
+      if (callback) {
+        callback(res);
       }
     }
   })
@@ -353,5 +456,7 @@ module.exports = {
   queryHouseDealAsync: queryHouseDealAsync,
   addHouseDealAsync: addHouseDealAsync,
   getHouseDealAsync: getHouseDealAsync,
-  getHousesByUidsAsync: getHousesByUidsAsync
+  getHousesByUidsAsync: getHousesByUidsAsync,
+  addMessageAsync: addMessageAsync,
+  queryMessagesAsync: queryMessagesAsync
 }
